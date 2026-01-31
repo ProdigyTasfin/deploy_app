@@ -155,29 +155,86 @@
             border-radius: 50%;
         }
         
-        .panel-links {
+        .auth-buttons {
             display: flex;
-            gap: 0.5rem;
-            margin-left: 1rem;
+            gap: 1rem;
+            align-items: center;
         }
         
-        .panel-links a {
-            text-decoration: none;
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--dark-card);
+            border-radius: 12px;
+            padding: 1rem;
+            min-width: 200px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            display: none;
+            z-index: 1000;
+            border: 1px solid var(--dark-border);
+        }
+        
+        .light-mode .user-dropdown {
+            background: white;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .user-dropdown.show {
+            display: block;
+        }
+        
+        .user-info {
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--dark-border);
+            margin-bottom: 0.5rem;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .user-email {
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+        
+        .dropdown-item {
+            display: block;
+            padding: 0.75rem;
             color: var(--dark-text);
-            font-weight: 500;
-            font-size: 0.9rem;
-            padding: 0.3rem 0.8rem;
-            border-radius: 4px;
-            background: rgba(139, 92, 246, 0.1);
+            text-decoration: none;
+            border-radius: 8px;
             transition: all 0.3s;
         }
         
-        .light-mode .panel-links a {
+        .light-mode .dropdown-item {
             color: #1e293b;
         }
         
-        .panel-links a:hover {
-            background: rgba(139, 92, 246, 0.2);
+        .dropdown-item:hover {
+            background: rgba(139, 92, 246, 0.1);
         }
         
         .cta-button {
@@ -661,13 +718,6 @@
                 flex-wrap: wrap;
                 justify-content: center;
             }
-            
-            .panel-links {
-                margin-left: 0;
-                margin-top: 0.5rem;
-                justify-content: center;
-                width: 100%;
-            }
         }
         
         @media (max-width: 768px) {
@@ -804,17 +854,12 @@
                 <li><a href="#" class="nav-link" data-page="how-it-works">কিভাবে কাজ করে</a></li>
                 <li><a href="#" class="nav-link" data-page="become-pro">বিশেষজ্ঞ হোন</a></li>
                 <li><a href="#" class="nav-link" data-page="get-help">সাহায্য নিন</a></li>
-                <li class="panel-links">
-                    <a href="employer.html">সেবাদাতা প্যানেল</a>
-                    <a href="customer.html">গ্রাহক প্যানেল</a>
-                    <a href="payment.html">পেমেন্ট</a>
-                </li>
             </ul>
         </nav>
         
-        <button class="cta-button" id="getHelpBtn">
-            <i class="fas fa-bolt"></i> এখনই সাহায্য নিন
-        </button>
+        <div class="auth-buttons" id="authButtons">
+            <!-- Will be populated by JavaScript -->
+        </div>
     </header>
     
     <!-- Home Page -->
@@ -855,77 +900,7 @@
         <section class="services-page">
             <h2 class="section-title">আমাদের পেশাদার সেবাসমূহ</h2>
             <div class="categories-grid">
-                <!-- Electrical Work -->
-                <div class="category-card">
-                    <div class="category-icon">
-                        <i class="fas fa-bolt"></i>
-                    </div>
-                    <h3>বৈদ্যুতিক কাজ</h3>
-                    <p>তারের মেরামত, ফিক্সচার বসানো, আউটলেট রিপেয়ার এবং সার্টিফাইড ইলেক্ট্রিশিয়ানদের সকল বৈদ্যুতিক সমস্যার সমাধান।</p>
-                    <button class="cta-button service-select-btn" data-service="বৈদ্যুতিক কাজ" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">
-                        ইলেক্ট্রিশিয়ান খুঁজুন
-                    </button>
-                </div>
-                
-                <!-- Plumbing -->
-                <div class="category-card">
-                    <div class="category-icon">
-                        <i class="fas fa-faucet"></i>
-                    </div>
-                    <h3>প্লাম্বিং</h3>
-                    <p>চুইয়ে পড়া কল, বন্ধ ড্রেন, পাইপ মেরামত এবং সম্পূর্ণ প্লাম্বিং সিস্টেম ইনস্টলেশন।</p>
-                    <button class="cta-button service-select-btn" data-service="প্লাম্বিং" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">
-                        প্লাম্বার খুঁজুন
-                    </button>
-                </div>
-                
-                <!-- Painting & Decor -->
-                <div class="category-card">
-                    <div class="category-icon">
-                        <i class="fas fa-paint-roller"></i>
-                    </div>
-                    <h3>রং ও সজ্জা</h3>
-                    <p>অভ্যন্তরীণ/বাহ্যিক রং করা, দেয়াল মেরামত, ওয়ালপেপার ইনস্টলেশন এবং গৃহসজ্জা সেবা।</p>
-                    <button class="cta-button service-select-btn" data-service="রং ও সজ্জা" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">
-                        পেইন্টার খুঁজুন
-                    </button>
-                </div>
-                
-                <!-- Carpentry -->
-                <div class="category-card">
-                    <div class="category-icon">
-                        <i class="fas fa-hammer"></i>
-                    </div>
-                    <h3>কাঠের কাজ</h3>
-                    <p>ফার্নিচার মেরামত, আলমারি ইনস্টলেশন, শেলফিং এবং কাস্টম কাঠের কাজের কাজ</p>
-                    <button class="cta-button service-select-btn" data-service="কাঠের কাজ" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">
-                        কাঠমিস্ত্রি খুঁজুন
-                    </button>
-                </div>
-                
-                <!-- HVAC Services -->
-                <div class="category-card">
-                    <div class="category-icon">
-                        <i class="fas fa-temperature-high"></i>
-                    </div>
-                    <h3>এয়ারকন্ডিশনিং</h3>
-                    <p>হিটিং, ভেন্টিলেশন, এয়ার কন্ডিশনার ইনস্টলেশন, রক্ষণাবেক্ষণ এবং মেরামত।</p>
-                    <button class="cta-button service-select-btn" data-service="এয়ারকন্ডিশনিং" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">
-                        এয়ারকন্ডিশন বিশেষজ্ঞ
-                    </button>
-                </div>
-                
-                <!-- Become a Pro -->
-                <div class="category-card">
-                    <div class="category-icon">
-                        <i class="fas fa-user-cog"></i>
-                    </div>
-                    <h3>বিশেষজ্ঞ হোন</h3>
-                    <p>দক্ষতা আছে? আমাদের পেশাদার নেটওয়ার্কে যোগ দিন এবং অন্যদের সাহায্য করে আয় করুন।</p>
-                    <button class="cta-button" id="becomeProBtnServices" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">
-                        এখনই যোগ দিন
-                    </button>
-                </div>
+                <!-- Categories will be loaded from database -->
             </div>
         </section>
     </div>
@@ -1190,36 +1165,90 @@
     </footer>
     
     <script>
-        // Theme Toggle Functionality
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = themeToggle.querySelector('i');
-        
-        // Check for saved theme or prefer-color-scheme
-        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-        const currentTheme = localStorage.getItem('theme');
-        
-        if (currentTheme === 'light' || (!currentTheme && !prefersDarkScheme.matches)) {
-            document.body.classList.add('light-mode');
-            themeIcon.className = 'fas fa-sun';
-        } else {
-            themeIcon.className = 'fas fa-moon';
-        }
-        
-        themeToggle.addEventListener('click', function() {
-            if (document.body.classList.contains('light-mode')) {
-                document.body.classList.remove('light-mode');
-                localStorage.setItem('theme', 'dark');
-                themeIcon.className = 'fas fa-moon';
-            } else {
-                document.body.classList.add('light-mode');
-                localStorage.setItem('theme', 'light');
-                themeIcon.className = 'fas fa-sun';
-            }
+        // Neon Database Configuration
+        const NEON_CONFIG = {
+            url: 'https://neon.tech/api/v2',
+            projectId: 'your-project-id',
+            branchId: 'main',
+            databaseName: 'neondb',
+            apiKey: 'your-neon-api-key'
+        };
+
+        // Current user state
+        let currentUser = null;
+        let isLoggedIn = false;
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Check login status
+            await checkLoginStatus();
+            
+            // Setup theme
+            setupTheme();
+            
+            // Setup navigation
+            setupNavigation();
+            
+            // Setup cursor
+            setupCursor();
+            
+            // Setup forms
+            setupForms();
+            
+            // Load services from database
+            await loadServices();
+            
+            // Update UI based on login status
+            updateAuthUI();
         });
-        
-        // Page Navigation System
-        document.addEventListener('DOMContentLoaded', function() {
-            // Get all page containers
+
+        // Check login status from localStorage and validate with server
+        async function checkLoginStatus() {
+            const userData = localStorage.getItem('nibash_user');
+            if (userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    // Validate token with server (in production)
+                    // For demo, we'll just use localStorage
+                    currentUser = user;
+                    isLoggedIn = true;
+                } catch (error) {
+                    console.error('Error parsing user data:', error);
+                    localStorage.removeItem('nibash_user');
+                }
+            }
+        }
+
+        // Setup theme functionality
+        function setupTheme() {
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = themeToggle.querySelector('i');
+            
+            const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+            const currentTheme = localStorage.getItem('theme');
+            
+            if (currentTheme === 'light' || (!currentTheme && !prefersDarkScheme.matches)) {
+                document.body.classList.add('light-mode');
+                themeIcon.className = 'fas fa-sun';
+            } else {
+                themeIcon.className = 'fas fa-moon';
+            }
+            
+            themeToggle.addEventListener('click', function() {
+                if (document.body.classList.contains('light-mode')) {
+                    document.body.classList.remove('light-mode');
+                    localStorage.setItem('theme', 'dark');
+                    themeIcon.className = 'fas fa-moon';
+                } else {
+                    document.body.classList.add('light-mode');
+                    localStorage.setItem('theme', 'light');
+                    themeIcon.className = 'fas fa-sun';
+                }
+            });
+        }
+
+        // Setup navigation between pages
+        function setupNavigation() {
             const pages = {
                 'home': document.getElementById('homePage'),
                 'services': document.getElementById('servicesPage'),
@@ -1228,25 +1257,18 @@
                 'get-help': document.getElementById('getHelpPage')
             };
             
-            // Get all navigation links
             const navLinks = document.querySelectorAll('.nav-link');
             const logo = document.getElementById('homeTab');
             
-            // Function to switch pages
             function switchPage(pageId) {
-                // Hide all pages
                 Object.values(pages).forEach(page => {
-                    if (page) {
-                        page.classList.remove('active');
-                    }
+                    page.classList.remove('active');
                 });
                 
-                // Show selected page
                 if (pages[pageId]) {
                     pages[pageId].classList.add('active');
                 }
                 
-                // Update active nav link
                 navLinks.forEach(link => {
                     link.classList.remove('active');
                     if (link.getAttribute('data-page') === pageId) {
@@ -1254,11 +1276,9 @@
                     }
                 });
                 
-                // Scroll to top
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
             
-            // Add click events to nav links
             navLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -1267,155 +1287,291 @@
                 });
             });
             
-            // Logo click goes to home
-            if (logo) {
-                logo.addEventListener('click', function() {
-                    switchPage('home');
-                });
-            }
-            
-            // Get Help Now button in header
-            const getHelpBtn = document.getElementById('getHelpBtn');
-            if (getHelpBtn) {
-                getHelpBtn.addEventListener('click', function() {
-                    switchPage('get-help');
-                });
-            }
-            
-            // Get Help Now button in home page
-            const homeGetHelpBtn = document.getElementById('homeGetHelpBtn');
-            if (homeGetHelpBtn) {
-                homeGetHelpBtn.addEventListener('click', function() {
-                    switchPage('get-help');
-                });
-            }
-            
-            // Get Help button in How It Works page
-            const getHelpFromHowItWorks = document.getElementById('getHelpFromHowItWorks');
-            if (getHelpFromHowItWorks) {
-                getHelpFromHowItWorks.addEventListener('click', function() {
-                    switchPage('get-help');
-                });
-            }
-            
-            // Become a Pro button in Services page
-            const becomeProBtnServices = document.getElementById('becomeProBtnServices');
-            if (becomeProBtnServices) {
-                becomeProBtnServices.addEventListener('click', function() {
-                    switchPage('become-pro');
-                });
-            }
-            
-            // Service selection buttons in Services page
-            document.querySelectorAll('.service-select-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const service = this.getAttribute('data-service');
-                    switchPage('get-help');
-                    
-                    // Set the service in the Get Help form
-                    setTimeout(() => {
-                        const selectedService = document.getElementById('selectedService');
-                        if (selectedService) {
-                            selectedService.value = service;
-                        }
-                        
-                        // Highlight the corresponding service option
-                        document.querySelectorAll('.service-option').forEach(option => {
-                            option.classList.remove('selected');
-                            if (option.getAttribute('data-service') === service) {
-                                option.classList.add('selected');
-                            }
-                        });
-                        
-                        // Show notification
-                        showNotification(`${service} সেবা নির্বাচন করা হয়েছে। সাহায্য পেতে এখন বাকি ফর্মটি পূরণ করুন!`);
-                    }, 300);
-                });
+            logo.addEventListener('click', function() {
+                switchPage('home');
             });
             
+            document.getElementById('homeGetHelpBtn').addEventListener('click', function() {
+                switchPage('get-help');
+            });
+            
+            document.getElementById('getHelpFromHowItWorks').addEventListener('click', function() {
+                switchPage('get-help');
+            });
+        }
+
+        // Update authentication UI
+        function updateAuthUI() {
+            const authButtons = document.getElementById('authButtons');
+            
+            if (isLoggedIn && currentUser) {
+                // Show user menu
+                const userInitial = currentUser.fullName ? currentUser.fullName.charAt(0) : 'U';
+                
+                authButtons.innerHTML = `
+                    <div class="user-menu">
+                        <div class="user-avatar" id="userAvatar">${userInitial}</div>
+                        <div class="user-dropdown" id="userDropdown">
+                            <div class="user-info">
+                                <div class="user-name">${currentUser.fullName || 'User'}</div>
+                                <div class="user-email">${currentUser.email || ''}</div>
+                            </div>
+                            ${currentUser.accountType === 'professional' ? 
+                                `<a href="employer.html" class="dropdown-item">
+                                    <i class="fas fa-user-cog"></i> সেবাদাতা ড্যাশবোর্ড
+                                </a>` : 
+                                `<a href="customer.html" class="dropdown-item">
+                                    <i class="fas fa-user"></i> গ্রাহক ড্যাশবোর্ড
+                                </a>`
+                            }
+                            <a href="payment.html" class="dropdown-item">
+                                <i class="fas fa-credit-card"></i> পেমেন্ট
+                            </a>
+                            <a href="#" class="dropdown-item" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt"></i> লগআউট
+                            </a>
+                        </div>
+                    </div>
+                `;
+                
+                // Setup user dropdown
+                const userAvatar = document.getElementById('userAvatar');
+                const userDropdown = document.getElementById('userDropdown');
+                const logoutBtn = document.getElementById('logoutBtn');
+                
+                userAvatar.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    userDropdown.classList.toggle('show');
+                });
+                
+                logoutBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    logout();
+                });
+                
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function() {
+                    userDropdown.classList.remove('show');
+                });
+                
+            } else {
+                // Show login/signup buttons
+                authButtons.innerHTML = `
+                    <div class="auth-buttons">
+                        <a href="login.html" class="nav-link">লগইন</a>
+                        <button class="cta-button" id="getHelpBtn" onclick="window.location.href='customer-signup.html'">
+                            <i class="fas fa-user-plus"></i> নিবন্ধন করুন
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('nibash_user');
+            currentUser = null;
+            isLoggedIn = false;
+            updateAuthUI();
+            showNotification('সফলভাবে লগআউট করা হয়েছে');
+        }
+
+        // Load services from database
+        async function loadServices() {
+            const servicesGrid = document.querySelector('.categories-grid');
+            
+            // For demo, use static data. In production, fetch from Neon
+            const services = [
+                {
+                    id: 1,
+                    name: 'বৈদ্যুতিক কাজ',
+                    icon: 'fa-bolt',
+                    description: 'তারের মেরামত, ফিক্সচার বসানো, আউটলেট রিপেয়ার এবং সার্টিফাইড ইলেক্ট্রিশিয়ানদের সকল বৈদ্যুতিক সমস্যার সমাধান।',
+                    price: '৳ ৫০০ - ৫০০০'
+                },
+                {
+                    id: 2,
+                    name: 'প্লাম্বিং',
+                    icon: 'fa-faucet',
+                    description: 'চুইয়ে পড়া কল, বন্ধ ড্রেন, পাইপ মেরামত এবং সম্পূর্ণ প্লাম্বিং সিস্টেম ইনস্টলেশন।',
+                    price: '৳ ৩০০ - ৪০০০'
+                },
+                {
+                    id: 3,
+                    name: 'রং ও সজ্জা',
+                    icon: 'fa-paint-roller',
+                    description: 'অভ্যন্তরীণ/বাহ্যিক রং করা, দেয়াল মেরামত, ওয়ালপেপার ইনস্টলেশন এবং গৃহসজ্জা সেবা।',
+                    price: '৳ ২০০০ - ২০০০০'
+                },
+                {
+                    id: 4,
+                    name: 'কাঠের কাজ',
+                    icon: 'fa-hammer',
+                    description: 'ফার্নিচার মেরামত, আলমারি ইনস্টলেশন, শেলফিং এবং কাস্টম কাঠের কাজের কাজ',
+                    price: '৳ ১০০০ - ১৫০০০'
+                },
+                {
+                    id: 5,
+                    name: 'এয়ারকন্ডিশনিং',
+                    icon: 'fa-temperature-high',
+                    description: 'হিটিং, ভেন্টিলেশন, এয়ার কন্ডিশনার ইনস্টলেশন, রক্ষণাবেক্ষণ এবং মেরামত।',
+                    price: '৳ ১০০০ - ৮০০০'
+                },
+                {
+                    id: 6,
+                    name: 'বিশেষজ্ঞ হোন',
+                    icon: 'fa-user-cog',
+                    description: 'দক্ষতা আছে? আমাদের পেশাদার নেটওয়ার্কে যোগ দিন এবং অন্যদের সাহায্য করে আয় করুন।',
+                    action: 'become-pro'
+                }
+            ];
+            
+            servicesGrid.innerHTML = services.map(service => `
+                <div class="category-card">
+                    <div class="category-icon">
+                        <i class="fas ${service.icon}"></i>
+                    </div>
+                    <h3>${service.name}</h3>
+                    <p>${service.description}</p>
+                    ${service.price ? `<p style="color: var(--primary); font-weight: 600; margin-bottom: 1rem;">${service.price}</p>` : ''}
+                    <button class="cta-button service-select-btn" data-service="${service.name}" 
+                            onclick="${service.action === 'become-pro' ? 'window.location.href=\'professional-signup.html\'' : `requestService('${service.name}')`}" 
+                            style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">
+                        ${service.action === 'become-pro' ? 'এখনই যোগ দিন' : `${service.name} খুঁজুন`}
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Setup forms
+        function setupForms() {
             // Service selector in Get Help page
             document.querySelectorAll('.service-option').forEach(option => {
                 option.addEventListener('click', function() {
                     const service = this.getAttribute('data-service');
-                    const selectedService = document.getElementById('selectedService');
-                    if (selectedService) {
-                        selectedService.value = service;
-                    }
+                    document.getElementById('selectedService').value = service;
                     
-                    // Update UI
                     document.querySelectorAll('.service-option').forEach(opt => {
                         opt.classList.remove('selected');
                     });
                     this.classList.add('selected');
                 });
             });
-            
-            // Form submissions
-            const proApplicationForm = document.getElementById('proApplicationForm');
-            if (proApplicationForm) {
-                proApplicationForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    
-                    const name = document.getElementById('fullName').value;
-                    const service = document.getElementById('serviceType').value;
-                    
-                    showNotification(`ধন্যবাদ ${name}! আপনার ${service} সেবার জন্য আবেদন জমা দেওয়া হয়েছে। আমরা ২৪ ঘণ্টার মধ্যে আপনার সাথে যোগাযোগ করব।`);
-                    this.reset();
-                    
-                    // Return to home after 3 seconds
-                    setTimeout(() => {
-                        switchPage('home');
-                    }, 3000);
-                });
-            }
-            
+
+            // Get Help form submission
             const helpRequestForm = document.getElementById('helpRequestForm');
             if (helpRequestForm) {
-                helpRequestForm.addEventListener('submit', function(e) {
+                helpRequestForm.addEventListener('submit', async function(e) {
                     e.preventDefault();
                     
-                    const selectedService = document.getElementById('selectedService');
-                    const service = selectedService ? selectedService.value : 'সাধারণ সাহায্য';
-                    const name = document.getElementById('contactName').value;
+                    if (!isLoggedIn) {
+                        showNotification('সেবা অনুরোধ করার জন্য দয়া করে লগইন করুন');
+                        window.location.href = 'login.html';
+                        return;
+                    }
                     
-                    showNotification(`ধন্যবাদ ${name}! আপনার ${service} এর জন্য অনুরোধ জমা দেওয়া হয়েছে। পেশাদাররা শীঘ্রই আপনার সাথে যোগাযোগ করবেন।`);
-                    this.reset();
+                    const serviceRequest = {
+                        service: document.getElementById('selectedService').value,
+                        description: document.getElementById('problemDescription').value,
+                        urgency: document.getElementById('urgency').value,
+                        customerName: document.getElementById('contactName').value,
+                        customerEmail: document.getElementById('contactEmail').value,
+                        customerPhone: document.getElementById('contactPhone').value,
+                        address: document.getElementById('address').value,
+                        userId: currentUser.id,
+                        status: 'pending',
+                        createdAt: new Date().toISOString()
+                    };
                     
-                    // Reset service selector
-                    document.querySelectorAll('.service-option').forEach(opt => {
-                        opt.classList.remove('selected');
-                    });
-                    
-                    // Return to home after 3 seconds
-                    setTimeout(() => {
-                        switchPage('home');
-                    }, 3000);
+                    try {
+                        // Save to database
+                        await saveServiceRequest(serviceRequest);
+                        
+                        showNotification('আপনার সেবা অনুরোধ সফলভাবে জমা দেওয়া হয়েছে!');
+                        this.reset();
+                        
+                        // Switch to home page
+                        document.querySelector('.nav-link[data-page="home"]').click();
+                    } catch (error) {
+                        console.error('Error saving service request:', error);
+                        showNotification('সেবা অনুরোধ জমা দিতে সমস্যা হয়েছে। পুনরায় চেষ্টা করুন।');
+                    }
                 });
             }
-            
-            // Notification function
-            function showNotification(message) {
-                const notification = document.getElementById('notification');
-                const notificationText = document.getElementById('notificationText');
-                
-                if (notification && notificationText) {
-                    notificationText.textContent = message;
-                    notification.classList.add('show');
+
+            // Pro application form
+            const proApplicationForm = document.getElementById('proApplicationForm');
+            if (proApplicationForm) {
+                proApplicationForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
                     
-                    setTimeout(() => {
-                        notification.classList.remove('show');
-                    }, 5000);
-                }
+                    const application = {
+                        fullName: document.getElementById('fullName').value,
+                        email: document.getElementById('email').value,
+                        phone: document.getElementById('phone').value,
+                        serviceType: document.getElementById('serviceType').value,
+                        experience: document.getElementById('experience').value,
+                        message: document.getElementById('message').value,
+                        status: 'pending',
+                        createdAt: new Date().toISOString()
+                    };
+                    
+                    try {
+                        // Save to database
+                        await saveProApplication(application);
+                        
+                        showNotification('আপনার বিশেষজ্ঞ আবেদন সফলভাবে জমা দেওয়া হয়েছে!');
+                        this.reset();
+                        
+                        // Switch to home page
+                        document.querySelector('.nav-link[data-page="home"]').click();
+                    } catch (error) {
+                        console.error('Error saving pro application:', error);
+                        showNotification('আবেদন জমা দিতে সমস্যা হয়েছে। পুনরায় চেষ্টা করুন।');
+                    }
+                });
+            }
+        }
+
+        // Request a service
+        function requestService(serviceName) {
+            if (!isLoggedIn) {
+                showNotification('সেবা অনুরোধ করার জন্য দয়া করে লগইন করুন');
+                window.location.href = 'login.html';
+                return;
             }
             
-            // Glass cursor effect
+            // Switch to get-help page
+            document.querySelector('.nav-link[data-page="get-help"]').click();
+            
+            // Set the service
+            setTimeout(() => {
+                document.getElementById('selectedService').value = serviceName;
+                document.querySelectorAll('.service-option').forEach(option => {
+                    option.classList.remove('selected');
+                    if (option.getAttribute('data-service') === serviceName) {
+                        option.classList.add('selected');
+                    }
+                });
+                
+                // Auto-fill user info if logged in
+                if (currentUser) {
+                    document.getElementById('contactName').value = currentUser.fullName || '';
+                    document.getElementById('contactEmail').value = currentUser.email || '';
+                    document.getElementById('contactPhone').value = currentUser.phone || '';
+                    document.getElementById('address').value = currentUser.address || '';
+                }
+            }, 300);
+        }
+
+        // Setup cursor effect
+        function setupCursor() {
             const cursor = document.getElementById('cursor');
             if (cursor) {
                 document.addEventListener('mousemove', (e) => {
                     cursor.style.left = e.clientX + 'px';
                     cursor.style.top = e.clientY + 'px';
                     
-                    // Add interactive effect when hovering over buttons
                     const target = e.target;
                     if (target.classList.contains('cta-button') || 
                         target.tagName === 'A' || 
@@ -1429,7 +1585,6 @@
                     }
                 });
                 
-                // Hide cursor when not hovering over page
                 document.addEventListener('mouseleave', () => {
                     cursor.style.opacity = '0';
                 });
@@ -1438,62 +1593,79 @@
                     cursor.style.opacity = '1';
                 });
             }
+        }
+
+        // Show notification
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
             
-            // Add entrance animations to page elements when they become visible
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
+            notificationText.textContent = message;
+            notification.classList.add('show');
             
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, observerOptions);
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
+        }
+
+        // Neon Database Functions (Mock for now - Replace with actual API calls)
+        async function saveServiceRequest(serviceRequest) {
+            // In production, make API call to save to Neon
+            console.log('Saving service request:', serviceRequest);
             
-            // Observe elements for scroll animations
-            document.querySelectorAll('.category-card, .step, .pro-benefit').forEach(el => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(20px)';
-                el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-                observer.observe(el);
+            // For demo, save to localStorage
+            const requests = JSON.parse(localStorage.getItem('service_requests') || '[]');
+            requests.push({
+                ...serviceRequest,
+                id: Date.now().toString()
             });
+            localStorage.setItem('service_requests', JSON.stringify(requests));
             
-            // Add hover effects to trust badges
-            const trustBadges = document.querySelectorAll('.trust-badges > div');
-            trustBadges.forEach(badge => {
-                badge.addEventListener('mouseenter', () => {
-                    const icon = badge.querySelector('i');
-                    if (icon) {
-                        icon.style.transform = 'scale(1.2)';
-                        icon.style.transition = 'transform 0.3s ease';
-                    }
+            return Promise.resolve({ success: true });
+        }
+
+        async function saveProApplication(application) {
+            // In production, make API call to save to Neon
+            console.log('Saving pro application:', application);
+            
+            // For demo, save to localStorage
+            const applications = JSON.parse(localStorage.getItem('pro_applications') || '[]');
+            applications.push({
+                ...application,
+                id: Date.now().toString()
+            });
+            localStorage.setItem('pro_applications', JSON.stringify(applications));
+            
+            return Promise.resolve({ success: true });
+        }
+
+        // Example of Neon API call (replace with actual implementation)
+        async function neonQuery(query, params = []) {
+            try {
+                // In production, use actual Neon API
+                const response = await fetch(`${NEON_CONFIG.url}/queries`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${NEON_CONFIG.apiKey}`,
+                        'Content-Type': 'application/json',
+                        'Neon-Project-Id': NEON_CONFIG.projectId
+                    },
+                    body: JSON.stringify({
+                        query: query,
+                        params: params
+                    })
                 });
                 
-                badge.addEventListener('mouseleave', () => {
-                    const icon = badge.querySelector('i');
-                    if (icon) {
-                        icon.style.transform = 'scale(1)';
-                    }
-                });
-            });
-            
-            // Form input validation styling
-            const formInputs = document.querySelectorAll('.form-control');
-            formInputs.forEach(input => {
-                input.addEventListener('focus', function() {
-                    this.parentElement.style.transform = 'translateY(-2px)';
-                    this.parentElement.style.transition = 'transform 0.3s ease';
-                });
+                if (!response.ok) {
+                    throw new Error('Neon query failed');
+                }
                 
-                input.addEventListener('blur', function() {
-                    this.parentElement.style.transform = 'translateY(0)';
-                });
-            });
-        });
+                return await response.json();
+            } catch (error) {
+                console.error('Neon query error:', error);
+                throw error;
+            }
+        }
     </script>
 </body>
 </html>
