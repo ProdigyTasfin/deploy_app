@@ -6,19 +6,15 @@
     <title>নিবাস - গৃহসেবা সমাধান</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Kalpurush&display=swap" rel="stylesheet">
     
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Hind Siliguri', 'Kalpurush';
+            font-family: 'Hind Siliguri', 'Kalpurush', 'Segoe UI', system-ui, sans-serif;
         }
-        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Kalpurush&display=swap');
-
-* {
-    font-family: 'Hind Siliguri', 'Kalpurush', 'Segoe UI', system-ui, sans-serif !important;
-}
         
         :root {
             --primary: #5629be;
@@ -124,9 +120,10 @@
             display: flex;
             list-style: none;
             gap: 1.5rem;
+            align-items: center;
         }
         
-        nav a {
+        .nav-link {
             text-decoration: none;
             color: var(--dark-text);
             font-weight: 500;
@@ -134,18 +131,19 @@
             padding: 0.5rem 1rem;
             border-radius: 50px;
             position: relative;
+            display: inline-block;
         }
         
-        .light-mode nav a {
+        .light-mode .nav-link {
             color: #1e293b;
         }
         
-        nav a:hover, nav a.active {
+        .nav-link:hover, .nav-link.active {
             color: var(--primary);
             background: rgba(139, 92, 246, 0.1);
         }
         
-        nav a.active::after {
+        .nav-link.active::after {
             content: '';
             position: absolute;
             bottom: -5px;
@@ -155,6 +153,31 @@
             height: 5px;
             background: var(--primary);
             border-radius: 50%;
+        }
+        
+        .panel-links {
+            display: flex;
+            gap: 0.5rem;
+            margin-left: 1rem;
+        }
+        
+        .panel-links a {
+            text-decoration: none;
+            color: var(--dark-text);
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            background: rgba(139, 92, 246, 0.1);
+            transition: all 0.3s;
+        }
+        
+        .light-mode .panel-links a {
+            color: #1e293b;
+        }
+        
+        .panel-links a:hover {
+            background: rgba(139, 92, 246, 0.2);
         }
         
         .cta-button {
@@ -627,10 +650,11 @@
         }
         
         /* Responsive Design */
-        @media (max-width: 768px) {
+        @media (max-width: 992px) {
             header {
                 flex-direction: column;
-                gap: 1rem;
+                gap: 1.5rem;
+                padding: 1rem 5%;
             }
             
             nav ul {
@@ -638,6 +662,15 @@
                 justify-content: center;
             }
             
+            .panel-links {
+                margin-left: 0;
+                margin-top: 0.5rem;
+                justify-content: center;
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2.5rem;
             }
@@ -656,6 +689,15 @@
                 width: 40px;
                 height: 40px;
                 font-size: 1rem;
+            }
+            
+            nav ul {
+                gap: 0.75rem;
+            }
+            
+            .nav-link {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.9rem;
             }
         }
         
@@ -762,9 +804,11 @@
                 <li><a href="#" class="nav-link" data-page="how-it-works">কিভাবে কাজ করে</a></li>
                 <li><a href="#" class="nav-link" data-page="become-pro">বিশেষজ্ঞ হোন</a></li>
                 <li><a href="#" class="nav-link" data-page="get-help">সাহায্য নিন</a></li>
-                <a href="employer.html">সেবাদাতা প্যানেল</a>
-                <a href="customer.html">গ্রাহক প্যানেল</a>
-                <a href="payment.html">পেমেন্ট</a>
+                <li class="panel-links">
+                    <a href="employer.html">সেবাদাতা প্যানেল</a>
+                    <a href="customer.html">গ্রাহক প্যানেল</a>
+                    <a href="payment.html">পেমেন্ট</a>
+                </li>
             </ul>
         </nav>
         
@@ -1192,7 +1236,9 @@
             function switchPage(pageId) {
                 // Hide all pages
                 Object.values(pages).forEach(page => {
-                    page.classList.remove('active');
+                    if (page) {
+                        page.classList.remove('active');
+                    }
                 });
                 
                 // Show selected page
@@ -1222,29 +1268,43 @@
             });
             
             // Logo click goes to home
-            logo.addEventListener('click', function() {
-                switchPage('home');
-            });
+            if (logo) {
+                logo.addEventListener('click', function() {
+                    switchPage('home');
+                });
+            }
             
             // Get Help Now button in header
-            document.getElementById('getHelpBtn').addEventListener('click', function() {
-                switchPage('get-help');
-            });
+            const getHelpBtn = document.getElementById('getHelpBtn');
+            if (getHelpBtn) {
+                getHelpBtn.addEventListener('click', function() {
+                    switchPage('get-help');
+                });
+            }
             
             // Get Help Now button in home page
-            document.getElementById('homeGetHelpBtn').addEventListener('click', function() {
-                switchPage('get-help');
-            });
+            const homeGetHelpBtn = document.getElementById('homeGetHelpBtn');
+            if (homeGetHelpBtn) {
+                homeGetHelpBtn.addEventListener('click', function() {
+                    switchPage('get-help');
+                });
+            }
             
             // Get Help button in How It Works page
-            document.getElementById('getHelpFromHowItWorks').addEventListener('click', function() {
-                switchPage('get-help');
-            });
+            const getHelpFromHowItWorks = document.getElementById('getHelpFromHowItWorks');
+            if (getHelpFromHowItWorks) {
+                getHelpFromHowItWorks.addEventListener('click', function() {
+                    switchPage('get-help');
+                });
+            }
             
             // Become a Pro button in Services page
-            document.getElementById('becomeProBtnServices').addEventListener('click', function() {
-                switchPage('become-pro');
-            });
+            const becomeProBtnServices = document.getElementById('becomeProBtnServices');
+            if (becomeProBtnServices) {
+                becomeProBtnServices.addEventListener('click', function() {
+                    switchPage('become-pro');
+                });
+            }
             
             // Service selection buttons in Services page
             document.querySelectorAll('.service-select-btn').forEach(btn => {
@@ -1254,7 +1314,10 @@
                     
                     // Set the service in the Get Help form
                     setTimeout(() => {
-                        document.getElementById('selectedService').value = service;
+                        const selectedService = document.getElementById('selectedService');
+                        if (selectedService) {
+                            selectedService.value = service;
+                        }
                         
                         // Highlight the corresponding service option
                         document.querySelectorAll('.service-option').forEach(option => {
@@ -1274,7 +1337,10 @@
             document.querySelectorAll('.service-option').forEach(option => {
                 option.addEventListener('click', function() {
                     const service = this.getAttribute('data-service');
-                    document.getElementById('selectedService').value = service;
+                    const selectedService = document.getElementById('selectedService');
+                    if (selectedService) {
+                        selectedService.value = service;
+                    }
                     
                     // Update UI
                     document.querySelectorAll('.service-option').forEach(opt => {
@@ -1285,82 +1351,93 @@
             });
             
             // Form submissions
-            document.getElementById('proApplicationForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const name = document.getElementById('fullName').value;
-                const service = document.getElementById('serviceType').value;
-                
-                showNotification(`ধন্যবাদ ${name}! আপনার ${service} সেবার জন্য আবেদন জমা দেওয়া হয়েছে। আমরা ২৪ ঘণ্টার মধ্যে আপনার সাথে যোগাযোগ করব।`);
-                this.reset();
-                
-                // Return to home after 3 seconds
-                setTimeout(() => {
-                    switchPage('home');
-                }, 3000);
-            });
-            
-            document.getElementById('helpRequestForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const service = document.getElementById('selectedService').value || 'সাধারণ সাহায্য';
-                const name = document.getElementById('contactName').value;
-                
-                showNotification(`ধন্যবাদ ${name}! আপনার ${service} এর জন্য অনুরোধ জমা দেওয়া হয়েছে। পেশাদাররা শীঘ্রই আপনার সাথে যোগাযোগ করবেন।`);
-                this.reset();
-                
-                // Reset service selector
-                document.querySelectorAll('.service-option').forEach(opt => {
-                    opt.classList.remove('selected');
+            const proApplicationForm = document.getElementById('proApplicationForm');
+            if (proApplicationForm) {
+                proApplicationForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const name = document.getElementById('fullName').value;
+                    const service = document.getElementById('serviceType').value;
+                    
+                    showNotification(`ধন্যবাদ ${name}! আপনার ${service} সেবার জন্য আবেদন জমা দেওয়া হয়েছে। আমরা ২৪ ঘণ্টার মধ্যে আপনার সাথে যোগাযোগ করব।`);
+                    this.reset();
+                    
+                    // Return to home after 3 seconds
+                    setTimeout(() => {
+                        switchPage('home');
+                    }, 3000);
                 });
-                
-                // Return to home after 3 seconds
-                setTimeout(() => {
-                    switchPage('home');
-                }, 3000);
-            });
+            }
+            
+            const helpRequestForm = document.getElementById('helpRequestForm');
+            if (helpRequestForm) {
+                helpRequestForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const selectedService = document.getElementById('selectedService');
+                    const service = selectedService ? selectedService.value : 'সাধারণ সাহায্য';
+                    const name = document.getElementById('contactName').value;
+                    
+                    showNotification(`ধন্যবাদ ${name}! আপনার ${service} এর জন্য অনুরোধ জমা দেওয়া হয়েছে। পেশাদাররা শীঘ্রই আপনার সাথে যোগাযোগ করবেন।`);
+                    this.reset();
+                    
+                    // Reset service selector
+                    document.querySelectorAll('.service-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Return to home after 3 seconds
+                    setTimeout(() => {
+                        switchPage('home');
+                    }, 3000);
+                });
+            }
             
             // Notification function
             function showNotification(message) {
                 const notification = document.getElementById('notification');
                 const notificationText = document.getElementById('notificationText');
                 
-                notificationText.textContent = message;
-                notification.classList.add('show');
-                
-                setTimeout(() => {
-                    notification.classList.remove('show');
-                }, 5000);
+                if (notification && notificationText) {
+                    notificationText.textContent = message;
+                    notification.classList.add('show');
+                    
+                    setTimeout(() => {
+                        notification.classList.remove('show');
+                    }, 5000);
+                }
             }
             
             // Glass cursor effect
             const cursor = document.getElementById('cursor');
-            document.addEventListener('mousemove', (e) => {
-                cursor.style.left = e.clientX + 'px';
-                cursor.style.top = e.clientY + 'px';
+            if (cursor) {
+                document.addEventListener('mousemove', (e) => {
+                    cursor.style.left = e.clientX + 'px';
+                    cursor.style.top = e.clientY + 'px';
+                    
+                    // Add interactive effect when hovering over buttons
+                    const target = e.target;
+                    if (target.classList.contains('cta-button') || 
+                        target.tagName === 'A' || 
+                        target.classList.contains('category-card') ||
+                        target.classList.contains('service-option')) {
+                        cursor.style.transform = 'scale(1.5)';
+                        cursor.style.background = 'rgba(139, 92, 246, 0.9)';
+                    } else {
+                        cursor.style.transform = 'scale(1)';
+                        cursor.style.background = 'rgba(139, 92, 246, 0.7)';
+                    }
+                });
                 
-                // Add interactive effect when hovering over buttons
-                const target = e.target;
-                if (target.classList.contains('cta-button') || 
-                    target.tagName === 'A' || 
-                    target.classList.contains('category-card') ||
-                    target.classList.contains('service-option')) {
-                    cursor.style.transform = 'scale(1.5)';
-                    cursor.style.background = 'rgba(139, 92, 246, 0.9)';
-                } else {
-                    cursor.style.transform = 'scale(1)';
-                    cursor.style.background = 'rgba(139, 92, 246, 0.7)';
-                }
-            });
-            
-            // Hide cursor when not hovering over page
-            document.addEventListener('mouseleave', () => {
-                cursor.style.opacity = '0';
-            });
-            
-            document.addEventListener('mouseenter', () => {
-                cursor.style.opacity = '1';
-            });
+                // Hide cursor when not hovering over page
+                document.addEventListener('mouseleave', () => {
+                    cursor.style.opacity = '0';
+                });
+                
+                document.addEventListener('mouseenter', () => {
+                    cursor.style.opacity = '1';
+                });
+            }
             
             // Add entrance animations to page elements when they become visible
             const observerOptions = {
@@ -1390,13 +1467,17 @@
             trustBadges.forEach(badge => {
                 badge.addEventListener('mouseenter', () => {
                     const icon = badge.querySelector('i');
-                    icon.style.transform = 'scale(1.2)';
-                    icon.style.transition = 'transform 0.3s ease';
+                    if (icon) {
+                        icon.style.transform = 'scale(1.2)';
+                        icon.style.transition = 'transform 0.3s ease';
+                    }
                 });
                 
                 badge.addEventListener('mouseleave', () => {
                     const icon = badge.querySelector('i');
-                    icon.style.transform = 'scale(1)';
+                    if (icon) {
+                        icon.style.transform = 'scale(1)';
+                    }
                 });
             });
             
@@ -1415,6 +1496,4 @@
         });
     </script>
 </body>
-
 </html>
-
