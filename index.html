@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>নিবাস - গৃহসেবা সমাধান</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Hind Siliguri', 'Kalpurush', system-ui, sans-serif;
+        }
+        
+        :root {
+            --primary: #5629be;
+            --primary-light: #a78bfa;
+            --secondary: #0eaa69c5;
+            --dark-bg: #0f172a;
+            --dark-card: #1e293b;
+            --dark-text: #f1f5f9;
+            --dark-border: #1b2430;
+            --light: #f8fafc;
+            --glass: rgba(30, 41, 59, 0.8);
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            color: var(--dark-text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        body.light-mode {
+            background: linear-gradient(135deg, #f0f4ff 0%, #fdf2f8 100%);
+            color: #1e293b;
+        }
+        
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--primary);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+            transition: all 0.3s;
+        }
+        
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            background: var(--primary-light);
+        }
+        
+        /* Glass cursor effect */
+        #cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: rgba(139, 92, 246, 0.7);
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+            pointer-events: none;
+            mix-blend-mode: difference;
+            z-index: 9999;
+            transition: transform 0.2s ease;
+        }
+        
+        /* Header & Navigation */
+        header {
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            background: var(--glass);
+            border-bottom: 1px solid var(--dark-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .light-mode header {
+            background: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            cursor: pointer;
+        }
+        
+        .logo i {
+            font-size: 2rem;
+            animation: pulse 2s infinite;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--dark-text);
+            font-weight: 500;
+            transition: all 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            position: relative;
+        }
+        
+        .light-mode nav a {
+            color: #1e293b;
+        }
+        
+        nav a:hover, nav a.active {
+            color: var(--primary);
+            background: rgba(139, 92, 246, 0.1);
+        }
+        
+        nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 5px;
+            height: 5px;
+            background: var(--primary);
+            border-radius: 50%;
+        }
+        
+        .cta-button {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+            font-family: 'Hind Siliguri', 'Kalpurush', system-ui, sans-serif;
+        }
+        
+        .cta-button:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4);
+        }
+        
+        /* Page Container */
+        .page-container {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s, transform 0.5s;
+            padding-bottom: 4rem;
+        }
+        
+        .page-container.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Home Page */
+        .hero {
+            padding: 5rem 5% 3rem;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+            font-family: 'Hind Siliguri', 'Kalpurush', system-ui, sans-serif;
+            font-weight: 700;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            color: #cbd5e1;
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+        
+        .light-mode .hero p {
+            color: #64748b;
+        }
+        
+        .hero-content {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--dark-border);
+        }
+        
+        .light-mode .hero-content {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Services Page */
+        .services-page {
+            padding: 3rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2.2rem;
+            color: var(--dark-text);
+            font-family: 'Hind Siliguri', 'Kalpurush', system-ui, sans-serif;
+            font-weight: 700;
+        }
+        
+        .light-mode .section-title {
+            color: #1e293b;
+        }
+        
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        
+        .category-card {
+            background: var(--dark-card);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 8px 24px var(--shadow);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid var(--dark-border);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .light-mode .category-card {
+            background: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+        
+        .category-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .category-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            height: 80px;
+            width: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            background: rgba(139, 92, 246, 0.1);
+        }
+        
+        .category-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark-text);
+        }
+        
+        .light-mode .category-card h3 {
+            color: #1e293b;
+        }
+        
+        .category-card p {
+            color: #94a3b8;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+        
+        .light-mode .category-card p {
+            color: #64748b;
+        }
+        
+        /* How It Works Page */
+        .how-it-works-page {
+            padding: 5rem 5%;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+            border-radius: 40px;
+            margin: 3rem 5%;
+            border: 1px solid var(--dark-border);
+        }
+        
+        .light-mode .how-it-works-page {
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        
+        .steps {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .step {
+            flex: 1;
+            min-width: 250px;
+            text-align: center;
+            padding: 2rem;
+            background: var(--dark-card);
+            border-radius: 16px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--dark-border);
+        }
+        
+        .light-mode .step {
+            background: white;
+        }
+        
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Become a Pro Page */
+        .become-pro-page {
+            padding: 4rem 5%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .pro-benefits {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .pro-benefit {
+            background: var(--dark-card);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--dark-border);
+        }
+        
+        .light-mode .pro-benefit {
+            background: white;
+        }
+        
+        .pro-benefit i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .pro-form {
+            background: var(--dark-card);
+            padding: 3rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            margin: 3rem auto;
+            border: 1px solid var(--dark-border);
+        }
+        
+        .light-mode .pro-form {
+            background: white;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark-text);
+        }
+        
+        .light-mode .form-group label {
+            color: #1e293b;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--dark-border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border 0.3s;
+            color: var(--dark-text);
+            font-family: 'Hind Siliguri', 'Kalpurush', system-ui, sans-serif;
+        }
+        
+        .light-mode .form-control {
+            background: white;
+            border: 1px solid #ddd;
+            color: #1e293b;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+        
+        /* Get Help Now Page */
+        .get-help-page {
+            padding: 4rem 5%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .help-form {
+            background: var(--dark-card);
+            padding: 3rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--dark-border);
+        }
+        
+        .light-mode .help-form {
+            background: white;
+        }
+        
+        .service-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .service-option {
+            padding: 1rem;
+            text-align: center;
+            border: 2px solid var(--dark-border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(15, 23, 42, 0.5);
+        }
+        
+        .light-mode .service-option {
+            border: 2px solid #e2e8f0;
+            background: white;
+        }
+        
+        .service-option:hover, .service-option.selected {
+            border-color: var(--primary);
+            background: rgba(139, 92, 246, 0.1);
+        }
+        
+        .service-option i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .urgent-help {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 4px solid #ef4444;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            border-radius: 8px;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark-bg);
+            color: white;
+            padding: 3rem 5% 2rem;
+            margin-top: 3rem;
+            border-top: 1px solid var(--dark-border);
+        }
+        
+        .light-mode footer {
+            background: #1e293b;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-column {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: white;
+            font-family: 'Hind Siliguri', 'Kalpurush', system-ui, sans-serif;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column li {
+            margin-bottom: 0.75rem;
+        }
+        
+        .footer-column a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.3s;
+            font-family: 'Hind Siliguri', 'Kalpurush', system-ui, sans-serif;
+        }
+        
+        .footer-column a:hover {
+            color: var(--primary);
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+        
+        .social-icons a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #94a3b8;
+            font-size: 0.9rem;
+            font-family: 'Hind Siliguri', 'Kalpurush', system-ui, sans-serif;
+        }
+        
+        /* Animations */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .floating {
+            animation: float 5s ease-in-out infinite;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .hero-content {
+                padding: 2rem;
+            }
+            
+            .theme-toggle {
+                top: 10px;
+                right: 10px;
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            transform: translateX(-150%);
+            transition: transform 0.3s ease;
+            font-family: 'Hind Siliguri', 'Kalpurush', system-ui, sans-serif;
+            max-width: 400px;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        /* Trust Badges */
+        .trust-badges {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            padding: 2rem;
+            background: var(--dark-card);
+            margin-top: 3rem;
+            border-top: 1px solid var(--dark-border);
+            border-radius: 16px;
+        }
+        
+        .light-mode .trust-badges {
+            background: white;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .trust-badges > div {
+            text-align: center;
+        }
+        
+        .trust-badges i {
+            font-size: 2rem;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .trust-badges div {
+            font-weight: bold;
+            color: var(--dark-text);
+        }
+        
+        .light-mode .trust-badges div {
+            color: #1e293b;
+        }
+        
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+    </button>
+    
+    <!-- Glass cursor -->
+    <div id="cursor"></div>
+    
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <span id="notificationText"></span>
+    </div>
+    
+    <!-- Header -->
+    <header>
+        <div class="logo" id="homeTab">
+            <i class="fas fa-home"></i>
+            <span>নিবাস</span>
+        </div>
+        
+        <nav>
+            <ul>
+                <li><a href="#" class="nav-link active" data-page="home">হোম</a></li>
+                <li><a href="#" class="nav-link" data-page="services">সেবাসমূহ</a></li>
+                <li><a href="#" class="nav-link" data-page="how-it-works">কিভাবে কাজ করে</a></li>
+                <li><a href="#" class="nav-link" data-page="become-pro">বিশেষজ্ঞ হোন</a></li>
+                <li><a href="#" class="nav-link" data-page="get-help">সাহায্য নিন</a></li>
+                <a href="employer.html">সেবাদাতা প্যানেল</a>
+                <a href="customer.html">গ্রাহক প্যানেল</a>
+                <a href="payment.html">পেমেন্ট</a>
+            </ul>
+        </nav>
+        
+        <button class="cta-button" id="getHelpBtn">
+            <i class="fas fa-bolt"></i> এখনই সাহায্য নিন
+        </button>
+    </header>
+    
+    <!-- Home Page -->
+    <div class="page-container active" id="homePage">
+        <section class="hero">
+            <div class="hero-content floating">
+                <h1>প্রতিটি গৃহস্থালি সমস্যার সমাধান এখানে</h1>
+                <p>আপনার গৃহস্থালি মেরামতের সকল প্রয়োজনীয়তা পূরণে দক্ষ পেশাদারদের সাথে সংযুক্ত হোন। বৈদ্যুতিক থেকে প্লাম্বিং, যেকোনো কাজের জন্য সঠিক সাহায্য খুঁজে নিন। মানসম্পন্ন সেবা পান, উপযুক্ত মূল্য দিন।</p>
+                <button class="cta-button" id="homeGetHelpBtn" style="font-size: 1.1rem; padding: 1rem 2rem;">
+                    <i class="fas fa-bolt"></i> এখনই সাহায্য খুঁজুন
+                </button>
+            </div>
+        </section>
+        
+        <!-- Trust Signals -->
+        <div class="trust-badges">
+            <div>
+                <i class="fas fa-shield-alt"></i>
+                <div>যাচাইকৃত দক্ষ জনবল</div>
+            </div>
+            <div>
+                <i class="fas fa-coins"></i>
+                <div>নির্দিষ্ট মূল্য</div>
+            </div>
+            <div>
+                <i class="fas fa-check-circle"></i>
+                <div>সন্তুষ্টি গ্যারান্টি</div>
+            </div>
+            <div>
+                <i class="fas fa-clock"></i>
+                <div>সর্বক্ষণ সহযোগিতা</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Services Page -->
+    <div class="page-container" id="servicesPage">
+        <section class="services-page">
+            <h2 class="section-title">আমাদের পেশাদার সেবাসমূহ</h2>
+            <div class="categories-grid">
+                <!-- Electrical Work -->
+                <div class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>বৈদ্যুতিক কাজ</h3>
+                    <p>তারের মেরামত, ফিক্সচার বসানো, আউটলেট রিপেয়ার এবং সার্টিফাইড ইলেক্ট্রিশিয়ানদের সকল বৈদ্যুতিক সমস্যার সমাধান।</p>
+                    <button class="cta-button service-select-btn" data-service="বৈদ্যুতিক কাজ" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">
+                        ইলেক্ট্রিশিয়ান খুঁজুন
+                    </button>
+                </div>
+                
+                <!-- Plumbing -->
+                <div class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-faucet"></i>
+                    </div>
+                    <h3>প্লাম্বিং</h3>
+                    <p>চুইয়ে পড়া কল, বন্ধ ড্রেন, পাইপ মেরামত এবং সম্পূর্ণ প্লাম্বিং সিস্টেম ইনস্টলেশন।</p>
+                    <button class="cta-button service-select-btn" data-service="প্লাম্বিং" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">
+                        প্লাম্বার খুঁজুন
+                    </button>
+                </div>
+                
+                <!-- Painting & Decor -->
+                <div class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-paint-roller"></i>
+                    </div>
+                    <h3>রং ও সজ্জা</h3>
+                    <p>অভ্যন্তরীণ/বাহ্যিক রং করা, দেয়াল মেরামত, ওয়ালপেপার ইনস্টলেশন এবং গৃহসজ্জা সেবা।</p>
+                    <button class="cta-button service-select-btn" data-service="রং ও সজ্জা" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">
+                        পেইন্টার খুঁজুন
+                    </button>
+                </div>
+                
+                <!-- Carpentry -->
+                <div class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-hammer"></i>
+                    </div>
+                    <h3>কাঠের কাজ</h3>
+                    <p>ফার্নিচার মেরামত, আলমারি ইনস্টলেশন, শেলফিং এবং কাস্টম কাঠের কাজের কাজ</p>
+                    <button class="cta-button service-select-btn" data-service="কাঠের কাজ" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">
+                        কাঠমিস্ত্রি খুঁজুন
+                    </button>
+                </div>
+                
+                <!-- HVAC Services -->
+                <div class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-temperature-high"></i>
+                    </div>
+                    <h3>এয়ারকন্ডিশনিং</h3>
+                    <p>হিটিং, ভেন্টিলেশন, এয়ার কন্ডিশনার ইনস্টলেশন, রক্ষণাবেক্ষণ এবং মেরামত।</p>
+                    <button class="cta-button service-select-btn" data-service="এয়ারকন্ডিশনিং" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">
+                        এয়ারকন্ডিশন বিশেষজ্ঞ
+                    </button>
+                </div>
+                
+                <!-- Become a Pro -->
+                <div class="category-card">
+                    <div class="category-icon">
+                        <i class="fas fa-user-cog"></i>
+                    </div>
+                    <h3>বিশেষজ্ঞ হোন</h3>
+                    <p>দক্ষতা আছে? আমাদের পেশাদার নেটওয়ার্কে যোগ দিন এবং অন্যদের সাহায্য করে আয় করুন।</p>
+                    <button class="cta-button" id="becomeProBtnServices" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">
+                        এখনই যোগ দিন
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- How It Works Page -->
+    <div class="page-container" id="howItWorksPage">
+        <section class="how-it-works-page">
+            <h2 class="section-title">নিবাস কিভাবে কাজ করে</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">১</div>
+                    <h3>আপনার সমস্যা বর্ণনা করুন</h3>
+                    <p>আমাদের বলুন কী মেরামত প্রয়োজন, ছবি আপলোড করুন এবং আপনার পছন্দসই সময়সীমা নির্ধারণ করুন। দ্রুত ও সহজ!</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">২</div>
+                    <h3>পেশাদারদের সাথে মিলিত হোন</h3>
+                    <p>আমরা আপনাকে আপনার এলাকায় যাচাইকৃত, দক্ষ পেশাদারদের সাথে সংযুক্ত করি যারা সাহায্যের জন্য প্রস্তুত।</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">৩</div>
+                    <h3>তুলনা করুন এবং বেছে নিন</h3>
+                    <p>প্রোফাইল, রেটিং এবং দাম পর্যালোচনা করুন। আপনার কাজ এবং বাজেটের জন্য সেরা বিশেষজ্ঞ নির্বাচন করুন।</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">৪</div>
+                    <h3>মেরামত করুন এবং পরিশোধ করুন</h3>
+                    <p>আপনার সমস্যার সমাধান হোক। আমাদের প্ল্যাটফর্মের মাধ্যমে নিরাপদে পরিশোধ করুন শুধুমাত্র যখন আপনি সন্তুষ্ট হবেন।</p>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 4rem;">
+                <h3 style="margin-bottom: 1.5rem;">শুরু করতে প্রস্তুত?</h3>
+                <button class="cta-button" id="getHelpFromHowItWorks" style="font-size: 1.1rem; padding: 1rem 2rem;">
+                    <i class="fas fa-wrench"></i> এখনই সেবা চাইুন
+                </button>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Become a Pro Page -->
+    <div class="page-container" id="becomeProPage">
+        <section class="become-pro-page">
+            <h2 class="section-title">নিবাস বিশেষজ্ঞ হোন</h2>
+            <p style="text-align: center; font-size: 1.1rem; color: #94a3b8; max-width: 800px; margin: 0 auto 2rem;">
+                আমাদের দক্ষ পেশাদারদের নেটওয়ার্কে যোগ দিন এবং অন্যদের গৃহস্থালি সমস্যা সমাধানে সাহায্য করে আয় করুন। নিজের সময়সূচী এবং হার নির্ধারণ করুন।
+            </p>
+            
+            <div class="pro-benefits">
+                <div class="pro-benefit">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <h3>আরো আয় করুন</h3>
+                    <p>প্রতিটি কাজের ৮৫% পর্যন্ত রাখুন। কোন মধ্যস্থতাকারী আপনার কষ্টার্জিত আয় থেকে বড় অংশ নেবে না।</p>
+                </div>
+                
+                <div class="pro-benefit">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3>নমনীয় সময়সূচী</h3>
+                    <p>আপনি যখন কাজ করতে চান তা নির্ধারণ করুন। আপনার সময়সূচী এবং উপলব্ধতার সাথে মিলে যায় এমন কাজ গ্রহণ করুন।</p>
+                </div>
+                
+                <div class="pro-benefit">
+                    <i class="fas fa-briefcase"></i>
+                    <h3>স্থির কাজ</h3>
+                    <p>আপনার এলাকায় আপনার নির্দিষ্ট দক্ষতা খোঁজা গ্রাহকদের সাথে সংযুক্ত হন।</p>
+                </div>
+            </div>
+            
+            <div class="pro-form">
+                <h3 style="text-align: center; margin-bottom: 2rem;">বিশেষজ্ঞ হিসেবে আবেদন করুন</h3>
+                <form id="proApplicationForm">
+                    <div class="form-group">
+                        <label for="fullName">পুরো নাম</label>
+                        <input type="text" id="fullName" class="form-control" required placeholder="আপনার পুরো নাম">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">ইমেইল ঠিকানা</label>
+                        <input type="email" id="email" class="form-control" required placeholder="yourname@example.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">ফোন নম্বর</label>
+                        <input type="tel" id="phone" class="form-control" required placeholder="০১৭XXXXXXXX">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="serviceType">আপনি কোন সেবা প্রদান করেন</label>
+                        <select id="serviceType" class="form-control" required>
+                            <option value="">একটি সেবা নির্বাচন করুন</option>
+                            <option value="বৈদ্যুতিক কাজ">বৈদ্যুতিক কাজ</option>
+                            <option value="প্লাম্বিং">প্লাম্বিং</option>
+                            <option value="রং ও সজ্জা">রং ও সজ্জা</option>
+                            <option value="কাঠের কাজ">কাঠের কাজ</option>
+                            <option value="এয়ারকন্ডিশনিং">এয়ারকন্ডিশনিং</option>
+                            <option value="অন্যান্য">অন্যান্য</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="experience">অভিজ্ঞতার বছর</label>
+                        <select id="experience" class="form-control" required>
+                            <option value="">অভিজ্ঞতার স্তর নির্বাচন করুন</option>
+                            <option value="১-২">১-২ বছর</option>
+                            <option value="৩-৫">৩-৫ বছর</option>
+                            <option value="৫-১০">৫-১০ বছর</option>
+                            <option value="১০+">১০+ বছর</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">আপনি কেন নিবাসে যোগ দিতে চান?</label>
+                        <textarea id="message" class="form-control" rows="4" placeholder="আপনার দক্ষতা এবং অভিজ্ঞতা সম্পর্কে বলুন..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="cta-button" style="width: 100%; padding: 1rem; font-size: 1.1rem;">
+                        <i class="fas fa-paper-plane"></i> আবেদন জমা দিন
+                    </button>
+                </form>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Get Help Now Page -->
+    <div class="page-container" id="getHelpPage">
+        <section class="get-help-page">
+            <h2 class="section-title">এখনই সাহায্য নিন</h2>
+            <p style="text-align: center; color: #94a3b8; margin-bottom: 3rem;">
+                আপনার গৃহস্থালি সমস্যা বর্ণনা করুন এবং আমরা আপনাকে সঠিক পেশাদারের সাথে সংযুক্ত করব।
+            </p>
+            
+            <div class="help-form">
+                <h3 style="margin-bottom: 1.5rem;">আপনার কীসের সাহায্য প্রয়োজন?</h3>
+                
+                <div class="service-selector">
+                    <div class="service-option" data-service="বৈদ্যুতিক কাজ">
+                        <i class="fas fa-bolt"></i>
+                        <div>বৈদ্যুতিক</div>
+                    </div>
+                    <div class="service-option" data-service="প্লাম্বিং">
+                        <i class="fas fa-faucet"></i>
+                        <div>প্লাম্বিং</div>
+                    </div>
+                    <div class="service-option" data-service="রং ও সজ্জা">
+                        <i class="fas fa-paint-roller"></i>
+                        <div>রং করা</div>
+                    </div>
+                    <div class="service-option" data-service="কাঠের কাজ">
+                        <i class="fas fa-hammer"></i>
+                        <div>কাঠের কাজ</div>
+                    </div>
+                    <div class="service-option" data-service="এয়ারকন্ডিশনিং">
+                        <i class="fas fa-temperature-high"></i>
+                        <div>এয়ারকন্ডিশনিং</div>
+                    </div>
+                </div>
+                
+                <form id="helpRequestForm">
+                    <input type="hidden" id="selectedService" value="">
+                    
+                    <div class="form-group">
+                        <label for="problemDescription">আপনার সমস্যা বিস্তারিত বর্ণনা করুন</label>
+                        <textarea id="problemDescription" class="form-control" rows="4" required placeholder="যেমন: আমার রান্নাঘরের সিংকটি আলমারির নিচে চুইয়ে পড়ছে। পানি ধীরে ধীরে তবে অবিরামভাবে পড়ছে..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="urgency">এটি কতটা জরুরি?</label>
+                        <select id="urgency" class="form-control" required>
+                            <option value="">জরুরিতা নির্বাচন করুন</option>
+                            <option value="জরুরি">জরুরি (আজ সাহায্য প্রয়োজন)</option>
+                            <option value="শীঘ্রই">শীঘ্রই (২৪-৪৮ ঘণ্টার মধ্যে)</option>
+                            <option value="শিগগির">শিগগির (এই সপ্তাহের মধ্যে)</option>
+                            <option value="নমনীয়">নমনীয় (যখন সুবিধাজনক)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contactName">আপনার নাম</label>
+                        <input type="text" id="contactName" class="form-control" required placeholder="আপনার পুরো নাম">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contactEmail">ইমেইল ঠিকানা</label>
+                        <input type="email" id="contactEmail" class="form-control" required placeholder="yourname@example.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contactPhone">ফোন নম্বর</label>
+                        <input type="tel" id="contactPhone" class="form-control" required placeholder="০১৭XXXXXXXX">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="address">ঠিকানা</label>
+                        <input type="text" id="address" class="form-control" placeholder="গ্রাম/রোড নম্বর, শহর, জেলা">
+                    </div>
+                    
+                    <div class="urgent-help">
+                        <h4><i class="fas fa-exclamation-triangle"></i> জরুরি অবস্থা?</h4>
+                        <p>আপনার জরুরি অবস্থা থাকলে আমাদের জরুরি লাইনে কল করুন: <strong>01538106089</strong></p>
+                    </div>
+                    
+                    <button type="submit" class="cta-button" style="width: 100%; padding: 1rem; font-size: 1.1rem; margin-top: 1.5rem;">
+                        <i class="fas fa-paper-plane"></i> অনুরোধ জমা দিন
+                    </button>
+                </form>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>নিবাস</h3>
+                <p>গৃহস্থালির সকল মেরামত প্রয়োজনীয়তা পূরণে দক্ষ পেশাদারদের সাথে সংযুক্তি। মানসম্পন্ন সেবা, উপযুক্ত মূল্য, গ্যারান্টিকৃত সন্তুষ্টি।</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h3>সেবাসমূহ</h3>
+                <ul>
+                    <li><a href="#" class="nav-link" data-page="services">বৈদ্যুতিক কাজ</a></li>
+                    <li><a href="#" class="nav-link" data-page="services">প্লাম্বিং</a></li>
+                    <li><a href="#" class="nav-link" data-page="services">রং ও সজ্জা</a></li>
+                    <li><a href="#" class="nav-link" data-page="services">কাঠের কাজ</a></li>
+                    <li><a href="#" class="nav-link" data-page="services">এয়ারকন্ডিশনিং</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>কোম্পানি</h3>
+                <ul>
+                    <li><a href="#" class="nav-link" data-page="home">হোম</a></li>
+                    <li><a href="#" class="nav-link" data-page="how-it-works">কিভাবে কাজ করে</a></li>
+                    <li><a href="#" class="nav-link" data-page="become-pro">বিশেষজ্ঞ হোন</a></li>
+                    <li><a href="#" class="nav-link" data-page="get-help">সাহায্য নিন</a></li>
+                    <li><a href="#">যোগাযোগ করুন</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Contact</h3>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> help@nibash.com</li>
+                    <li><i class="fas fa-phone"></i> 01538106089</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Dhaka, Bangladesh</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; ২০২৬ নিবাস। সর্বস্বত্ব সংরক্ষিত। | <a href="#" style="color: #94a3b8;">গোপনীয়তা নীতি</a> | <a href="#" style="color: #94a3b8;">সেবার শর্তাবলী</a></p>
+        </div>
+    </footer>
+    
+    <script>
+        // Theme Toggle Functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        // Check for saved theme or prefer-color-scheme
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        const currentTheme = localStorage.getItem('theme');
+        
+        if (currentTheme === 'light' || (!currentTheme && !prefersDarkScheme.matches)) {
+            document.body.classList.add('light-mode');
+            themeIcon.className = 'fas fa-sun';
+        } else {
+            themeIcon.className = 'fas fa-moon';
+        }
+        
+        themeToggle.addEventListener('click', function() {
+            if (document.body.classList.contains('light-mode')) {
+                document.body.classList.remove('light-mode');
+                localStorage.setItem('theme', 'dark');
+                themeIcon.className = 'fas fa-moon';
+            } else {
+                document.body.classList.add('light-mode');
+                localStorage.setItem('theme', 'light');
+                themeIcon.className = 'fas fa-sun';
+            }
+        });
+        
+        // Page Navigation System
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get all page containers
+            const pages = {
+                'home': document.getElementById('homePage'),
+                'services': document.getElementById('servicesPage'),
+                'how-it-works': document.getElementById('howItWorksPage'),
+                'become-pro': document.getElementById('becomeProPage'),
+                'get-help': document.getElementById('getHelpPage')
+            };
+            
+            // Get all navigation links
+            const navLinks = document.querySelectorAll('.nav-link');
+            const logo = document.getElementById('homeTab');
+            
+            // Function to switch pages
+            function switchPage(pageId) {
+                // Hide all pages
+                Object.values(pages).forEach(page => {
+                    page.classList.remove('active');
+                });
+                
+                // Show selected page
+                if (pages[pageId]) {
+                    pages[pageId].classList.add('active');
+                }
+                
+                // Update active nav link
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('data-page') === pageId) {
+                        link.classList.add('active');
+                    }
+                });
+                
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            
+            // Add click events to nav links
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const pageId = this.getAttribute('data-page');
+                    switchPage(pageId);
+                });
+            });
+            
+            // Logo click goes to home
+            logo.addEventListener('click', function() {
+                switchPage('home');
+            });
+            
+            // Get Help Now button in header
+            document.getElementById('getHelpBtn').addEventListener('click', function() {
+                switchPage('get-help');
+            });
+            
+            // Get Help Now button in home page
+            document.getElementById('homeGetHelpBtn').addEventListener('click', function() {
+                switchPage('get-help');
+            });
+            
+            // Get Help button in How It Works page
+            document.getElementById('getHelpFromHowItWorks').addEventListener('click', function() {
+                switchPage('get-help');
+            });
+            
+            // Become a Pro button in Services page
+            document.getElementById('becomeProBtnServices').addEventListener('click', function() {
+                switchPage('become-pro');
+            });
+            
+            // Service selection buttons in Services page
+            document.querySelectorAll('.service-select-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const service = this.getAttribute('data-service');
+                    switchPage('get-help');
+                    
+                    // Set the service in the Get Help form
+                    setTimeout(() => {
+                        document.getElementById('selectedService').value = service;
+                        
+                        // Highlight the corresponding service option
+                        document.querySelectorAll('.service-option').forEach(option => {
+                            option.classList.remove('selected');
+                            if (option.getAttribute('data-service') === service) {
+                                option.classList.add('selected');
+                            }
+                        });
+                        
+                        // Show notification
+                        showNotification(`${service} সেবা নির্বাচন করা হয়েছে। সাহায্য পেতে এখন বাকি ফর্মটি পূরণ করুন!`);
+                    }, 300);
+                });
+            });
+            
+            // Service selector in Get Help page
+            document.querySelectorAll('.service-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const service = this.getAttribute('data-service');
+                    document.getElementById('selectedService').value = service;
+                    
+                    // Update UI
+                    document.querySelectorAll('.service-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                });
+            });
+            
+            // Form submissions
+            document.getElementById('proApplicationForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const name = document.getElementById('fullName').value;
+                const service = document.getElementById('serviceType').value;
+                
+                showNotification(`ধন্যবাদ ${name}! আপনার ${service} সেবার জন্য আবেদন জমা দেওয়া হয়েছে। আমরা ২৪ ঘণ্টার মধ্যে আপনার সাথে যোগাযোগ করব।`);
+                this.reset();
+                
+                // Return to home after 3 seconds
+                setTimeout(() => {
+                    switchPage('home');
+                }, 3000);
+            });
+            
+            document.getElementById('helpRequestForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const service = document.getElementById('selectedService').value || 'সাধারণ সাহায্য';
+                const name = document.getElementById('contactName').value;
+                
+                showNotification(`ধন্যবাদ ${name}! আপনার ${service} এর জন্য অনুরোধ জমা দেওয়া হয়েছে। পেশাদাররা শীঘ্রই আপনার সাথে যোগাযোগ করবেন।`);
+                this.reset();
+                
+                // Reset service selector
+                document.querySelectorAll('.service-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // Return to home after 3 seconds
+                setTimeout(() => {
+                    switchPage('home');
+                }, 3000);
+            });
+            
+            // Notification function
+            function showNotification(message) {
+                const notification = document.getElementById('notification');
+                const notificationText = document.getElementById('notificationText');
+                
+                notificationText.textContent = message;
+                notification.classList.add('show');
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 5000);
+            }
+            
+            // Glass cursor effect
+            const cursor = document.getElementById('cursor');
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+                
+                // Add interactive effect when hovering over buttons
+                const target = e.target;
+                if (target.classList.contains('cta-button') || 
+                    target.tagName === 'A' || 
+                    target.classList.contains('category-card') ||
+                    target.classList.contains('service-option')) {
+                    cursor.style.transform = 'scale(1.5)';
+                    cursor.style.background = 'rgba(139, 92, 246, 0.9)';
+                } else {
+                    cursor.style.transform = 'scale(1)';
+                    cursor.style.background = 'rgba(139, 92, 246, 0.7)';
+                }
+            });
+            
+            // Hide cursor when not hovering over page
+            document.addEventListener('mouseleave', () => {
+                cursor.style.opacity = '0';
+            });
+            
+            document.addEventListener('mouseenter', () => {
+                cursor.style.opacity = '1';
+            });
+            
+            // Add entrance animations to page elements when they become visible
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe elements for scroll animations
+            document.querySelectorAll('.category-card, .step, .pro-benefit').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(el);
+            });
+            
+            // Add hover effects to trust badges
+            const trustBadges = document.querySelectorAll('.trust-badges > div');
+            trustBadges.forEach(badge => {
+                badge.addEventListener('mouseenter', () => {
+                    const icon = badge.querySelector('i');
+                    icon.style.transform = 'scale(1.2)';
+                    icon.style.transition = 'transform 0.3s ease';
+                });
+                
+                badge.addEventListener('mouseleave', () => {
+                    const icon = badge.querySelector('i');
+                    icon.style.transform = 'scale(1)';
+                });
+            });
+            
+            // Form input validation styling
+            const formInputs = document.querySelectorAll('.form-control');
+            formInputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.style.transform = 'translateY(-2px)';
+                    this.parentElement.style.transition = 'transform 0.3s ease';
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.parentElement.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>নিবাস - গ্রাহক ড্যাশবোর্ড</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #5629be;
+            --primary-light: #a78bfa;
+            --secondary: #0eaa69c5;
+            --dark-bg: #0f172a;
+            --dark-card: #1e293b;
+            --dark-text: #f1f5f9;
+            --dark-border: #334155;
+            --light-bg: #f8fafc;
+            --light-card: #ffffff;
+            --light-text: #1e293b;
+            --light-border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Hind Siliguri', 'Kalpurush', system-ui, sans-serif;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode {
+            --bg-color: var(--dark-bg);
+            --card-bg: var(--dark-card);
+            --text-color: var(--dark-text);
+            --border-color: var(--dark-border);
+            --hover-bg: rgba(255, 255, 255, 0.05);
+        }
+
+        body.light-mode {
+            --bg-color: var(--light-bg);
+            --card-bg: var(--light-card);
+            --text-color: var(--light-text);
+            --border-color: var(--light-border);
+            --hover-bg: rgba(0, 0, 0, 0.02);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--primary);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(86, 41, 190, 0.3);
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* Header */
+        .header {
+            padding: 1rem 2rem;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .user-nav {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: var(--hover-bg);
+            transform: translateY(-1px);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Dashboard Layout */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            padding: 1.5rem 0;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.25rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--hover-bg);
+            color: var(--primary);
+            border-right: 3px solid var(--primary);
+        }
+
+        .nav-link i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        /* Welcome Banner */
+        .welcome-banner {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .welcome-text h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-text p {
+            opacity: 0.9;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .btn-light {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-light:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            border-color: var(--primary);
+        }
+
+        .action-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+            margin: 0 auto 1rem;
+        }
+
+        .action-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .action-desc {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        /* Service History */
+        .table-container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .table-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th {
+            padding: 1rem;
+            text-align: left;
+            background: var(--hover-bg);
+            color: var(--text-color);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table tbody tr:hover {
+            background: var(--hover-bg);
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+
+        .status-active {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--info);
+        }
+
+        .status-completed {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+
+        .status-cancelled {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: none;
+            background: var(--card-bg);
+            color: var(--text-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .btn-icon:hover {
+            background: var(--hover-bg);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(86, 41, 190, 0.3);
+        }
+
+        /* Reviews Section */
+        .reviews-section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .review-card {
+            background: var(--hover-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .reviewer-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .reviewer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .reviewer-name {
+            font-weight: 600;
+        }
+
+        .reviewer-service {
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        .review-rating {
+            color: var(--warning);
+            font-size: 1.1rem;
+        }
+
+        .review-text {
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 16px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--hover-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-color);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(86, 41, 190, 0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome-banner {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <i class="fas fa-user"></i>
+            <span>নিবাস গ্রাহক</span>
+        </div>
+        
+        <div class="user-nav">
+            <a href="index.html" class="nav-btn">
+                <i class="fas fa-home"></i>
+                মূল সাইট
+            </a>
+            <div class="user-info">
+                <div class="user-avatar">মা</div>
+                <div>
+                    <div style="font-weight: 600;">মাহমুদ হাসান</div>
+                    <div style="font-size: 0.85rem; color: #94a3b8;">প্রিমিয়াম সদস্য</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dashboard -->
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#dashboard" class="nav-link active">
+                        <i class="fas fa-tachometer-alt"></i>
+                        ড্যাশবোর্ড
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#services" class="nav-link">
+                        <i class="fas fa-concierge-bell"></i>
+                        আমার সেবা
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#providers" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        সেবাদাতা
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#payments" class="nav-link">
+                        <i class="fas fa-credit-card"></i>
+                        পেমেন্ট
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#reviews" class="nav-link">
+                        <i class="fas fa-star"></i>
+                        রিভিউ
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#profile" class="nav-link">
+                        <i class="fas fa-user-cog"></i>
+                        প্রোফাইল
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        লগআউট
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <!-- Welcome Banner -->
+            <div class="welcome-banner">
+                <div class="welcome-text">
+                    <h1>স্বাগতম, মাহমুদ হাসান!</h1>
+                    <p>আপনার সর্বশেষ সেবার স্ট্যাটাস: <strong>চলমান</strong></p>
+                </div>
+                <button class="btn btn-light" onclick="requestNewService()">
+                    <i class="fas fa-plus-circle"></i>
+                    নতুন সেবা চাই
+                </button>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <div class="action-card" onclick="requestNewService()">
+                    <div class="action-icon">
+                        <i class="fas fa-wrench"></i>
+                    </div>
+                    <h3 class="action-title">নতুন সেবা চাই</h3>
+                    <p class="action-desc">বাড়ির যেকোনো সমস্যার সমাধান</p>
+                </div>
+
+                <div class="action-card" onclick="showPayments()">
+                    <div class="action-icon">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <h3 class="action-title">পেমেন্ট</h3>
+                    <p class="action-desc">বাকি বিল পরিশোধ করুন</p>
+                </div>
+
+                <div class="action-card" onclick="showProviders()">
+                    <div class="action-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3 class="action-title">সেবাদাতা খুঁজুন</h3>
+                    <p class="action-desc">রেটিং দেখে নির্বাচন করুন</p>
+                </div>
+
+                <div class="action-card" onclick="showSupport()">
+                    <div class="action-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3 class="action-title">সহায়তা</h3>
+                    <p class="action-desc">২৪/৭ সাপোর্ট লাইন</p>
+                </div>
+            </div>
+
+            <!-- Active Services -->
+            <div class="table-container">
+                <div class="table-header">
+                    <h3 class="table-title">সক্রিয় সেবা</h3>
+                    <button class="btn btn-primary" onclick="requestNewService()">
+                        <i class="fas fa-plus"></i>
+                        নতুন অনুরোধ
+                    </button>
+                </div>
+                
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>সেবা আইডি</th>
+                            <th>সেবার ধরন</th>
+                            <th>সেবাদাতা</th>
+                            <th>তারিখ</th>
+                            <th>পরিমাণ</th>
+                            <th>স্ট্যাটাস</th>
+                            <th>অ্যাকশন</th>
+                        </tr>
+                    </thead>
+                    <tbody id="servicesTableBody">
+                        <!-- Services will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Recent Reviews -->
+            <div class="reviews-section">
+                <h3 style="color: var(--text-color); margin-bottom: 1.5rem;">সাম্প্রতিক রিভিউ</h3>
+                
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <div class="reviewer-avatar">এস</div>
+                            <div>
+                                <div class="reviewer-name">এস. করিম</div>
+                                <div class="reviewer-service">বৈদ্যুতিক কাজ</div>
+                            </div>
+                        </div>
+                        <div class="review-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            ৫.০
+                        </div>
+                    </div>
+                    <p class="review-text">
+                        অত্যন্ত দক্ষ এবং সময়নিষ্ঠ কাজ। বৈদ্যুতিক সমস্যা খুব ভালোভাবে সমাধান করেছেন। পরবর্তীতেও অবশ্যই কাজ করাবো।
+                    </p>
+                </div>
+
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <div class="reviewer-avatar">জা</div>
+                            <div>
+                                <div class="reviewer-name">জামাল উদ্দিন</div>
+                                <div class="reviewer-service">প্লাম্বিং</div>
+                            </div>
+                        </div>
+                        <div class="review-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            ৪.৫
+                        </div>
+                    </div>
+                    <p class="review-text">
+                        প্লাম্বিং কাজ খুব সুন্দরভাবে করেছেন। পরিষ্কার-পরিচ্ছন্ন কাজ এবং যন্ত্রপাতি গুছিয়ে রেখে গেছেন। দামও যুক্তিসঙ্গত।
+                    </p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Service Details Modal -->
+    <div class="modal" id="serviceModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">সেবার বিস্তারিত</h3>
+                <button class="modal-close" onclick="closeServiceModal()">×</button>
+            </div>
+            <div class="modal-body" id="serviceModalBody">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal" id="paymentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">পেমেন্ট করুন</h3>
+                <button class="modal-close" onclick="closePaymentModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div id="paymentForm">
+                    <!-- Payment form will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div class="modal" id="reviewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">রিভিউ দিন</h3>
+                <button class="modal-close" onclick="closeReviewModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="reviewForm">
+                    <div class="form-group">
+                        <label class="form-label">রেটিং</label>
+                        <div class="star-rating" style="font-size: 2rem; color: var(--warning);">
+                            <i class="far fa-star" data-rating="1"></i>
+                            <i class="far fa-star" data-rating="2"></i>
+                            <i class="far fa-star" data-rating="3"></i>
+                            <i class="far fa-star" data-rating="4"></i>
+                            <i class="far fa-star" data-rating="5"></i>
+                        </div>
+                        <input type="hidden" id="rating" value="5">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">রিভিউ লিখুন</label>
+                        <textarea class="form-input" id="reviewText" rows="4" required placeholder="আপনার অভিজ্ঞতা শেয়ার করুন..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-paper-plane"></i> রিভিউ জমা দিন
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme Management
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        // Load theme from localStorage
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.body.classList.add(`${savedTheme}-mode`);
+        themeIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        
+        themeToggle.addEventListener('click', () => {
+            if (document.body.classList.contains('dark-mode')) {
+                document.body.classList.remove('dark-mode');
+                document.body.classList.add('light-mode');
+                localStorage.setItem('theme', 'light');
+                themeIcon.className = 'fas fa-moon';
+            } else {
+                document.body.classList.remove('light-mode');
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+                themeIcon.className = 'fas fa-sun';
+            }
+        });
+
+        // Sample Services Data
+        const services = [
+            {
+                id: 'SVC-2024-001',
+                type: 'বৈদ্যুতিক কাজ',
+                provider: 'এস. করিম',
+                date: '১৫ মার্চ, ২০২৪',
+                amount: '৳ ২,৫০০',
+                status: 'active',
+                description: 'বৈদ্যুতিক তার পরিবর্তন এবং নতুন আউটলেট বসানো',
+                phone: '০১৭১২৩৪৫৬৭৮',
+                address: 'ধানমন্ডি, ঢাকা',
+                rating: 5
+            },
+            {
+                id: 'SVC-2024-002',
+                type: 'প্লাম্বিং',
+                provider: 'জামাল উদ্দিন',
+                date: '১৬ মার্চ, ২০২৪',
+                amount: '৳ ১,৮০০',
+                status: 'pending',
+                description: 'বাথরুমের পাইপ মেরামত',
+                phone: '০১৮৯৮৭৬৫৪৩২',
+                address: 'গুলশান, ঢাকা',
+                rating: 4.5
+            },
+            {
+                id: 'SVC-2024-003',
+                type: 'এয়ারকন্ডিশনিং',
+                provider: 'মোঃ রফিক',
+                date: '১৪ মার্চ, ২০২৪',
+                amount: '৳ ৩,২০০',
+                status: 'completed',
+                description: 'এয়ারকন্ডিশন সার্ভিসিং',
+                phone: '০১৯১২৩৪৫৬৭৮',
+                address: 'বনানী, ঢাকা',
+                rating: null
+            },
+            {
+                id: 'SVC-2024-004',
+                type: 'কাঠের কাজ',
+                provider: 'করিম মিয়া',
+                date: '১০ মার্চ, ২০২৪',
+                amount: '৳ ৪,৫০০',
+                status: 'completed',
+                description: 'ক্যাবিনেট মেরামত',
+                phone: '০১৬৭৮৯০১২৩৪',
+                address: 'মিরপুর, ঢাকা',
+                rating: 4
+            }
+        ];
+
+        // Initialize Dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            loadServicesTable();
+            setupNavigation();
+            setupStarRating();
+            setupReviewForm();
+        });
+
+        // Load Services Table
+        function loadServicesTable() {
+            const tbody = document.getElementById('servicesTableBody');
+            tbody.innerHTML = '';
+            
+            services.forEach(service => {
+                const statusText = {
+                    'active': 'চলমান',
+                    'pending': 'অপেক্ষমান',
+                    'completed': 'সম্পন্ন',
+                    'cancelled': 'বাতিল'
+                };
+                
+                const statusClass = {
+                    'active': 'status-active',
+                    'pending': 'status-pending',
+                    'completed': 'status-completed',
+                    'cancelled': 'status-cancelled'
+                };
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${service.id}</td>
+                    <td>${service.type}</td>
+                    <td>${service.provider}</td>
+                    <td>${service.date}</td>
+                    <td>${service.amount}</td>
+                    <td><span class="status-badge ${statusClass[service.status]}">${statusText[service.status]}</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-icon" onclick="viewService('${service.id}')" title="বিস্তারিত">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            ${service.status === 'pending' ? `
+                                <button class="btn-icon" onclick="editService('${service.id}')" title="সম্পাদনা">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-icon btn-reject" onclick="cancelService('${service.id}')" title="বাতিল">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            ` : ''}
+                            ${service.status === 'completed' && !service.rating ? `
+                                <button class="btn-icon btn-accept" onclick="reviewService('${service.id}')" title="রিভিউ">
+                                    <i class="fas fa-star"></i>
+                                </button>
+                            ` : ''}
+                            ${service.status === 'active' ? `
+                                <button class="btn-icon btn-primary" onclick="makePayment('${service.id}')" title="পেমেন্ট">
+                                    <i class="fas fa-credit-card"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Navigation
+        function setupNavigation() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    // Remove active class from all links
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    
+                    // Add active class to clicked link
+                    link.classList.add('active');
+                    
+                    // Here you would load the appropriate content
+                    const section = link.getAttribute('href').substring(1);
+                    showSection(section);
+                });
+            });
+        }
+
+        function showSection(section) {
+            // This function would load different content based on section
+            const sections = {
+                'dashboard': 'ড্যাশবোর্ড',
+                'services': 'আমার সেবা',
+                'providers': 'সেবাদাতা',
+                'payments': 'পেমেন্ট',
+                'reviews': 'রিভিউ',
+                'profile': 'প্রোফাইল'
+            };
+            
+            if (sections[section]) {
+                // In a real app, you would load the content here
+                console.log(`Loading ${sections[section]} section`);
+            }
+        }
+
+        // Service Actions
+        function viewService(serviceId) {
+            const service = services.find(s => s.id === serviceId);
+            if (service) {
+                document.getElementById('serviceModalBody').innerHTML = `
+                    <div class="form-group">
+                        <label class="form-label">সেবা আইডি</label>
+                        <div class="form-input" style="background: var(--card-bg);">${service.id}</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">সেবার ধরন</label>
+                        <div class="form-input" style="background: var(--card-bg);">${service.type}</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">সেবাদাতা</label>
+                        <div class="form-input" style="background: var(--card-bg);">${service.provider}</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">ফোন নম্বর</label>
+                        <div class="form-input" style="background: var(--card-bg);">${service.phone}</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">ঠিকানা</label>
+                        <div class="form-input" style="background: var(--card-bg);">${service.address}</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">সেবার বর্ণনা</label>
+                        <div class="form-input" style="background: var(--card-bg); min-height: 100px;">${service.description}</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">তারিখ</label>
+                        <div class="form-input" style="background: var(--card-bg);">${service.date}</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">পরিমাণ</label>
+                        <div class="form-input" style="background: var(--card-bg);">${service.amount}</div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                        <button class="btn btn-primary" onclick="callProvider('${service.phone}')" style="flex: 1;">
+                            <i class="fas fa-phone"></i> কল করুন
+                        </button>
+                        <button class="btn btn-secondary" onclick="messageProvider('${service.phone}')" style="flex: 1;">
+                            <i class="fas fa-sms"></i> মেসেজ
+                        </button>
+                    </div>
+                `;
+                document.getElementById('serviceModal').style.display = 'flex';
+            }
+        }
+
+        function editService(serviceId) {
+            alert('সেবা সম্পাদনা পৃষ্ঠায় যাচ্ছে...');
+            // In real app, redirect to edit page
+        }
+
+        function cancelService(serviceId) {
+            if (confirm('আপনি কি এই সেবা বাতিল করতে চান?')) {
+                const service = services.find(s => s.id === serviceId);
+                if (service) {
+                    service.status = 'cancelled';
+                    loadServicesTable();
+                    alert('সেবা বাতিল করা হয়েছে');
+                }
+            }
+        }
+
+        function reviewService(serviceId) {
+            const service = services.find(s => s.id === serviceId);
+            if (service) {
+                currentServiceId = serviceId;
+                document.getElementById('reviewModal').style.display = 'flex';
+            }
+        }
+
+        function makePayment(serviceId) {
+            const service = services.find(s => s.id === serviceId);
+            if (service) {
+                document.getElementById('paymentForm').innerHTML = `
+                    <div class="form-group">
+                        <label class="form-label">সেবা আইডি</label>
+                        <div class="form-input" style="background: var(--card-bg);">${service.id}</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">সেবার ধরন</label>
+                        <div class="form-input" style="background: var(--card-bg);">${service.type}</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">পরিশোধ করতে হবে</label>
+                        <div class="form-input" style="background: var(--card-bg); font-size: 1.2rem; color: var(--primary); font-weight: bold;">
+                            ${service.amount}
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">পেমেন্ট মেথড</label>
+                        <select class="form-input" id="paymentMethod">
+                            <option value="bkash">বিকাশ</option>
+                            <option value="nagad">নগদ</option>
+                            <option value="card">ক্রেডিট কার্ড</option>
+                            <option value="bank">ব্যাংক ট্রান্সফার</option>
+                        </select>
+                    </div>
+                    
+                    <div id="paymentDetails"></div>
+                    
+                    <button class="btn btn-primary" onclick="processPayment('${serviceId}')" style="width: 100%; margin-top: 1rem;">
+                        <i class="fas fa-lock"></i> পেমেন্ট করুন
+                    </button>
+                `;
+                
+                // Show payment method specific fields
+                showPaymentFields();
+                document.getElementById('paymentModal').style.display = 'flex';
+            }
+        }
+
+        function showPaymentFields() {
+            const method = document.getElementById('paymentMethod').value;
+            let fields = '';
+            
+            switch(method) {
+                case 'bkash':
+                    fields = `
+                        <div class="form-group">
+                            <label class="form-label">বিকাশ নম্বর</label>
+                            <input type="tel" class="form-input" placeholder="01XXXXXXXXX" maxlength="11" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">পিন নম্বর</label>
+                            <input type="password" class="form-input" placeholder="••••" maxlength="4" required>
+                        </div>
+                    `;
+                    break;
+                case 'nagad':
+                    fields = `
+                        <div class="form-group">
+                            <label class="form-label">নগদ নম্বর</label>
+                            <input type="tel" class="form-input" placeholder="01XXXXXXXXX" maxlength="11" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">পিন নম্বর</label>
+                            <input type="password" class="form-input" placeholder="••••" maxlength="4" required>
+                        </div>
+                    `;
+                    break;
+                case 'card':
+                    fields = `
+                        <div class="form-group">
+                            <label class="form-label">কার্ড নম্বর</label>
+                            <input type="text" class="form-input" placeholder="1234 5678 9012 3456" required>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">এক্সপায়ারি</label>
+                                <input type="text" class="form-input" placeholder="MM/YY" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">CVV</label>
+                                <input type="password" class="form-input" placeholder="123" maxlength="3" required>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'bank':
+                    fields = `
+                        <div class="form-group">
+                            <label class="form-label">ব্যাংক নাম</label>
+                            <input type="text" class="form-input" placeholder="ব্যাংকের নাম" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">হিসাব নম্বর</label>
+                            <input type="text" class="form-input" placeholder="হিসাব নম্বর" required>
+                        </div>
+                    `;
+                    break;
+            }
+            
+            document.getElementById('paymentDetails').innerHTML = fields;
+        }
+
+        function processPayment(serviceId) {
+            const btn = event.target;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> প্রসেসিং...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                const service = services.find(s => s.id === serviceId);
+                if (service) {
+                    service.status = 'completed';
+                    loadServicesTable();
+                    closePaymentModal();
+                    alert('পেমেন্ট সফল! ধন্যবাদ।');
+                }
+                
+                btn.innerHTML = '<i class="fas fa-lock"></i> পেমেন্ট করুন';
+                btn.disabled = false;
+            }, 2000);
+        }
+
+        // Quick Actions
+        function requestNewService() {
+            window.location.href = 'index.html#get-help';
+        }
+
+        function showPayments() {
+            alert('পেমেন্ট হিস্ট্রি দেখানো হবে');
+        }
+
+        function showProviders() {
+            alert('সেবাদাতাদের তালিকা দেখানো হবে');
+        }
+
+        function showSupport() {
+            alert('সহায়তা কেন্দ্র: 01538106089');
+        }
+
+        function callProvider(phone) {
+            alert(`কল করা হচ্ছে: ${phone}`);
+        }
+
+        function messageProvider(phone) {
+            const message = prompt('মেসেজ লিখুন:');
+            if (message) {
+                alert(`মেসেজ পাঠানো হয়েছে: ${message}`);
+            }
+        }
+
+        // Star Rating
+        function setupStarRating() {
+            const stars = document.querySelectorAll('.star-rating i');
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    const rating = this.getAttribute('data-rating');
+                    document.getElementById('rating').value = rating;
+                    
+                    stars.forEach(s => {
+                        if (s.getAttribute('data-rating') <= rating) {
+                            s.className = 'fas fa-star';
+                        } else {
+                            s.className = 'far fa-star';
+                        }
+                    });
+                });
+                
+                star.addEventListener('mouseover', function() {
+                    const rating = this.getAttribute('data-rating');
+                    stars.forEach(s => {
+                        if (s.getAttribute('data-rating') <= rating) {
+                            s.className = 'fas fa-star';
+                        }
+                    });
+                });
+                
+                star.addEventListener('mouseout', function() {
+                    const currentRating = document.getElementById('rating').value;
+                    stars.forEach(s => {
+                        if (s.getAttribute('data-rating') > currentRating) {
+                            s.className = 'far fa-star';
+                        }
+                    });
+                });
+            });
+        }
+
+        // Review Form
+        function setupReviewForm() {
+            const form = document.getElementById('reviewForm');
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const rating = document.getElementById('rating').value;
+                const reviewText = document.getElementById('reviewText').value;
+                
+                if (!reviewText.trim()) {
+                    alert('দয়া করে রিভিউ লিখুন');
+                    return;
+                }
+                
+                // Find and update service rating
+                const service = services.find(s => s.id === currentServiceId);
+                if (service) {
+                    service.rating = parseFloat(rating);
+                    loadServicesTable();
+                    closeReviewModal();
+                    form.reset();
+                    alert('রিভিউ জমা দেওয়া হয়েছে! ধন্যবাদ।');
+                }
+            });
+        }
+
+        // Modal Functions
+        function closeServiceModal() {
+            document.getElementById('serviceModal').style.display = 'none';
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').style.display = 'none';
+        }
+
+        function closeReviewModal() {
+            document.getElementById('reviewModal').style.display = 'none';
+            document.getElementById('reviewForm').reset();
+            // Reset stars
+            const stars = document.querySelectorAll('.star-rating i');
+            stars.forEach((star, index) => {
+                star.className = index < 5 ? 'far fa-star' : 'far fa-star';
+            });
+            document.getElementById('rating').value = '5';
+        }
+
+        // Logout Function
+        function logout() {
+            if (confirm('আপনি কি লগআউট করতে চান?')) {
+                localStorage.removeItem('customer_token');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Event Listeners
+        document.getElementById('paymentMethod').addEventListener('change', showPaymentFields);
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+
+        // Global variable for current service being reviewed
+        let currentServiceId = null;
+    </script>
+</body>
+</html>
