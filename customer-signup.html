@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>নিবাস - গ্রাহক হিসেবে নিবন্ধন</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Kalpurush&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #5629be;
+            --primary-light: #a78bfa;
+            --secondary: #0eaa69c5;
+            --dark-bg: #0f172a;
+            --dark-card: #1e293b;
+            --dark-text: #f1f5f9;
+            --dark-border: #334155;
+            --light-bg: #f8fafc;
+            --light-card: #ffffff;
+            --light-text: #1e293b;
+            --light-border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Hind Siliguri', 'Kalpurush', system-ui, sans-serif;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            color: var(--dark-text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        body.light-mode {
+            background: linear-gradient(135deg, #f0f4ff 0%, #fdf2f8 100%);
+            color: var(--light-text);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        /* Logo */
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            margin: 0 auto 1rem;
+        }
+
+        .logo-text {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .logo-subtext {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--primary);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(86, 41, 190, 0.3);
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* Back Button */
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--dark-card);
+            color: var(--dark-text);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--dark-border);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .light-mode .back-btn {
+            background: var(--light-card);
+            color: var(--light-text);
+            border: 1px solid var(--light-border);
+        }
+
+        .back-btn:hover {
+            background: rgba(86, 41, 190, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Signup Card */
+        .signup-card {
+            background: rgba(30, 41, 59, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 1px solid var(--dark-border);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .light-mode .signup-card {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .signup-title {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .signup-subtitle {
+            text-align: center;
+            color: #94a3b8;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .light-mode .signup-subtitle {
+            color: #64748b;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark-text);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .light-mode .form-label {
+            color: var(--light-text);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--dark-border);
+            border-radius: 10px;
+            color: var(--dark-text);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .light-mode .form-input {
+            background: rgba(248, 250, 252, 0.8);
+            border: 1px solid var(--light-border);
+            color: var(--light-text);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(86, 41, 190, 0.15);
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+
+        .input-with-icon .form-input {
+            padding-left: 3rem;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        /* Terms and Conditions */
+        .terms-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .terms-checkbox {
+            margin-top: 0.25rem;
+        }
+
+        .terms-text {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+
+        .light-mode .terms-text {
+            color: #64748b;
+        }
+
+        .terms-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .terms-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .submit-btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(86, 41, 190, 0.3);
+        }
+
+        .submit-btn:disabled {
+            background: #475569;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Divider */
+        .divider {
+            text-align: center;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--dark-border);
+            z-index: 1;
+        }
+
+        .light-mode .divider::before {
+            background: var(--light-border);
+        }
+
+        .divider span {
+            background: var(--dark-card);
+            padding: 0 1rem;
+            color: #94a3b8;
+            position: relative;
+            z-index: 2;
+            font-size: 0.9rem;
+        }
+
+        .light-mode .divider span {
+            background: var(--light-card);
+        }
+
+        /* Social Login */
+        .social-login {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .social-btn {
+            padding: 0.85rem;
+            border-radius: 10px;
+            border: 1px solid var(--dark-border);
+            background: rgba(15, 23, 42, 0.6);
+            color: var(--dark-text);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .light-mode .social-btn {
+            background: rgba(248, 250, 252, 0.8);
+            border: 1px solid var(--light-border);
+            color: var(--light-text);
+        }
+
+        .social-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .social-btn.facebook {
+            background: #1877F2;
+            color: white;
+            border-color: #1877F2;
+        }
+
+        .social-btn.google {
+            background: white;
+            color: #1a1a1a;
+            border-color: #e0e0e0;
+        }
+
+        .light-mode .social-btn.google {
+            background: #f8fafc;
+        }
+
+        /* Login Link */
+        .login-link {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+
+        .light-mode .login-link {
+            color: #64748b;
+        }
+
+        .login-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Error Message */
+        .error-message {
+            color: var(--danger);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* Success Modal */
+        .success-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .success-content {
+            background: var(--dark-card);
+            padding: 3rem;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            border: 2px solid var(--success);
+            animation: successAnimation 0.5s ease-out;
+        }
+
+        .light-mode .success-content {
+            background: var(--light-card);
+        }
+
+        @keyframes successAnimation {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            color: var(--success);
+            margin-bottom: 1.5rem;
+            animation: bounce 0.5s ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .success-title {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--success);
+        }
+
+        .success-message {
+            color: #94a3b8;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .light-mode .success-message {
+            color: #64748b;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+
+            .signup-card {
+                padding: 2rem;
+            }
+
+            .social-login {
+                grid-template-columns: 1fr;
+            }
+
+            .back-btn {
+                position: relative;
+                top: 0;
+                left: 0;
+                margin-bottom: 1rem;
+                width: fit-content;
+            }
+
+            .theme-toggle {
+                top: 10px;
+                right: 10px;
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .signup-card {
+                padding: 1.5rem;
+            }
+
+            .logo-text {
+                font-size: 1.8rem;
+            }
+
+            .logo-icon {
+                width: 70px;
+                height: 70px;
+                font-size: 2rem;
+            }
+
+            .signup-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <!-- Back Button -->
+    <a href="index.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        হোম পেজে ফিরে যান
+    </a>
+
+    <div class="container">
+        <!-- Logo -->
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            <div class="logo-text">নিবাস</div>
+            <div class="logo-subtext">গৃহসেবা সমাধান প্ল্যাটফর্ম</div>
+        </div>
+        
+        <!-- Signup Card -->
+        <div class="signup-card">
+            <h2 class="signup-title">গ্রাহক হিসেবে নিবন্ধন</h2>
+            <p class="signup-subtitle">আপনার গৃহস্থালি সমস্যার সমাধান পেতে এখনই নিবন্ধন করুন</p>
+            
+            <form id="customerSignupForm">
+                <div class="form-group">
+                    <label class="form-label">পুরো নাম *</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-user input-icon"></i>
+                        <input type="text" class="form-input" id="fullName" placeholder="আপনার পুরো নাম" required>
+                    </div>
+                    <div class="error-message" id="nameError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">ইমেইল ঠিকানা *</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" class="form-input" id="email" placeholder="yourname@example.com" required>
+                    </div>
+                    <div class="error-message" id="emailError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">ফোন নম্বর *</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-phone input-icon"></i>
+                        <input type="tel" class="form-input" id="phone" placeholder="০১৭XXXXXXXX" required>
+                    </div>
+                    <div class="error-message" id="phoneError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">পাসওয়ার্ড *</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" class="form-input" id="password" placeholder="কমপক্ষে ৮ অক্ষর" required>
+                        <button type="button" class="password-toggle" id="togglePassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="error-message" id="passwordError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">পাসওয়ার্ড নিশ্চিত করুন *</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" class="form-input" id="confirmPassword" placeholder="পাসওয়ার্ড আবার লিখুন" required>
+                    </div>
+                    <div class="error-message" id="confirmPasswordError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">ঠিকানা</label>
+                    <textarea class="form-input" id="address" rows="2" placeholder="আপনার সম্পূর্ণ ঠিকানা"></textarea>
+                </div>
+                
+                <div class="terms-group">
+                    <input type="checkbox" class="terms-checkbox" id="terms" required>
+                    <label for="terms" class="terms-text">
+                        আমি নিবাসের 
+                        <a href="#" class="terms-link">সেবার শর্তাবলী</a> 
+                        এবং 
+                        <a href="#" class="terms-link">গোপনীয়তা নীতি</a> 
+                        পড়েছি এবং তা মেনে চলতে সম্মত আছি।
+                    </label>
+                </div>
+                
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <i class="fas fa-user-plus"></i>
+                    নিবন্ধন সম্পন্ন করুন
+                </button>
+            </form>
+            
+            <div class="divider">
+                <span>অথবা</span>
+            </div>
+            
+            <div class="social-login">
+                <button class="social-btn facebook" onclick="signupWithFacebook()">
+                    <i class="fab fa-facebook-f"></i>
+                    Facebook দিয়ে
+                </button>
+                <button class="social-btn google" onclick="signupWithGoogle()">
+                    <i class="fab fa-google"></i>
+                    Google দিয়ে
+                </button>
+            </div>
+            
+            <div class="login-link">
+                ইতিমধ্যে অ্যাকাউন্ট আছে? 
+                <a href="login.html">লগইন করুন</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Success Modal -->
+    <div id="successModal" class="success-modal">
+        <div class="success-content">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2 class="success-title">নিবন্ধন সফল!</h2>
+            <p class="success-message">
+                আপনার গ্রাহক অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে। 
+                এখন আপনি নিবাসের সকল সেবা ব্যবহার করতে পারবেন।
+            </p>
+            
+            <button class="submit-btn" onclick="goToDashboard()" style="margin-bottom: 0;">
+                <i class="fas fa-tachometer-alt"></i>
+                ড্যাশবোর্ডে যান
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Theme Management
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        // Load theme from localStorage
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.body.classList.add(`${savedTheme}-mode`);
+        themeIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        
+        themeToggle.addEventListener('click', () => {
+            if (document.body.classList.contains('dark-mode')) {
+                document.body.classList.remove('dark-mode');
+                document.body.classList.add('light-mode');
+                localStorage.setItem('theme', 'light');
+                themeIcon.className = 'fas fa-moon';
+            } else {
+                document.body.classList.remove('light-mode');
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+                themeIcon.className = 'fas fa-sun';
+            }
+        });
+
+        // Initialize Signup Page
+        document.addEventListener('DOMContentLoaded', function() {
+            setupPasswordToggle();
+            setupFormValidation();
+            setupFormSubmission();
+        });
+
+        // Password Toggle
+        function setupPasswordToggle() {
+            const toggleBtn = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('password');
+            
+            toggleBtn.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+            });
+        }
+
+        // Form Validation
+        function setupFormValidation() {
+            const form = document.getElementById('customerSignupForm');
+            const inputs = form.querySelectorAll('input[required]');
+            
+            inputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    validateField(this);
+                });
+                
+                input.addEventListener('input', function() {
+                    clearError(this.id + 'Error');
+                });
+            });
+        }
+
+        function validateField(field) {
+            const value = field.value.trim();
+            const errorId = field.id + 'Error';
+            const errorElement = document.getElementById(errorId);
+            
+            switch(field.id) {
+                case 'fullName':
+                    if (value.length < 2) {
+                        showError(errorElement, 'নাম কমপক্ষে ২ অক্ষরের হতে হবে');
+                        return false;
+                    }
+                    break;
+                    
+                case 'email':
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(value)) {
+                        showError(errorElement, 'সঠিক ইমেইল ঠিকানা দিন');
+                        return false;
+                    }
+                    break;
+                    
+                case 'phone':
+                    const phoneRegex = /^01[3-9]\d{8}$/;
+                    const phoneDigits = value.replace(/\D/g, '');
+                    if (!phoneRegex.test(phoneDigits)) {
+                        showError(errorElement, 'সঠিক ফোন নম্বর দিন (01XXXXXXXXX)');
+                        return false;
+                    }
+                    break;
+                    
+                case 'password':
+                    if (value.length < 8) {
+                        showError(errorElement, 'পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে');
+                        return false;
+                    }
+                    break;
+                    
+                case 'confirmPassword':
+                    const password = document.getElementById('password').value;
+                    if (value !== password) {
+                        showError(errorElement, 'পাসওয়ার্ড মিলছে না');
+                        return false;
+                    }
+                    break;
+            }
+            
+            clearError(errorId);
+            return true;
+        }
+
+        function showError(element, message) {
+            element.textContent = message;
+            element.classList.add('show');
+        }
+
+        function clearError(errorId) {
+            const element = document.getElementById(errorId);
+            element.textContent = '';
+            element.classList.remove('show');
+        }
+
+        // Form Submission
+        function setupFormSubmission() {
+            const form = document.getElementById('customerSignupForm');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validate all fields
+                const inputs = form.querySelectorAll('input[required]');
+                let isValid = true;
+                
+                inputs.forEach(input => {
+                    if (!validateField(input)) {
+                        isValid = false;
+                    }
+                });
+                
+                // Check terms agreement
+                const termsCheckbox = document.getElementById('terms');
+                if (!termsCheckbox.checked) {
+                    alert('দয়া করে সেবার শর্তাবলীতে সম্মতি দিন');
+                    isValid = false;
+                }
+                
+                if (isValid) {
+                    // Disable submit button and show loading
+                    submitBtn.innerHTML = '<span class="loading"></span> প্রক্রিয়াধীন...';
+                    submitBtn.disabled = true;
+                    
+                    // Simulate API call
+                    setTimeout(() => {
+                        // Save customer data to localStorage (simulating database)
+                        saveCustomerData();
+                        
+                        // Show success modal
+                        document.getElementById('successModal').style.display = 'flex';
+                        
+                        // Reset form and button
+                        submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> নিবন্ধন সম্পন্ন করুন';
+                        submitBtn.disabled = false;
+                    }, 2000);
+                }
+            });
+        }
+
+        function saveCustomerData() {
+            const customerData = {
+                fullName: document.getElementById('fullName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                address: document.getElementById('address').value,
+                registrationDate: new Date().toISOString(),
+                accountType: 'customer',
+                status: 'active'
+            };
+            
+            // Save to localStorage (in real app, this would be an API call)
+            localStorage.setItem('customer_account', JSON.stringify(customerData));
+            
+            // Create a customer record in users list
+            let users = JSON.parse(localStorage.getItem('nibash_users') || '[]');
+            users.push({
+                email: customerData.email,
+                phone: customerData.phone,
+                password: document.getElementById('password').value, // In real app, this should be hashed
+                accountType: 'customer',
+                createdAt: new Date().toISOString()
+            });
+            localStorage.setItem('nibash_users', JSON.stringify(users));
+        }
+
+        // Social Signup
+        function signupWithFacebook() {
+            alert('Facebook দিয়ে নিবন্ধন করা হবে। (Demo Mode)');
+            // In real app, implement Facebook OAuth
+        }
+
+        function signupWithGoogle() {
+            alert('Google দিয়ে নিবন্ধন করা হবে। (Demo Mode)');
+            // In real app, implement Google OAuth
+        }
+
+        // Navigation
+        function goToDashboard() {
+            window.location.href = 'customer.html';
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === document.getElementById('successModal')) {
+                document.getElementById('successModal').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
