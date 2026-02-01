@@ -1,28 +1,40 @@
-import { Pool } from "pg";
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
+import pool from "./db.js";
+import bcrypt from "bcryptjs";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { email, password } = req.body;
+  const { fullName, email, phone, password, role } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({ error: "Missing email or password" });
+  if (!email || !password || !role) {
+    return res.status(400).json({ error: "Missing required fields" });
   }
 
   try {
-    await pool.query(
-      "INSERT INTO users (email, password) VALUES ($1, $2)",
-      [email, password]
+    // Check existing user
+    const existing = await pool.query(
+      "SELECT id FROM users WHERE email = $1",
+      [email]
     );
 
-    res.status(200).json({ success: true });
+    if (existing.rowCount > 0) {
+      return res.status(409).json({ error: "Email already registered" });
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await pool.query(
+      `INSERT INTO users (full_name, email, phone, password, role)
+       VALUES ($1, $2, $3, $4, $5)`,
+      [fullName, email, phone, hashedPassword, role]
+    );
+
+    res.status(201).json({ success: true });
   } catch (err) {
-    res.status(500).json({ error: "Database error" });
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
   }
 }
