@@ -2,14 +2,13 @@
 import { createClient } from '@supabase/supabase-js';
 import bcrypt from 'bcryptjs';
 
-// Use environment variables or fallback to your Supabase project
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://kohswrhxjvfygzrldyyk.supabase.co';
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtvaHN3cmh4anZmeWd6cmxkeXlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwMzUzODgsImV4cCI6MjA4NTYxMTM4OH0.rK-SYCs-uC63581jLtuTDdYklsiL7vKtdCO7TuIdKII';
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default async function handler(req, res) {
-  // Enable CORS
+  // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -26,7 +25,16 @@ export default async function handler(req, res) {
   try {
     console.log('📥 Signup request received');
     
-    const { email, password, role, fullName, phone, address } = req.body;
+    let body;
+    try {
+      body = JSON.parse(req.body);
+    } catch {
+      body = req.body;
+    }
+    
+    const { email, password, role, fullName, phone, address } = body;
+    
+    console.log('📧 Signup attempt for:', email);
     
     // Validation
     if (!email || !password || !role || !fullName || !phone) {
@@ -39,7 +47,7 @@ export default async function handler(req, res) {
     // Check if user exists
     const { data: existingUser, error: checkError } = await supabase
       .from('users')
-      .select('*')
+      .select('id')
       .eq('email', email)
       .single();
     
@@ -53,7 +61,7 @@ export default async function handler(req, res) {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
     
-    // Insert user
+    // Insert new user
     const { data: newUser, error: insertError } = await supabase
       .from('users')
       .insert([{
@@ -70,33 +78,37 @@ export default async function handler(req, res) {
       .single();
     
     if (insertError) {
-      console.error('❌ Supabase error:', insertError);
+      console.error('❌ Supabase insert error:', insertError);
       return res.status(500).json({ 
         success: false, 
         error: 'Database error: ' + insertError.message 
       });
     }
     
-    console.log('✅ User created successfully:', newUser.id);
+    console.log('✅ User created:', newUser.id);
     
-    // Return success (without password)
+    // Return user data (without password)
+    const userResponse = {
+      id: newUser.id,
+      email: newUser.email,
+      fullName: newUser.full_name,
+      role: newUser.role,
+      phone: newUser.phone,
+      address: newUser.address || '',
+      status: newUser.status || 'active'
+    };
+    
     return res.status(201).json({
       success: true,
       message: 'Registration successful!',
-      user: {
-        id: newUser.id,
-        email: newUser.email,
-        role: newUser.role,
-        fullName: newUser.full_name,
-        phone: newUser.phone
-      }
+      user: userResponse
     });
     
   } catch (error) {
-    console.error('❌ Unexpected error:', error);
+    console.error('❌ Signup error:', error);
     return res.status(500).json({ 
       success: false, 
       error: 'Internal server error: ' + error.message 
     });
   }
-} 
+}
