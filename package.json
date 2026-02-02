@@ -1,24 +1,30 @@
 {
   "name": "deploy_app",
   "version": "1.0.0",
-  "description": "",
+  "description": "Nibash - Home Service Solution Platform",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "dev": "node --watch index.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ProdigyTasfin/deploy_app.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["nibash", "home-service", "vercel"],
+  "author": "ProdigyTasfin",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/ProdigyTasfin/deploy_app/issues"
   },
   "homepage": "https://github.com/ProdigyTasfin/deploy_app#readme",
   "dependencies": {
-    "pg": "^8.18.0"
+    "@supabase/supabase-js": "^2.44.1",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
