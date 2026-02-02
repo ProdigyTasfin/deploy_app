@@ -8,24 +8,42 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUz
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default async function handler(req, res) {
-  // CORS headers
+  // Set CORS headers - MUST BE BEFORE ANY RESPONSE
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   
+  // Handle OPTIONS request (preflight)
   if (req.method === 'OPTIONS') {
+    console.log('🔧 Handling OPTIONS preflight request');
     return res.status(200).end();
   }
   
+  // Only allow POST requests
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    console.log('❌ Method not allowed:', req.method);
+    return res.status(405).json({ 
+      success: false, 
+      error: 'Method not allowed' 
+    });
   }
   
   try {
-    const { email, password, role } = req.body;
+    console.log('📥 Login request received');
     
-    console.log('📥 Login attempt:', { email, role });
+    // Parse request body
+    let body;
+    try {
+      body = JSON.parse(req.body);
+    } catch {
+      body = req.body;
+    }
     
+    const { email, password, role } = body;
+    
+    console.log('📧 Login attempt for:', email);
+    
+    // Validate input
     if (!email || !password || !role) {
       return res.status(400).json({ 
         success: false, 
@@ -33,7 +51,7 @@ export default async function handler(req, res) {
       });
     }
     
-    // Query user
+    // Query user from Supabase
     const { data: users, error } = await supabase
       .from('users')
       .select('*')
@@ -50,6 +68,7 @@ export default async function handler(req, res) {
     }
     
     if (!users || users.length === 0) {
+      console.log('❌ No user found with email:', email);
       return res.status(401).json({ 
         success: false, 
         error: 'Invalid email or password' 
@@ -62,30 +81,34 @@ export default async function handler(req, res) {
     const valid = await bcrypt.compare(password, user.password);
     
     if (!valid) {
+      console.log('❌ Invalid password for user:', email);
       return res.status(401).json({ 
         success: false, 
         error: 'Invalid email or password' 
       });
     }
     
-    console.log('✅ Login successful:', user.id);
+    console.log('✅ Login successful for user:', user.id);
     
-    // Return success response
+    // Return user data (without password)
+    const userResponse = {
+      id: user.id,
+      email: user.email,
+      fullName: user.full_name,
+      role: user.role,
+      phone: user.phone,
+      address: user.address || '',
+      status: user.status || 'active'
+    };
+    
     return res.status(200).json({
       success: true,
-      user: {
-        id: user.id,
-        email: user.email,
-        fullName: user.full_name,
-        role: user.role,
-        phone: user.phone,
-        address: user.address
-      },
+      user: userResponse,
       message: 'Login successful'
     });
     
   } catch (error) {
-    console.error('❌ Login error:', error);
+    console.error('❌ Unexpected error:', error);
     return res.status(500).json({ 
       success: false, 
       error: 'Internal server error: ' + error.message 
