@@ -1,12 +1,19 @@
-// api/signup.js - Supabase version
-import supabase from './db.js'
+// api/signup.js
+import { createClient } from '@supabase/supabase-js'
 import bcrypt from 'bcryptjs'
 
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+const supabase = createClient(supabaseUrl, supabaseKey)
+
 export default async function handler(req, res) {
+  // CORS headers - CRITICAL for browser requests
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
   
+  // Handle preflight requests
   if (req.method === 'OPTIONS') {
     return res.status(200).end()
   }
@@ -15,28 +22,24 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' })
   }
   
-  const { email, password, role, fullName, phone, address } = req.body
-  
-  // Validation
-  if (!email || !password || !role || !fullName || !phone) {
-    return res.status(400).json({ error: 'All fields are required' })
-  }
-  
-  if (password.length < 8) {
-    return res.status(400).json({ error: 'Password must be at least 8 characters' })
-  }
-  
   try {
+    const { email, password, role, fullName, phone, address } = req.body
+    
+    console.log('📥 Signup request:', { email, role, fullName })
+    
+    // Validation
+    if (!email || !password || !role || !fullName || !phone) {
+      return res.status(400).json({ error: 'All fields are required' })
+    }
+    
     // Check if user exists
     const { data: existingUser, error: checkError } = await supabase
       .from('users')
       .select('id')
       .eq('email', email)
-      .limit(1)
+      .single()
     
-    if (checkError) throw checkError
-    
-    if (existingUser && existingUser.length > 0) {
+    if (existingUser) {
       return res.status(409).json({ error: 'Email already registered' })
     }
     
@@ -53,18 +56,21 @@ export default async function handler(req, res) {
         full_name: fullName,
         phone,
         address: address || '',
-        status: role === 'professional' ? 'pending' : 'active',
+        status: 'active',
         created_at: new Date().toISOString()
       }])
       .select()
     
-    if (insertError) throw insertError
+    if (insertError) {
+      console.error('Supabase insert error:', insertError)
+      return res.status(500).json({ error: 'Database error: ' + insertError.message })
+    }
+    
+    console.log('✅ User created:', newUser[0].id)
     
     res.status(201).json({
       success: true,
-      message: role === 'professional' 
-        ? 'Registration successful! Account pending approval.' 
-        : 'Registration successful!',
+      message: 'Registration successful!',
       user: {
         id: newUser[0].id,
         email: newUser[0].email,
