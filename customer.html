@@ -697,26 +697,35 @@
 
         // Check if user is logged in
         async function checkLogin() {
-            const userData = localStorage.getItem('nibash_user');
-            if (!userData) {
-                window.location.href = 'login.html';
-                return;
-            }
-            
-            try {
-                currentUser = JSON.parse(userData);
-                if (currentUser.accountType !== 'customer') {
-                    window.location.href = 'index.html';
-                    return;
-                }
-                
-                updateUserInfo();
-            } catch (error) {
-                console.error('Error parsing user data:', error);
-                window.location.href = 'login.html';
-            }
+    console.log('🔍 Checking login status...');
+    
+    const userData = localStorage.getItem('nibash_user');
+    console.log('📦 Stored user data:', userData);
+    
+    if (!userData) {
+        console.log('❌ No user data found, redirecting to login');
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    try {
+        currentUser = JSON.parse(userData);
+        console.log('✅ Current user:', currentUser);
+        
+        // ✅ FIX: Check role, not accountType
+        if (currentUser.role !== 'customer') {
+            console.log('❌ Not a customer, redirecting');
+            window.location.href = 'index.html';
+            return;
         }
-
+        
+        updateUserInfo();
+        
+    } catch (error) {
+        console.error('❌ Error parsing user data:', error);
+        window.location.href = 'login.html';
+    }
+}
         // Update user info in header
         function updateUserInfo() {
             const userInfo = document.getElementById('userInfo');
