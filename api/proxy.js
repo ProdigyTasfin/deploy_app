@@ -5,24 +5,22 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   
-  // Handle preflight
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
   
   try {
     const { endpoint } = req.query;
-    const targetUrl = `https://deployapp-git-main-prodigytasfins-projects.vercel.app/api/${endpoint}`;
     
-    console.log('🔁 Proxying to:', targetUrl);
+    // Forward to your actual API
+    const targetUrl = `https://deployapp-git-main-prodigytasfins-projects.vercel.app/api/${endpoint}`;
     
     const response = await fetch(targetUrl, {
       method: req.method,
       headers: {
         'Content-Type': 'application/json',
-        ...req.headers
       },
-      body: req.method !== 'GET' ? JSON.stringify(req.body) : undefined
+      body: JSON.stringify(req.body)
     });
     
     const data = await response.json();
@@ -30,10 +28,7 @@ export default async function handler(req, res) {
     return res.status(response.status).json(data);
     
   } catch (error) {
-    console.error('❌ Proxy error:', error);
-    return res.status(500).json({ 
-      success: false, 
-      error: 'Proxy error: ' + error.message 
-    });
+    console.error('Proxy error:', error);
+    return res.status(500).json({ error: 'Proxy error: ' + error.message });
   }
 }
