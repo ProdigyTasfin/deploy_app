@@ -1,66 +1,80 @@
-import pool from "./db.js";
-import bcrypt from "bcryptjs";
+// api/signup.js - Supabase version
+import supabase from './db.js'
+import bcrypt from 'bcryptjs'
 
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+  
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end()
   }
-
-  const { email, password, role, fullName, phone, address } = req.body;
-
-  // Validate required fields
+  
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' })
+  }
+  
+  const { email, password, role, fullName, phone, address } = req.body
+  
+  // Validation
   if (!email || !password || !role || !fullName || !phone) {
-    return res.status(400).json({ error: "Missing required fields" });
+    return res.status(400).json({ error: 'All fields are required' })
   }
-
-  // Validate email format
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    return res.status(400).json({ error: "Invalid email format" });
-  }
-
-  // Validate password strength
+  
   if (password.length < 8) {
-    return res.status(400).json({ error: "Password must be at least 8 characters" });
+    return res.status(400).json({ error: 'Password must be at least 8 characters' })
   }
-
+  
   try {
-    // Check if user already exists
-    const existingUser = await pool.query(
-      "SELECT id FROM users WHERE email = $1",
-      [email]
-    );
-
-    if (existingUser.rowCount > 0) {
-      return res.status(409).json({ error: "Email already registered" });
+    // Check if user exists
+    const { data: existingUser, error: checkError } = await supabase
+      .from('users')
+      .select('id')
+      .eq('email', email)
+      .limit(1)
+    
+    if (checkError) throw checkError
+    
+    if (existingUser && existingUser.length > 0) {
+      return res.status(409).json({ error: 'Email already registered' })
     }
-
+    
     // Hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
+    const hashedPassword = await bcrypt.hash(password, 10)
+    
     // Insert new user
-    const result = await pool.query(
-      `INSERT INTO users (email, password, role, full_name, phone, address, created_at) 
-       VALUES ($1, $2, $3, $4, $5, $6, NOW()) 
-       RETURNING id, email, role, full_name`,
-      [email, hashedPassword, role, fullName, phone, address || null]
-    );
-
-    const user = result.rows[0];
-
+    const { data: newUser, error: insertError } = await supabase
+      .from('users')
+      .insert([{
+        email,
+        password: hashedPassword,
+        role,
+        full_name: fullName,
+        phone,
+        address: address || '',
+        status: role === 'professional' ? 'pending' : 'active',
+        created_at: new Date().toISOString()
+      }])
+      .select()
+    
+    if (insertError) throw insertError
+    
     res.status(201).json({
       success: true,
-      message: "User registered successfully",
+      message: role === 'professional' 
+        ? 'Registration successful! Account pending approval.' 
+        : 'Registration successful!',
       user: {
-        id: user.id,
-        email: user.email,
-        role: user.role,
-        fullName: user.full_name
+        id: newUser[0].id,
+        email: newUser[0].email,
+        role: newUser[0].role,
+        fullName: newUser[0].full_name
       }
-    });
-  } catch (err) {
-    console.error("Signup error:", err);
-    res.status(500).json({ error: "Server error during registration" });
+    })
+    
+  } catch (error) {
+    console.error('Signup error:', error)
+    res.status(500).json({ error: 'Internal server error' })
   }
 }

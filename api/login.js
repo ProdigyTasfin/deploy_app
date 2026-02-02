@@ -1,56 +1,57 @@
-import pool from "./db.js";
-import bcrypt from "bcryptjs";
+// api/login.js - Supabase version
+import supabase from './db.js'
+import bcrypt from 'bcryptjs'
 
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+  // CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+  
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end()
   }
-
-  const { email, password, role } = req.body;
-
-  if (!email || !password || !role) {
-    return res.status(400).json({ error: "Missing credentials" });
+  
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' })
   }
-
+  
+  const { email, password, role } = req.body
+  
   try {
-    const result = await pool.query(
-      "SELECT id, password, full_name, status FROM users WHERE email = $1 AND role = $2",
-      [email, role]
-    );
-
-    if (result.rowCount === 0) {
-      return res.status(401).json({ error: "Invalid credentials" });
-    }
-
-    const user = result.rows[0];
+    // Query user from Supabase
+    const { data: users, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('email', email)
+      .eq('role', role)
+      .limit(1)
     
-    // Check if account is active
-    if (user.status === 'pending') {
-      return res.status(403).json({ 
-        error: "Account pending approval. Please wait for verification." 
-      });
+    if (error) throw error
+    
+    if (!users || users.length === 0) {
+      return res.status(401).json({ error: 'Invalid credentials' })
     }
     
-    if (user.status === 'suspended') {
-      return res.status(403).json({ 
-        error: "Account suspended. Please contact support." 
-      });
-    }
-
-    const valid = await bcrypt.compare(password, user.password);
-
+    const user = users[0]
+    
+    // Verify password
+    const valid = await bcrypt.compare(password, user.password)
+    
     if (!valid) {
-      return res.status(401).json({ error: "Invalid credentials" });
+      return res.status(401).json({ error: 'Invalid credentials' })
     }
-
-    res.status(200).json({
+    
+    res.json({
       success: true,
       userId: user.id,
       fullName: user.full_name,
-      role: role
-    });
-  } catch (err) {
-    console.error("Login error:", err);
-    res.status(500).json({ error: "Server error" });
+      role: user.role,
+      email: user.email
+    })
+    
+  } catch (error) {
+    console.error('Login error:', error)
+    res.status(500).json({ error: 'Internal server error' })
   }
 }
