@@ -14,7 +14,7 @@ export default async function handler(req, res) {
 
   try {
     const result = await pool.query(
-      "SELECT id, password FROM users WHERE email = $1 AND role = $2",
+      "SELECT id, password, full_name, status FROM users WHERE email = $1 AND role = $2",
       [email, role]
     );
 
@@ -23,6 +23,20 @@ export default async function handler(req, res) {
     }
 
     const user = result.rows[0];
+    
+    // Check if account is active
+    if (user.status === 'pending') {
+      return res.status(403).json({ 
+        error: "Account pending approval. Please wait for verification." 
+      });
+    }
+    
+    if (user.status === 'suspended') {
+      return res.status(403).json({ 
+        error: "Account suspended. Please contact support." 
+      });
+    }
+
     const valid = await bcrypt.compare(password, user.password);
 
     if (!valid) {
@@ -31,10 +45,12 @@ export default async function handler(req, res) {
 
     res.status(200).json({
       success: true,
-      userId: user.id
+      userId: user.id,
+      fullName: user.full_name,
+      role: role
     });
   } catch (err) {
-    console.error(err);
+    console.error("Login error:", err);
     res.status(500).json({ error: "Server error" });
   }
 }
