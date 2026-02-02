@@ -2,7 +2,7 @@
   "name": "deploy_app",
   "version": "1.0.0",
   "description": "Nibash - Home Service Solution Platform",
-  "main": "index.js",
+  "main": "index.html",
   "scripts": {
     "start": "node index.js",
     "dev": "node --watch index.js"
