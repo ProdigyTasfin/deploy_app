@@ -1,13 +1,13 @@
 // api/signup.js
-import { createClient } from '@supabase/supabase-js';
-import bcrypt from 'bcryptjs';
+const { createClient } = require('@supabase/supabase-js');
+const bcrypt = require('bcryptjs');
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://kohswrhxjvfygzrldyyk.supabase.co';
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtvaHN3cmh4anZmeWd6cmxkeXlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwMzUzODgsImV4cCI6MjA4NTYxMTM4OH0.rK-SYCs-uC63581jLtuTDdYklsiL7vKtdCO7TuIdKII';
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -27,7 +27,7 @@ export default async function handler(req, res) {
     
     let body;
     try {
-      body = JSON.parse(req.body);
+      body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
     } catch {
       body = req.body;
     }
@@ -111,4 +111,4 @@ export default async function handler(req, res) {
       error: 'Internal server error: ' + error.message 
     });
   }
-}
+};
