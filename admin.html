@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>নিবাস - এডমিন ড্যাশবোর্ড</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Kalpurush&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #5629be;
+            --primary-light: #a78bfa;
+            --secondary: #0eaa69c5;
+            --dark-bg: #0f172a;
+            --dark-card: #1e293b;
+            --dark-text: #f1f5f9;
+            --dark-border: #334155;
+            --light-bg: #f8fafc;
+            --light-card: #ffffff;
+            --light-text: #1e293b;
+            --light-border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Hind Siliguri', 'Kalpurush', system-ui, sans-serif;
+        }
+
+        body {
+            background: var(--dark-bg);
+            color: var(--dark-text);
+            min-height: 100vh;
+        }
+
+        body.light-mode {
+            background: var(--light-bg);
+            color: var(--light-text);
+        }
+
+        /* Header */
+        .header {
+            padding: 1rem 2rem;
+            background: var(--dark-card);
+            border-bottom: 1px solid var(--dark-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .light-mode .header {
+            background: var(--light-card);
+            border-bottom: 1px solid var(--light-border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Dashboard Layout */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--dark-card);
+            border-right: 1px solid var(--dark-border);
+            padding: 1.5rem 0;
+        }
+
+        .light-mode .sidebar {
+            background: var(--light-card);
+            border-right: 1px solid var(--light-border);
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.25rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: var(--dark-text);
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .light-mode .nav-link {
+            color: var(--light-text);
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(86, 41, 190, 0.1);
+            color: var(--primary);
+            border-right: 3px solid var(--primary);
+        }
+
+        .nav-link i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--dark-card);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--dark-border);
+            text-align: center;
+        }
+
+        .light-mode .stat-card {
+            background: var(--light-card);
+            border: 1px solid var(--light-border);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            margin: 0 auto 1rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .light-mode .stat-label {
+            color: #64748b;
+        }
+
+        /* Tables */
+        .table-container {
+            background: var(--dark-card);
+            border-radius: 12px;
+            border: 1px solid var(--dark-border);
+            overflow: hidden;
+            margin-top: 1.5rem;
+        }
+
+        .light-mode .table-container {
+            background: var(--light-card);
+            border: 1px solid var(--light-border);
+        }
+
+        .table-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--dark-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .light-mode .table-header {
+            border-bottom: 1px solid var(--light-border);
+        }
+
+        .table-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+
+        .light-mode .table-title {
+            color: var(--light-text);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th {
+            padding: 1rem;
+            text-align: left;
+            background: rgba(86, 41, 190, 0.1);
+            color: var(--dark-text);
+            font-weight: 600;
+            border-bottom: 1px solid var(--dark-border);
+        }
+
+        .light-mode .table th {
+            background: rgba(86, 41, 190, 0.05);
+            color: var(--light-text);
+            border-bottom: 1px solid var(--light-border);
+        }
+
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--dark-border);
+        }
+
+        .light-mode .table td {
+            border-bottom: 1px solid var(--light-border);
+        }
+
+        .table tbody tr:hover {
+            background: rgba(86, 41, 190, 0.05);
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .status-pending {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+
+        .status-approved {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+
+        .status-rejected {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+
+        .status-active {
+            background: rgba(86, 41, 190, 0.15);
+            color: var(--primary);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-info {
+            background: var(--info);
+            color: white;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: var(--dark-card);
+            border-radius: 16px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid var(--dark-border);
+        }
+
+        .light-mode .modal-content {
+            background: var(--light-card);
+            border: 1px solid var(--light-border);
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--dark-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .light-mode .modal-header {
+            border-bottom: 1px solid var(--light-border);
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+
+        .light-mode .modal-title {
+            color: var(--light-text);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--dark-border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .light-mode .modal-footer {
+            border-top: 1px solid var(--light-border);
+        }
+
+        /* Filter */
+        .filter-bar {
+            background: var(--dark-card);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .light-mode .filter-bar {
+            background: var(--light-card);
+        }
+
+        .filter-select {
+            padding: 0.5rem 1rem;
+            background: var(--dark-bg);
+            border: 1px solid var(--dark-border);
+            border-radius: 6px;
+            color: var(--dark-text);
+        }
+
+        .light-mode .filter-select {
+            background: var(--light-bg);
+            border: 1px solid var(--light-border);
+            color: var(--light-text);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <!-- Header -->
+    <header class="header">
+        <a href="index.html" class="logo">
+            <i class="fas fa-user-shield"></i>
+            <span>নিবাস এডমিন</span>
+        </a>
+        
+        <div class="user-info" id="userInfo">
+            <!-- Will be populated by JavaScript -->
+        </div>
+    </header>
+
+    <!-- Dashboard -->
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a class="nav-link active" data-section="dashboard">
+                        <i class="fas fa-tachometer-alt"></i>
+                        ড্যাশবোর্ড
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-section="professionals">
+                        <i class="fas fa-user-cog"></i>
+                        বিশেষজ্ঞ আবেদন
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-section="service-requests">
+                        <i class="fas fa-tools"></i>
+                        সেবা অনুরোধ
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-section="users">
+                        <i class="fas fa-users"></i>
+                        ব্যবহারকারী
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-section="payments">
+                        <i class="fas fa-credit-card"></i>
+                        পেমেন্ট
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        লগআউট
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <div class="section active" id="dashboardSection">
+                <h2 style="margin-bottom: 1.5rem;">এডমিন ড্যাশবোর্ড</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-cog"></i>
+                        </div>
+                        <div class="stat-value" id="pendingProfessionals">০</div>
+                        <div class="stat-label">অপেক্ষমান বিশেষজ্ঞ</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <div class="stat-value" id="pendingRequests">০</div>
+                        <div class="stat-label">অপেক্ষমান সেবা</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-value" id="totalUsers">০</div>
+                        <div class="stat-label">মোট ব্যবহারকারী</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="stat-value" id="totalRevenue">৳ ০</div>
+                        <div class="stat-label">মোট আয়</div>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3 class="table-title">সাম্প্রতিক বিশেষজ্ঞ আবেদন</h3>
+                        <a href="#professionals" class="btn btn-primary" onclick="showSection('professionals')">
+                            <i class="fas fa-eye"></i> সব দেখুন
+                        </a>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>নাম</th>
+                                <th>ইমেইল</th>
+                                <th>সেবা</th>
+                                <th>তারিখ</th>
+                                <th>স্ট্যাটাস</th>
+                                <th>অ্যাকশন</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentProfessionals">
+                            <!-- Will be loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="table-container" style="margin-top: 1.5rem;">
+                    <div class="table-header">
+                        <h3 class="table-title">সাম্প্রতিক সেবা অনুরোধ</h3>
+                        <a href="#service-requests" class="btn btn-primary" onclick="showSection('service-requests')">
+                            <i class="fas fa-eye"></i> সব দেখুন
+                        </a>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>গ্রাহক</th>
+                                <th>সেবা</th>
+                                <th>ঠিকানা</th>
+                                <th>তারিখ</th>
+                                <th>স্ট্যাটাস</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentRequests">
+                            <!-- Will be loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Professionals Section -->
+            <div class="section" id="professionalsSection">
+                <h2 style="margin-bottom: 1rem;">বিশেষজ্ঞ আবেদন ম্যানেজমেন্ট</h2>
+                
+                <div class="filter-bar">
+                    <select class="filter-select" id="professionalFilter" onchange="filterProfessionals()">
+                        <option value="all">সব আবেদন</option>
+                        <option value="pending">অপেক্ষমান</option>
+                        <option value="approved">অনুমোদিত</option>
+                        <option value="rejected">প্রত্যাখ্যাত</option>
+                    </select>
+                </div>
+                
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>নাম</th>
+                                <th>ইমেইল</th>
+                                <th>ফোন</th>
+                                <th>সেবা</th>
+                                <th>এনআইডি</th>
+                                <th>তারিখ</th>
+                                <th>স্ট্যাটাস</th>
+                                <th>অ্যাকশন</th>
+                            </tr>
+                        </thead>
+                        <tbody id="professionalsTable">
+                            <!-- Will be loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Service Requests Section -->
+            <div class="section" id="serviceRequestsSection">
+                <h2 style="margin-bottom: 1rem;">সেবা অনুরোধ</h2>
+                
+                <div class="filter-bar">
+                    <select class="filter-select" id="requestFilter" onchange="filterRequests()">
+                        <option value="all">সব অনুরোধ</option>
+                        <option value="pending">অপেক্ষমান</option>
+                        <option value="assigned">বিশেষজ্ঞ নিয়োগ</option>
+                        <option value="completed">সম্পন্ন</option>
+                        <option value="cancelled">বাতিল</option>
+                    </select>
+                </div>
+                
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>আইডি</th>
+                                <th>গ্রাহক</th>
+                                <th>সেবা</th>
+                                <th>সমস্যা</th>
+                                <th>ঠিকানা</th>
+                                <th>তারিখ</th>
+                                <th>স্ট্যাটাস</th>
+                                <th>অ্যাকশন</th>
+                            </tr>
+                        </thead>
+                        <tbody id="requestsTable">
+                            <!-- Will be loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Professional Details Modal -->
+    <div class="modal" id="professionalModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">বিশেষজ্ঞের বিস্তারিত তথ্য</h3>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body" id="professionalModalBody">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Service Request Details Modal -->
+    <div class="modal" id="requestModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">সেবা অনুরোধের বিস্তারিত</h3>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body" id="requestModalBody">
+                <!-- Content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentAdmin = null;
+        let selectedProfessional = null;
+        let selectedRequest = null;
+
+        // Initialize admin dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAdminAccess();
+            setupNavigation();
+            loadDashboardData();
+            loadAllProfessionals();
+            loadAllServiceRequests();
+        });
+
+        // Check if user is admin
+        async function checkAdminAccess() {
+            const userData = localStorage.getItem('nibash_user');
+            if (!userData) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            try {
+                currentAdmin = JSON.parse(userData);
+                
+                // For demo, check if user is admin
+                // In production, this should check user.role === 'admin'
+                if (currentAdmin.email !== 'admin@nibash.com') {
+                    alert('এই পেজে শুধুমাত্র এডমিন অ্যাক্সেস করতে পারে');
+                    window.location.href = 'index.html';
+                    return;
+                }
+                
+                updateUserInfo();
+            } catch (error) {
+                console.error('Error:', error);
+                window.location.href = 'login.html';
+            }
+        }
+
+        function updateUserInfo() {
+            const userInfo = document.getElementById('userInfo');
+            const userInitial = currentAdmin.fullName ? currentAdmin.fullName.charAt(0) : 'A';
+            
+            userInfo.innerHTML = `
+                <div class="user-avatar">${userInitial}</div>
+                <div>
+                    <div style="font-weight: 600;">${currentAdmin.fullName || 'এডমিন'}</div>
+                    <div style="font-size: 0.85rem; color: #94a3b8;">সিস্টেম এডমিন</div>
+                </div>
+            `;
+        }
+
+        function setupNavigation() {
+            const navLinks = document.querySelectorAll('.nav-link[data-section]');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    const sectionId = this.getAttribute('data-section');
+                    
+                    // Update active states
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show selected section
+                    showSection(sectionId);
+                });
+            });
+        }
+
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            const section = document.getElementById(sectionId + 'Section');
+            if (section) {
+                section.classList.add('active');
+            }
+        }
+
+        // Load dashboard statistics
+        async function loadDashboardData() {
+            // Load data from localStorage
+            const applications = JSON.parse(localStorage.getItem('nibash_applications') || '[]');
+            const serviceRequests = JSON.parse(localStorage.getItem('service_requests') || '[]');
+            const users = JSON.parse(localStorage.getItem('nibash_users') || '[]');
+            const payments = JSON.parse(localStorage.getItem('user_payments') || '[]');
+            
+            // Update stats
+            document.getElementById('pendingProfessionals').textContent = 
+                applications.filter(app => app.status === 'pending').length;
+            
+            document.getElementById('pendingRequests').textContent = 
+                serviceRequests.filter(req => req.status === 'pending').length;
+            
+            document.getElementById('totalUsers').textContent = users.length;
+            
+            const totalRevenue = payments.reduce((sum, payment) => {
+                return sum + (parseFloat(payment.amount) || 0);
+            }, 0);
+            document.getElementById('totalRevenue').textContent = `৳ ${totalRevenue.toLocaleString()}`;
+            
+            // Load recent professionals
+            loadRecentProfessionals();
+            
+            // Load recent service requests
+            loadRecentServiceRequests();
+        }
+
+        function loadRecentProfessionals() {
+            const applications = JSON.parse(localStorage.getItem('nibash_applications') || '[]');
+            const recent = applications.slice(-5).reverse();
+            const tbody = document.getElementById('recentProfessionals');
+            
+            if (recent.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 2rem; color: #94a3b8;">
+                            <i class="fas fa-user-cog" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                            <div>কোন আবেদন নেই</div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = recent.map(professional => `
+                <tr>
+                    <td>${professional.fullName || 'N/A'}</td>
+                    <td>${professional.email}</td>
+                    <td>${professional.service || 'N/A'}</td>
+                    <td>${new Date(professional.createdAt).toLocaleDateString('bn-BD')}</td>
+                    <td>
+                        <span class="status-badge ${getStatusClass(professional.status)}">
+                            ${getStatusText(professional.status)}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-info" onclick="viewProfessional('${professional.email}')" style="padding: 0.25rem 0.5rem; font-size: 0.85rem;">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function loadRecentServiceRequests() {
+            const requests = JSON.parse(localStorage.getItem('service_requests') || '[]');
+            const recent = requests.slice(-5).reverse();
+            const tbody = document.getElementById('recentRequests');
+            
+            if (recent.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 2rem; color: #94a3b8;">
+                            <i class="fas fa-tools" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                            <div>কোন অনুরোধ নেই</div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = recent.map(request => `
+                <tr>
+                    <td>${request.customerName || 'গ্রাহক'}</td>
+                    <td>${getServiceName(request.serviceType)}</td>
+                    <td>${request.customerAddress ? request.customerAddress.substring(0, 30) + '...' : 'N/A'}</td>
+                    <td>${new Date(request.createdAt || new Date()).toLocaleDateString('bn-BD')}</td>
+                    <td>
+                        <span class="status-badge ${getStatusClass(request.status)}">
+                            ${getStatusText(request.status)}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Load all professionals for management
+        function loadAllProfessionals() {
+            const applications = JSON.parse(localStorage.getItem('nibash_applications') || '[]');
+            const tbody = document.getElementById('professionalsTable');
+            
+            if (applications.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 2rem; color: #94a3b8;">
+                            <i class="fas fa-user-cog" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                            <div>কোন বিশেষজ্ঞ আবেদন নেই</div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            renderProfessionalsTable(applications);
+        }
+
+        function renderProfessionalsTable(professionals) {
+            const tbody = document.getElementById('professionalsTable');
+            
+            tbody.innerHTML = professionals.map(professional => `
+                <tr>
+                    <td>${professional.fullName || 'N/A'}</td>
+                    <td>${professional.email}</td>
+                    <td>${professional.phone || 'N/A'}</td>
+                    <td>${professional.service || 'N/A'}</td>
+                    <td>${professional.nid || 'N/A'}</td>
+                    <td>${new Date(professional.createdAt).toLocaleDateString('bn-BD')}</td>
+                    <td>
+                        <span class="status-badge ${getStatusClass(professional.status)}">
+                            ${getStatusText(professional.status)}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-info" onclick="viewProfessional('${professional.email}')" style="padding: 0.25rem 0.5rem;">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            ${professional.status === 'pending' ? `
+                                <button class="btn btn-success" onclick="approveProfessional('${professional.email}')" style="padding: 0.25rem 0.5rem;">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="btn btn-danger" onclick="rejectProfessional('${professional.email}')" style="padding: 0.25rem 0.5rem;">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Filter professionals by status
+        function filterProfessionals() {
+            const filter = document.getElementById('professionalFilter').value;
+            const applications = JSON.parse(localStorage.getItem('nibash_applications') || '[]');
+            
+            let filtered = applications;
+            if (filter !== 'all') {
+                filtered = applications.filter(app => app.status === filter);
+            }
+            
+            renderProfessionalsTable(filtered);
+        }
+
+        // Load all service requests
+        function loadAllServiceRequests() {
+            const requests = JSON.parse(localStorage.getItem('service_requests') || '[]');
+            renderRequestsTable(requests);
+        }
+
+        function renderRequestsTable(requests) {
+            const tbody = document.getElementById('requestsTable');
+            
+            if (requests.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 2rem; color: #94a3b8;">
+                            <i class="fas fa-tools" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                            <div>কোন সেবা অনুরোধ নেই</div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = requests.map(request => `
+                <tr>
+                    <td>${request.id || 'N/A'}</td>
+                    <td>${request.customerName || 'গ্রাহক'}</td>
+                    <td>${getServiceName(request.serviceType)}</td>
+                    <td>${request.problemDescription ? request.problemDescription.substring(0, 50) + '...' : 'N/A'}</td>
+                    <td>${request.customerAddress ? request.customerAddress.substring(0, 30) + '...' : 'N/A'}</td>
+                    <td>${new Date(request.createdAt || new Date()).toLocaleDateString('bn-BD')}</td>
+                    <td>
+                        <span class="status-badge ${getStatusClass(request.status)}">
+                            ${getStatusText(request.status)}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-info" onclick="viewServiceRequest('${request.id}')" style="padding: 0.25rem 0.5rem;">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            ${request.status === 'pending' ? `
+                                <button class="btn btn-success" onclick="assignProfessional('${request.id}')" style="padding: 0.25rem 0.5rem;">
+                                    <i class="fas fa-user-cog"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Filter service requests
+        function filterRequests() {
+            const filter = document.getElementById('requestFilter').value;
+            const requests = JSON.parse(localStorage.getItem('service_requests') || '[]');
+            
+            let filtered = requests;
+            if (filter !== 'all') {
+                filtered = requests.filter(req => req.status === filter);
+            }
+            
+            renderRequestsTable(filtered);
+        }
+
+        // View professional details
+        function viewProfessional(email) {
+            const applications = JSON.parse(localStorage.getItem('nibash_applications') || '[]');
+            const professional = applications.find(app => app.email === email);
+            
+            if (!professional) {
+                alert('বিশেষজ্ঞ খুঁজে পাওয়া যায়নি');
+                return;
+            }
+            
+            selectedProfessional = professional;
+            
+            document.getElementById('professionalModalBody').innerHTML = `
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;">ব্যক্তিগত তথ্য</h4>
+                    <div style="background: rgba(86, 41, 190, 0.1); padding: 1rem; border-radius: 8px;">
+                        <p><strong>নাম:</strong> ${professional.fullName}</p>
+                        <p><strong>ইমেইল:</strong> ${professional.email}</p>
+                        <p><strong>ফোন:</strong> ${professional.phone || 'N/A'}</p>
+                        <p><strong>এনআইডি:</strong> ${professional.nid || 'N/A'}</p>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;">পেশাগত তথ্য</h4>
+                    <div style="background: rgba(86, 41, 190, 0.1); padding: 1rem; border-radius: 8px;">
+                        <p><strong>সেবার ধরন:</strong> ${professional.service || 'N/A'}</p>
+                        <p><strong>অভিজ্ঞতা:</strong> ${professional.experience || 'N/A'}</p>
+                        <p><strong>ঠিকানা:</strong> ${professional.address || 'N/A'}</p>
+                        <p><strong>আবেদনের তারিখ:</strong> ${new Date(professional.createdAt).toLocaleDateString('bn-BD')}</p>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;">স্ট্যাটাস</h4>
+                    <div style="background: rgba(86, 41, 190, 0.1); padding: 1rem; border-radius: 8px;">
+                        <p><strong>বর্তমান স্ট্যাটাস:</strong> 
+                            <span class="status-badge ${getStatusClass(professional.status)}" style="margin-left: 0.5rem;">
+                                ${getStatusText(professional.status)}
+                            </span>
+                        </p>
+                        <p><strong>অ্যাকাউন্ট টাইপ:</strong> ${professional.accountType || 'professional'}</p>
+                    </div>
+                </div>
+                
+                <div class="modal-footer" style="margin-top: 1.5rem; padding: 1rem 0 0; border-top: 1px solid var(--dark-border);">
+                    ${professional.status === 'pending' ? `
+                        <button class="btn btn-success" onclick="approveProfessional('${professional.email}')">
+                            <i class="fas fa-check"></i> অনুমোদন দিন
+                        </button>
+                        <button class="btn btn-danger" onclick="rejectProfessional('${professional.email}')">
+                            <i class="fas fa-times"></i> প্রত্যাখ্যান করুন
+                        </button>
+                    ` : ''}
+                    <button class="btn" onclick="closeModal()">
+                        বন্ধ করুন
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('professionalModal').style.display = 'flex';
+        }
+
+        // View service request details
+        function viewServiceRequest(requestId) {
+            const requests = JSON.parse(localStorage.getItem('service_requests') || '[]');
+            const request = requests.find(req => req.id === requestId);
+            
+            if (!request) {
+                alert('অনুরোধ খুঁজে পাওয়া যায়নি');
+                return;
+            }
+            
+            selectedRequest = request;
+            
+            document.getElementById('requestModalBody').innerHTML = `
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;">গ্রাহকের তথ্য</h4>
+                    <div style="background: rgba(86, 41, 190, 0.1); padding: 1rem; border-radius: 8px;">
+                        <p><strong>নাম:</strong> ${request.customerName || 'গ্রাহক'}</p>
+                        <p><strong>ফোন:</strong> ${request.customerPhone || 'N/A'}</p>
+                        <p><strong>ঠিকানা:</strong> ${request.customerAddress || 'N/A'}</p>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;">সেবার বিস্তারিত</h4>
+                    <div style="background: rgba(86, 41, 190, 0.1); padding: 1rem; border-radius: 8px;">
+                        <p><strong>সেবার ধরন:</strong> ${getServiceName(request.serviceType)}</p>
+                        <p><strong>সমস্যার বর্ণনা:</strong></p>
+                        <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 6px; margin-top: 0.5rem;">
+                            ${request.problemDescription || 'N/A'}
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;">স্ট্যাটাস</h4>
+                    <div style="background: rgba(86, 41, 190, 0.1); padding: 1rem; border-radius: 8px;">
+                        <p><strong>বর্তমান স্ট্যাটাস:</strong> 
+                            <span class="status-badge ${getStatusClass(request.status)}" style="margin-left: 0.5rem;">
+                                ${getStatusText(request.status)}
+                            </span>
+                        </p>
+                        <p><strong>তারিখ:</strong> ${new Date(request.createdAt || new Date()).toLocaleDateString('bn-BD')}</p>
+                    </div>
+                </div>
+                
+                <div class="modal-footer" style="margin-top: 1.5rem; padding: 1rem 0 0; border-top: 1px solid var(--dark-border);">
+                    ${request.status === 'pending' ? `
+                        <button class="btn btn-success" onclick="assignProfessional('${request.id}')">
+                            <i class="fas fa-user-cog"></i> বিশেষজ্ঞ নিয়োগ দিন
+                        </button>
+                    ` : ''}
+                    <button class="btn" onclick="closeModal()">
+                        বন্ধ করুন
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('requestModal').style.display = 'flex';
+        }
+
+        // Approve a professional
+        function approveProfessional(email) {
+            if (!confirm('আপনি কি এই বিশেষজ্ঞকে অনুমোদন করতে চান?')) {
+                return;
+            }
+            
+            // Update in applications
+            let applications = JSON.parse(localStorage.getItem('nibash_applications') || '[]');
+            applications = applications.map(app => {
+                if (app.email === email) {
+                    return { ...app, status: 'approved', approvedAt: new Date().toISOString() };
+                }
+                return app;
+            });
+            localStorage.setItem('nibash_applications', JSON.stringify(applications));
+            
+            // Update in users
+            let users = JSON.parse(localStorage.getItem('nibash_users') || '[]');
+            users = users.map(user => {
+                if (user.email === email) {
+                    return { ...user, status: 'active' };
+                }
+                return user;
+            });
+            localStorage.setItem('nibash_users', JSON.stringify(users));
+            
+            alert('বিশেষজ্ঞ সফলভাবে অনুমোদিত হয়েছে!');
+            closeModal();
+            loadDashboardData();
+            loadAllProfessionals();
+        }
+
+        // Reject a professional
+        function rejectProfessional(email) {
+            if (!confirm('আপনি কি এই বিশেষজ্ঞকে প্রত্যাখ্যান করতে চান?')) {
+                return;
+            }
+            
+            let applications = JSON.parse(localStorage.getItem('nibash_applications') || '[]');
+            applications = applications.map(app => {
+                if (app.email === email) {
+                    return { ...app, status: 'rejected', rejectedAt: new Date().toISOString() };
+                }
+                return app;
+            });
+            localStorage.setItem('nibash_applications', JSON.stringify(applications));
+            
+            alert('বিশেষজ্ঞ প্রত্যাখ্যান করা হয়েছে!');
+            closeModal();
+            loadDashboardData();
+            loadAllProfessionals();
+        }
+
+        // Assign professional to service request
+        function assignProfessional(requestId) {
+            // Get approved professionals
+            const applications = JSON.parse(localStorage.getItem('nibash_applications') || '[]');
+            const approvedProfessionals = applications.filter(app => app.status === 'approved');
+            
+            if (approvedProfessionals.length === 0) {
+                alert('কোন অনুমোদিত বিশেষজ্ঞ নেই। প্রথমে কিছু বিশেষজ্ঞ অনুমোদন করুন।');
+                return;
+            }
+            
+            // Show professional selection
+            let options = '<option value="">বিশেষজ্ঞ নির্বাচন করুন</option>';
+            approvedProfessionals.forEach(pro => {
+                options += `<option value="${pro.email}">${pro.fullName} - ${pro.service}</option>`;
+            });
+            
+            const selectedPro = prompt(`নিম্নলিখিত বিশেষজ্ঞ থেকে নির্বাচন করুন:\n${approvedProfessionals.map(p => `${p.fullName} (${p.service})`).join('\n')}\n\nবিশেষজ্ঞের ইমেইল দিন:`);
+            
+            if (!selectedPro) return;
+            
+            const professional = approvedProfessionals.find(p => p.email === selectedPro);
+            if (!professional) {
+                alert('সঠিক বিশেষজ্ঞ নির্বাচন করুন');
+                return;
+            }
+            
+            // Update service request
+            let requests = JSON.parse(localStorage.getItem('service_requests') || '[]');
+            requests = requests.map(req => {
+                if (req.id === requestId) {
+                    return { 
+                        ...req, 
+                        status: 'assigned',
+                        assignedTo: professional.email,
+                        assignedToName: professional.fullName,
+                        assignedAt: new Date().toISOString()
+                    };
+                }
+                return req;
+            });
+            localStorage.setItem('service_requests', JSON.stringify(requests));
+            
+            alert(`সেবা ${professional.fullName} এর কাছে নিয়োগ করা হয়েছে!`);
+            closeModal();
+            loadDashboardData();
+            loadAllServiceRequests();
+        }
+
+        // Helper functions
+        function getStatusClass(status) {
+            switch(status) {
+                case 'pending': return 'status-pending';
+                case 'approved': return 'status-approved';
+                case 'rejected': return 'status-rejected';
+                case 'active': return 'status-active';
+                case 'assigned': return 'status-active';
+                case 'completed': return 'status-approved';
+                case 'cancelled': return 'status-rejected';
+                default: return 'status-pending';
+            }
+        }
+
+        function getStatusText(status) {
+            switch(status) {
+                case 'pending': return 'অপেক্ষমান';
+                case 'approved': return 'অনুমোদিত';
+                case 'rejected': return 'প্রত্যাখ্যাত';
+                case 'active': return 'সক্রিয়';
+                case 'assigned': return 'নিয়োগকৃত';
+                case 'completed': return 'সম্পন্ন';
+                case 'cancelled': return 'বাতিল';
+                default: return 'অপেক্ষমান';
+            }
+        }
+
+        function getServiceName(serviceId) {
+            const services = {
+                '1': 'বৈদ্যুতিক কাজ',
+                '2': 'প্লাম্বিং',
+                '3': 'রং ও সজ্জা',
+                '4': 'এয়ারকন্ডিশনিং',
+                '5': 'কাঠের কাজ',
+                '6': 'অন্যান্য'
+            };
+            return services[serviceId] || 'সাধারণ সেবা';
+        }
+
+        function closeModal() {
+            document.getElementById('professionalModal').style.display = 'none';
+            document.getElementById('requestModal').style.display = 'none';
+        }
+
+        function logout() {
+            localStorage.removeItem('nibash_user');
+            window.location.href = 'index.html';
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === document.getElementById('professionalModal') || 
+                e.target === document.getElementById('requestModal')) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
