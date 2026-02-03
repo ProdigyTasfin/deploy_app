@@ -657,13 +657,355 @@
             </div>
         </section>
 
-        <!-- Services -->
-        <section id="services" style="padding: 0 5% 4rem;">
-            <h2 class="section-title">আমাদের সেবাসমূহ</h2>
-            <div class="services-grid" id="servicesGrid">
-                <!-- Services will be loaded dynamically -->
-            </div>
-        </section>
+       <!-- Services -->
+<section id="services" style="padding: 0 5% 4rem;">
+    <div class="section-header">
+        <h2 class="section-title">আমাদের সেবাসমূহ</h2>
+        <p class="section-subtitle">গৃহস্থালির সকল সমস্যার একমাত্র সমাধান</p>
+        <p class="section-description">
+            বৈদ্যুতিক, প্লাম্বিং, রং করার কাজ থেকে শুরু করে সকল গৃহস্থালি মেরামতের জন্য দক্ষ পেশাদারদের সাথে সংযুক্ত হোন। 
+            নির্ভরযোগ্য সেবা, সাশ্রয়ী মূল্য, সময়মতো সমাধান।
+        </p>
+    </div>
+    <div class="services-grid" id="servicesGrid">
+        <!-- Services will be loaded dynamically -->
+    </div>
+</section>
+
+<style>
+    /* Services Section Styling */
+    .section-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        animation: fadeInDown 1s ease-out;
+    }
+    
+    .section-title {
+        font-size: 2.5rem;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        position: relative;
+        display: inline-block;
+    }
+    
+    .section-title::after {
+        content: '';
+        position: absolute;
+        width: 70px;
+        height: 4px;
+        background: #3498db;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 2px;
+    }
+    
+    .section-subtitle {
+        font-size: 1.5rem;
+        color: #e74c3c;
+        font-weight: 600;
+        margin: 1.5rem 0 0.5rem;
+        animation: fadeIn 1.5s ease-out;
+    }
+    
+    .section-description {
+        max-width: 800px;
+        margin: 1rem auto 0;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        color: #555;
+        animation: fadeIn 2s ease-out;
+    }
+    
+    /* Services Grid Layout */
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+    
+    /* Service Card Styling */
+    .service-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        opacity: 0;
+        transform: translateY(30px);
+        animation: cardAppear 0.6s forwards;
+    }
+    
+    .service-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+    }
+    
+    .service-card:nth-child(1) { animation-delay: 0.1s; }
+    .service-card:nth-child(2) { animation-delay: 0.2s; }
+    .service-card:nth-child(3) { animation-delay: 0.3s; }
+    .service-card:nth-child(4) { animation-delay: 0.4s; }
+    .service-card:nth-child(5) { animation-delay: 0.5s; }
+    .service-card:nth-child(6) { animation-delay: 0.6s; }
+    
+    .service-icon {
+        height: 80px;
+        width: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 2rem auto 1.5rem;
+        font-size: 2.5rem;
+        color: white;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .service-icon::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: inherit;
+        opacity: 0.2;
+        z-index: -1;
+        transform: scale(1.3);
+    }
+    
+    .service-content {
+        padding: 0 1.5rem 2rem;
+        text-align: center;
+    }
+    
+    .service-title {
+        font-size: 1.5rem;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+    
+    .service-description {
+        color: #666;
+        line-height: 1.6;
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .service-features {
+        text-align: left;
+        padding: 0 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .service-features li {
+        padding: 0.4rem 0;
+        color: #555;
+        position: relative;
+        padding-left: 1.8rem;
+    }
+    
+    .service-features li:before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: #27ae60;
+        font-weight: bold;
+    }
+    
+    .service-button {
+        display: inline-block;
+        padding: 0.7rem 1.8rem;
+        background: #3498db;
+        color: white;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: 2px solid #3498db;
+    }
+    
+    .service-button:hover {
+        background: transparent;
+        color: #3498db;
+        transform: scale(1.05);
+    }
+    
+    /* Animations */
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    @keyframes cardAppear {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .section-title {
+            font-size: 2rem;
+        }
+        
+        .section-subtitle {
+            font-size: 1.3rem;
+        }
+        
+        .services-grid {
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+    }
+</style>
+
+<script>
+    // Services Data
+    const services = [
+        {
+            id: 1,
+            title: "বৈদ্যুতিক মেরামত",
+            icon: "⚡",
+            color: "#f39c12",
+            description: "বাড়ির সকল ধরনের বৈদ্যুতিক সমস্যার সমাধান।",
+            features: [
+                "ওয়্যারিং ও ফিউজ সমস্যা সমাধান",
+                "সুইচ, প্লাগ ও সকেট মেরামত",
+                "লাইটিং ও ফ্যান স্থাপন",
+                "বৈদ্যুতিক সরঞ্জাম মেরামত"
+            ]
+        },
+        {
+            id: 2,
+            title: "প্লাম্বিং কাজ",
+            icon: "🔧",
+            color: "#3498db",
+            description: "পানির লাইন, ড্রেন ও স্যানিটারি সমস্যার পূর্ণ সমাধান।",
+            features: [
+                "পানি লিকেজ মেরামত",
+                "ড্রেন ও সিভার লাইন পরিষ্কার",
+                "নতুন ট্যাপ ও শাওয়ার স্থাপন",
+                "বাথরুম ও রান্নাঘর প্লাম্বিং"
+            ]
+        },
+        {
+            id: 3,
+            title: "রং করার কাজ",
+            icon: "🎨",
+            color: "#9b59b6",
+            description: "ঘর, অফিস, দোকান সহ সকল ধরনের রং করার কাজ।",
+            features: [
+                "ঘরের দেয়াল ও সিলিং রং",
+                "উড ও মেটাল পলিশিং",
+                "ওয়াটারপ্রুফ ও ডেকোরেটিভ পেইন্ট",
+                "বাইরের দেয়াল রং"
+            ]
+        },
+        {
+            id: 4,
+            title: "এসি ও ফ্রিজ সার্ভিস",
+            icon: "❄️",
+            color: "#1abc9c",
+            description: "এয়ার কন্ডিশনার ও রেফ্রিজারেটর সার্ভিসিং ও মেরামত।",
+            features: [
+                "এসি গ্যাস রিচার্জ ও পরিষ্কার",
+                "ফ্রিজ সার্ভিসিং ও মেরামত",
+                "নতুন এসি/ফ্রিজ ইনস্টলেশন",
+                "রেগুলার মেইনটেনেন্স"
+            ]
+        },
+        {
+            id: 5,
+            title: "গৃহস্থালি মেরামত",
+            icon: "🏠",
+            color: "#e74c3c",
+            description: "ঘরের যেকোনো ধরনের ছোট-বড় মেরামতের কাজ।",
+            features: [
+                "দরজা-জানালা মেরামত",
+                "ফার্নিচার মেরামত ও অ্যাসেম্বলিং",
+                "টাইলস ও সিরামিক কাজ",
+                "সামান্য সিভিল কাজ"
+            ]
+        },
+        {
+            id: 6,
+            title: "ক্লিনিং সার্ভিস",
+            icon: "🧹",
+            color: "#2ecc71",
+            description: "ঘর, অফিস, দোকানের জন্য পেশাদার পরিষ্কারকরণ সেবা।",
+            features: [
+                "ঘর ও কার্পেট পরিষ্কার",
+                "বাথরুম ও রান্নাঘর পরিষ্কার",
+                "কাচ ও জানালা পরিষ্কার",
+                "বাড়ি/অফিস ডিপ ক্লিনিং"
+            ]
+        }
+    ];
+
+    // Function to load services dynamically
+    function loadServices() {
+        const servicesGrid = document.getElementById('servicesGrid');
+        
+        services.forEach(service => {
+            const serviceCard = document.createElement('div');
+            serviceCard.className = 'service-card';
+            
+            serviceCard.innerHTML = `
+                <div class="service-icon" style="background: ${service.color}">
+                    ${service.icon}
+                </div>
+                <div class="service-content">
+                    <h3 class="service-title">${service.title}</h3>
+                    <p class="service-description">${service.description}</p>
+                    <ul class="service-features">
+                        ${service.features.map(feature => `<li>${feature}</li>`).join('')}
+                    </ul>
+                    <a href="#contact" class="service-button">সেবা নিন</a>
+                </div>
+            `;
+            
+            servicesGrid.appendChild(serviceCard);
+        });
+    }
+
+    // Load services when page loads
+    document.addEventListener('DOMContentLoaded', loadServices);
+
+    // Add scroll animation for service cards
+    function animateOnScroll() {
+        const cards = document.querySelectorAll('.service-card');
+        const windowHeight = window.innerHeight;
+        
+        cards.forEach(card => {
+            const cardPosition = card.getBoundingClientRect().top;
+            
+            if (cardPosition < windowHeight - 100) {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }
+        });
+    }
+
+    // Initialize scroll animation
+    window.addEventListener('scroll', animateOnScroll);
+    window.addEventListener('load', animateOnScroll);
+</script>
 
         <!-- Testimonials -->
         <section class="testimonials">
@@ -1181,5 +1523,6 @@
     </script>
 </body>
 </html>
+
 
 
