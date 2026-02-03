@@ -1,5 +1,5 @@
 // api/proxy.js
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // Allow all origins
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -15,12 +15,13 @@ export default async function handler(req, res) {
     // Forward to your actual API
     const targetUrl = `https://deployapp-git-main-prodigytasfins-projects.vercel.app/api/${endpoint}`;
     
+    const body = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
     const response = await fetch(targetUrl, {
       method: req.method,
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(req.body)
+      body
     });
     
     const data = await response.json();
@@ -31,4 +32,4 @@ export default async function handler(req, res) {
     console.error('Proxy error:', error);
     return res.status(500).json({ error: 'Proxy error: ' + error.message });
   }
-}
+};
