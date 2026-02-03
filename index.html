@@ -1208,51 +1208,54 @@
 
         // Update authentication UI with ADMIN PANEL LINK
         function updateAuthUI(user) {
-            const authSection = document.getElementById('authSection');
-            const userInitial = user.fullName ? user.fullName.charAt(0).toUpperCase() : 'U';
-            
-            // Check if user is admin
-            const isAdmin = user.email === 'admin@nibash.com' || user.role === 'admin';
-            
-            authSection.innerHTML = `
-                <div class="user-menu">
-                    <div class="user-avatar" onclick="toggleDropdown()">
-                        ${userInitial}
-                    </div>
-                    <div class="dropdown" id="userDropdown">
-                        <div style="padding: 0.5rem 1rem; border-bottom: 1px solid var(--border-color);">
-                            <strong>${user.fullName || 'User'}</strong>
-                            <div style="font-size: 0.8rem; color: var(--gray);">${user.email || ''}</div>
-                            ${isAdmin ? '<div style="font-size: 0.8rem; color: var(--primary);">সিস্টেম এডমিন</div>' : ''}
-                        </div>
-                        ${user.role === 'professional' ? 
-                            `<a href="professional.html" class="dropdown-item">
-                                <i class="fas fa-tachometer-alt"></i> ড্যাশবোর্ড
-                            </a>` : 
-                            `<a href="customer.html" class="dropdown-item">
-                                <i class="fas fa-tachometer-alt"></i> ড্যাশবোর্ড
-                            </a>`
-                        }
-                        
-                        ${isAdmin ? 
-                            `<a href="admin.html" class="dropdown-item" style="color: var(--primary); font-weight: bold;">
-                                <i class="fas fa-user-shield"></i> এডমিন ড্যাশবোর্ড
-                            </a>` : ''
-                        }
-                        
-                        <a href="payment.html" class="dropdown-item">
-                            <i class="fas fa-history"></i> পেমেন্ট ইতিহাস
-                        </a>
-                        <a href="profile.html" class="dropdown-item">
-                            <i class="fas fa-user-cog"></i> প্রোফাইল
-                        </a>
-                        <a href="#" class="dropdown-item" onclick="logout()">
-                            <i class="fas fa-sign-out-alt"></i> লগআউট
-                        </a>
-                    </div>
+    const authSection = document.getElementById('authSection');
+    const userInitial = user.fullName ? user.fullName.charAt(0).toUpperCase() : 'U';
+    
+    // Check if user is admin
+    const isAdmin = user.email === 'admin@nibash.com' || user.role === 'admin';
+    
+    authSection.innerHTML = `
+        <div class="user-menu">
+            <div class="user-avatar" onclick="toggleDropdown()">
+                ${userInitial}
+            </div>
+            <div class="dropdown" id="userDropdown">
+                <div style="padding: 0.5rem 1rem; border-bottom: 1px solid var(--border-color);">
+                    <strong>${user.fullName || 'User'}</strong>
+                    <div style="font-size: 0.8rem; color: var(--gray);">${user.email || ''}</div>
+                    ${isAdmin ? '<div style="font-size: 0.8rem; color: var(--primary);"><i class="fas fa-user-shield"></i> সিস্টেম এডমিন</div>' : ''}
                 </div>
-            `;
-        }
+                
+                <!-- Dashboard based on role -->
+                ${user.role === 'professional' ? 
+                    `<a href="professional.html" class="dropdown-item">
+                        <i class="fas fa-tachometer-alt"></i> ড্যাশবোর্ড
+                    </a>` : 
+                    `<a href="customer.html" class="dropdown-item">
+                        <i class="fas fa-tachometer-alt"></i> ড্যাশবোর্ড
+                    </a>`
+                }
+                
+                <!-- Only show admin panel link for admins -->
+                ${isAdmin ? 
+                    `<a href="admin.html" class="dropdown-item" style="color: var(--primary); font-weight: 600; background: rgba(86, 41, 190, 0.1);">
+                        <i class="fas fa-user-shield"></i> এডমিন ড্যাশবোর্ড
+                    </a>` : ''
+                }
+                
+                <a href="payment.html" class="dropdown-item">
+                    <i class="fas fa-history"></i> পেমেন্ট ইতিহাস
+                </a>
+                <a href="profile.html" class="dropdown-item">
+                    <i class="fas fa-user-cog"></i> প্রোফাইল
+                </a>
+                <a href="#" class="dropdown-item" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> লগআউট
+                </a>
+            </div>
+        </div>
+    `;
+}
 
         function showAuthButtons() {
             const authSection = document.getElementById('authSection');
@@ -1605,6 +1608,7 @@
 </script>
 </body>
 </html>
+
 
 
 
