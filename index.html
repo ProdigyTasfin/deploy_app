@@ -46,6 +46,8 @@
             color: var(--text-color);
             min-height: 100vh;
             transition: all 0.3s ease;
+            cursor: none;
+            overflow-x: hidden;
         }
 
         body.dark-mode {
@@ -64,11 +66,123 @@
             --hover-bg: rgba(0, 0, 0, 0.02);
         }
 
+        /* Glass Cursor */
+        .glass-cursor {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            border: 2px solid rgba(86, 41, 190, 0.8);
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, background 0.3s;
+            box-shadow: 0 0 15px rgba(86, 41, 190, 0.3);
+        }
+
+        .glass-cursor.hover {
+            width: 60px;
+            height: 60px;
+            background: rgba(86, 41, 190, 0.15);
+            border-color: rgba(14, 170, 105, 0.8);
+        }
+
+        .cursor-dot {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: var(--secondary);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f172a, #5629be);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10001;
+            transition: opacity 0.8s, visibility 0.8s;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .loader-circle {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 4px solid transparent;
+            animation: rotate 2s linear infinite;
+        }
+
+        .loader-circle:nth-child(1) {
+            border-top-color: var(--light-text);
+            animation-delay: 0.1s;
+        }
+
+        .loader-circle:nth-child(2) {
+            border-right-color: var(--primary);
+            animation-delay: 0.2s;
+        }
+
+        .loader-circle:nth-child(3) {
+            border-bottom-color: var(--success);
+            animation-delay: 0.3s;
+        }
+
+        .loading-text {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+            font-family: 'Kalpurush', sans-serif;
+        }
+
+        .loading-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .loading-dots span {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: white;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+
+        .loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+
         /* Theme Toggle */
         .theme-toggle {
             position: fixed;
             top: 20px;
-            right: 20px;
+            right: 80px;
             z-index: 1000;
             background: var(--primary);
             border: none;
@@ -246,34 +360,168 @@
             margin-bottom: 1rem;
         }
 
-        /* Services */
+        /* Services Section Specific Styling */
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInDown 1s ease-out;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 70px;
+            height: 4px;
+            background: var(--secondary);
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+        
+        .section-subtitle {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            font-weight: 600;
+            margin: 1.5rem 0 0.5rem;
+            animation: fadeIn 1.5s ease-out;
+        }
+        
+        .section-description {
+            max-width: 800px;
+            margin: 1rem auto 0;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--gray);
+            animation: fadeIn 2s ease-out;
+        }
+        
+        /* Services Grid Layout */
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
-            padding: 0 5%;
-            max-width: 1200px;
-            margin: 0 auto;
+            margin-top: 2rem;
         }
-
+        
+        /* Service Card Styling */
         .service-card {
             background: var(--card-bg);
-            padding: 2rem;
             border-radius: 12px;
-            text-align: center;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: cardAppear 0.6s forwards;
             border: 1px solid var(--border-color);
-            transition: all 0.3s;
         }
-
+        
         .service-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
             border-color: var(--primary);
         }
-
+        
+        .service-card:nth-child(1) { animation-delay: 0.1s; }
+        .service-card:nth-child(2) { animation-delay: 0.2s; }
+        .service-card:nth-child(3) { animation-delay: 0.3s; }
+        .service-card:nth-child(4) { animation-delay: 0.4s; }
+        .service-card:nth-child(5) { animation-delay: 0.5s; }
+        .service-card:nth-child(6) { animation-delay: 0.6s; }
+        
         .service-icon {
-            font-size: 3rem;
-            color: var(--primary);
+            height: 80px;
+            width: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 2rem auto 1.5rem;
+            font-size: 2.5rem;
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .service-icon::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: inherit;
+            opacity: 0.2;
+            z-index: -1;
+            transform: scale(1.3);
+        }
+        
+        .service-content {
+            padding: 0 1.5rem 2rem;
+            text-align: center;
+        }
+        
+        .service-title {
+            font-size: 1.5rem;
+            color: var(--text-color);
             margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        .service-description {
+            color: var(--gray);
+            line-height: 1.6;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .service-features {
+            text-align: left;
+            padding: 0 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .service-features li {
+            padding: 0.4rem 0;
+            color: var(--gray);
+            position: relative;
+            padding-left: 1.8rem;
+        }
+        
+        .service-features li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
+        
+        .service-button {
+            display: inline-block;
+            padding: 0.7rem 1.8rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid var(--primary);
+            cursor: none;
+        }
+        
+        .service-button:hover {
+            background: transparent;
+            color: var(--primary);
+            transform: scale(1.05);
         }
 
         /* Testimonials */
@@ -376,6 +624,7 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
+            cursor: none;
         }
 
         .btn-primary {
@@ -442,6 +691,7 @@
             text-decoration: none;
             border-radius: 4px;
             transition: background 0.3s;
+            cursor: none;
         }
 
         .dropdown-item:hover {
@@ -470,6 +720,11 @@
 
             .stat-number {
                 font-size: 2rem;
+            }
+
+            .theme-toggle {
+                top: 20px;
+                right: 20px;
             }
         }
 
@@ -554,15 +809,81 @@
             border-radius: 8px;
             color: var(--text-color);
             font-size: 1rem;
+            cursor: none;
         }
 
         .form-control:focus {
             outline: none;
             border-color: var(--primary);
         }
+
+        /* Animations */
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes cardAppear {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Scroll Animation */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body class="dark-mode">
+    <!-- Glass Cursor -->
+    <div class="glass-cursor"></div>
+    <div class="cursor-dot"></div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loader">
+            <div class="loader-circle"></div>
+            <div class="loader-circle"></div>
+            <div class="loader-circle"></div>
+        </div>
+        <div class="loading-text">নিবাস লোড হচ্ছে</div>
+        <div class="loading-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
     <!-- Theme Toggle -->
     <button class="theme-toggle" id="themeToggle">
         <i class="fas fa-moon"></i>
@@ -671,341 +992,6 @@
         <!-- Services will be loaded dynamically -->
     </div>
 </section>
-
-<style>
-    /* Services Section Styling */
-    .section-header {
-        text-align: center;
-        margin-bottom: 3rem;
-        animation: fadeInDown 1s ease-out;
-    }
-    
-    .section-title {
-        font-size: 2.5rem;
-        color: #2c3e50;
-        margin-bottom: 0.5rem;
-        position: relative;
-        display: inline-block;
-    }
-    
-    .section-title::after {
-        content: '';
-        position: absolute;
-        width: 70px;
-        height: 4px;
-        background: #3498db;
-        bottom: -10px;
-        left: 50%;
-        transform: translateX(-50%);
-        border-radius: 2px;
-    }
-    
-    .section-subtitle {
-        font-size: 1.5rem;
-        color: #e74c3c;
-        font-weight: 600;
-        margin: 1.5rem 0 0.5rem;
-        animation: fadeIn 1.5s ease-out;
-    }
-    
-    .section-description {
-        max-width: 800px;
-        margin: 1rem auto 0;
-        font-size: 1.1rem;
-        line-height: 1.6;
-        color: #555;
-        animation: fadeIn 2s ease-out;
-    }
-    
-    /* Services Grid Layout */
-    .services-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 2rem;
-        margin-top: 2rem;
-    }
-    
-    /* Service Card Styling */
-    .service-card {
-        background: white;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        position: relative;
-        opacity: 0;
-        transform: translateY(30px);
-        animation: cardAppear 0.6s forwards;
-    }
-    
-    .service-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
-    }
-    
-    .service-card:nth-child(1) { animation-delay: 0.1s; }
-    .service-card:nth-child(2) { animation-delay: 0.2s; }
-    .service-card:nth-child(3) { animation-delay: 0.3s; }
-    .service-card:nth-child(4) { animation-delay: 0.4s; }
-    .service-card:nth-child(5) { animation-delay: 0.5s; }
-    .service-card:nth-child(6) { animation-delay: 0.6s; }
-    
-    .service-icon {
-        height: 80px;
-        width: 80px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 2rem auto 1.5rem;
-        font-size: 2.5rem;
-        color: white;
-        position: relative;
-        z-index: 1;
-    }
-    
-    .service-icon::after {
-        content: '';
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        background: inherit;
-        opacity: 0.2;
-        z-index: -1;
-        transform: scale(1.3);
-    }
-    
-    .service-content {
-        padding: 0 1.5rem 2rem;
-        text-align: center;
-    }
-    
-    .service-title {
-        font-size: 1.5rem;
-        color: #2c3e50;
-        margin-bottom: 1rem;
-        font-weight: 600;
-    }
-    
-    .service-description {
-        color: #666;
-        line-height: 1.6;
-        font-size: 1rem;
-        margin-bottom: 1.5rem;
-    }
-    
-    .service-features {
-        text-align: left;
-        padding: 0 1rem;
-        margin-bottom: 1.5rem;
-    }
-    
-    .service-features li {
-        padding: 0.4rem 0;
-        color: #555;
-        position: relative;
-        padding-left: 1.8rem;
-    }
-    
-    .service-features li:before {
-        content: '✓';
-        position: absolute;
-        left: 0;
-        color: #27ae60;
-        font-weight: bold;
-    }
-    
-    .service-button {
-        display: inline-block;
-        padding: 0.7rem 1.8rem;
-        background: #3498db;
-        color: white;
-        border-radius: 50px;
-        text-decoration: none;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        border: 2px solid #3498db;
-    }
-    
-    .service-button:hover {
-        background: transparent;
-        color: #3498db;
-        transform: scale(1.05);
-    }
-    
-    /* Animations */
-    @keyframes fadeInDown {
-        from {
-            opacity: 0;
-            transform: translateY(-30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-    
-    @keyframes cardAppear {
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .section-title {
-            font-size: 2rem;
-        }
-        
-        .section-subtitle {
-            font-size: 1.3rem;
-        }
-        
-        .services-grid {
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-        }
-    }
-</style>
-
-<script>
-    // Services Data
-    const services = [
-        {
-            id: 1,
-            title: "বৈদ্যুতিক মেরামত",
-            icon: "⚡",
-            color: "#f39c12",
-            description: "বাড়ির সকল ধরনের বৈদ্যুতিক সমস্যার সমাধান।",
-            features: [
-                "ওয়্যারিং ও ফিউজ সমস্যা সমাধান",
-                "সুইচ, প্লাগ ও সকেট মেরামত",
-                "লাইটিং ও ফ্যান স্থাপন",
-                "বৈদ্যুতিক সরঞ্জাম মেরামত"
-            ]
-        },
-        {
-            id: 2,
-            title: "প্লাম্বিং কাজ",
-            icon: "🔧",
-            color: "#3498db",
-            description: "পানির লাইন, ড্রেন ও স্যানিটারি সমস্যার পূর্ণ সমাধান।",
-            features: [
-                "পানি লিকেজ মেরামত",
-                "ড্রেন ও সিভার লাইন পরিষ্কার",
-                "নতুন ট্যাপ ও শাওয়ার স্থাপন",
-                "বাথরুম ও রান্নাঘর প্লাম্বিং"
-            ]
-        },
-        {
-            id: 3,
-            title: "রং করার কাজ",
-            icon: "🎨",
-            color: "#9b59b6",
-            description: "ঘর, অফিস, দোকান সহ সকল ধরনের রং করার কাজ।",
-            features: [
-                "ঘরের দেয়াল ও সিলিং রং",
-                "উড ও মেটাল পলিশিং",
-                "ওয়াটারপ্রুফ ও ডেকোরেটিভ পেইন্ট",
-                "বাইরের দেয়াল রং"
-            ]
-        },
-        {
-            id: 4,
-            title: "এসি ও ফ্রিজ সার্ভিস",
-            icon: "❄️",
-            color: "#1abc9c",
-            description: "এয়ার কন্ডিশনার ও রেফ্রিজারেটর সার্ভিসিং ও মেরামত।",
-            features: [
-                "এসি গ্যাস রিচার্জ ও পরিষ্কার",
-                "ফ্রিজ সার্ভিসিং ও মেরামত",
-                "নতুন এসি/ফ্রিজ ইনস্টলেশন",
-                "রেগুলার মেইনটেনেন্স"
-            ]
-        },
-        {
-            id: 5,
-            title: "গৃহস্থালি মেরামত",
-            icon: "🏠",
-            color: "#e74c3c",
-            description: "ঘরের যেকোনো ধরনের ছোট-বড় মেরামতের কাজ।",
-            features: [
-                "দরজা-জানালা মেরামত",
-                "ফার্নিচার মেরামত ও অ্যাসেম্বলিং",
-                "টাইলস ও সিরামিক কাজ",
-                "সামান্য সিভিল কাজ"
-            ]
-        },
-        {
-            id: 6,
-            title: "ক্লিনিং সার্ভিস",
-            icon: "🧹",
-            color: "#2ecc71",
-            description: "ঘর, অফিস, দোকানের জন্য পেশাদার পরিষ্কারকরণ সেবা।",
-            features: [
-                "ঘর ও কার্পেট পরিষ্কার",
-                "বাথরুম ও রান্নাঘর পরিষ্কার",
-                "কাচ ও জানালা পরিষ্কার",
-                "বাড়ি/অফিস ডিপ ক্লিনিং"
-            ]
-        }
-    ];
-
-    // Function to load services dynamically
-    function loadServices() {
-        const servicesGrid = document.getElementById('servicesGrid');
-        
-        services.forEach(service => {
-            const serviceCard = document.createElement('div');
-            serviceCard.className = 'service-card';
-            
-            serviceCard.innerHTML = `
-                <div class="service-icon" style="background: ${service.color}">
-                    ${service.icon}
-                </div>
-                <div class="service-content">
-                    <h3 class="service-title">${service.title}</h3>
-                    <p class="service-description">${service.description}</p>
-                    <ul class="service-features">
-                        ${service.features.map(feature => `<li>${feature}</li>`).join('')}
-                    </ul>
-                    <a href="#contact" class="service-button">সেবা নিন</a>
-                </div>
-            `;
-            
-            servicesGrid.appendChild(serviceCard);
-        });
-    }
-
-    // Load services when page loads
-    document.addEventListener('DOMContentLoaded', loadServices);
-
-    // Add scroll animation for service cards
-    function animateOnScroll() {
-        const cards = document.querySelectorAll('.service-card');
-        const windowHeight = window.innerHeight;
-        
-        cards.forEach(card => {
-            const cardPosition = card.getBoundingClientRect().top;
-            
-            if (cardPosition < windowHeight - 100) {
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
-            }
-        });
-    }
-
-    // Initialize scroll animation
-    window.addEventListener('scroll', animateOnScroll);
-    window.addEventListener('load', animateOnScroll);
-</script>
 
         <!-- Testimonials -->
         <section class="testimonials">
@@ -1124,12 +1110,71 @@
     <script>
         // Initialize application
         document.addEventListener('DOMContentLoaded', async function() {
-            setupTheme();
-            await checkLoginStatus();
-            loadServices();
-            loadTestimonials();
-            setupNavigation();
+            // Show loading overlay first
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').classList.add('hidden');
+                document.body.style.cursor = 'none';
+                
+                // Initialize everything else
+                setupTheme();
+                setupGlassCursor();
+                initAnimations();
+                await checkLoginStatus();
+                loadServices();
+                loadTestimonials();
+                setupNavigation();
+            }, 2000);
         });
+
+        // Glass Cursor Setup
+        function setupGlassCursor() {
+            const cursor = document.querySelector('.glass-cursor');
+            const cursorDot = document.querySelector('.cursor-dot');
+            
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+                
+                setTimeout(() => {
+                    cursorDot.style.left = e.clientX + 'px';
+                    cursorDot.style.top = e.clientY + 'px';
+                }, 50);
+            });
+            
+            // Hover effect for cursor
+            const hoverElements = document.querySelectorAll('a, button, .service-card, .step, .service-button, .btn, .dropdown-item');
+            hoverElements.forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    cursor.classList.add('hover');
+                });
+                el.addEventListener('mouseleave', () => {
+                    cursor.classList.remove('hover');
+                });
+            });
+        }
+
+        // Initialize animations
+        function initAnimations() {
+            // Animate hero elements sequentially
+            const heroElements = document.querySelectorAll('.hero-content > *');
+            heroElements.forEach((el, index) => {
+                el.style.animationDelay = `${0.5 + (index * 0.2)}s`;
+                el.classList.add('animate-on-scroll');
+            });
+
+            // Scroll animations
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            document.querySelectorAll('.animate-on-scroll').forEach(el => {
+                observer.observe(el);
+            });
+        }
 
         // Theme setup
         function setupTheme() {
@@ -1169,18 +1214,18 @@
                 showAuthButtons();
             }
             // In checkLoginStatus() function, add:
-    if (user.email === 'admin@nibash.com') {
-        authSection.innerHTML = `
-            <div style="display: flex; gap: 1rem;">
-            <a href="admin.html" class="btn btn-primary">
-                <i class="fas fa-user-shield"></i> এডমিন ড্যাশবোর্ড
-            </a>
-            <button class="btn" onclick="logout()">
-                <i class="fas fa-sign-out-alt"></i> লগআউট
-            </button>
-        </div>
-    `;
-}
+            if (user.email === 'admin@nibash.com') {
+                authSection.innerHTML = `
+                    <div style="display: flex; gap: 1rem;">
+                    <a href="admin.html" class="btn btn-primary">
+                        <i class="fas fa-user-shield"></i> এডমিন ড্যাশবোর্ড
+                    </a>
+                    <button class="btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> লগআউট
+                    </button>
+                </div>
+            `;
+            }
         }
 
         // Update authentication UI
@@ -1251,60 +1296,111 @@
             const services = [
                 {
                     id: 1,
-                    name: 'বৈদ্যুতিক কাজ',
-                    icon: 'fa-bolt',
-                    description: 'সকল ধরনের বৈদ্যুতিক সমস্যার সমাধান, ফিক্সচার বসানো, মেরামত ও রক্ষণাবেক্ষণ।'
+                    title: "বৈদ্যুতিক মেরামত",
+                    icon: "⚡",
+                    color: "#f39c12",
+                    description: "বাড়ির সকল ধরনের বৈদ্যুতিক সমস্যার সমাধান।",
+                    features: [
+                        "ওয়্যারিং ও ফিউজ সমস্যা সমাধান",
+                        "সুইচ, প্লাগ ও সকেট মেরামত",
+                        "লাইটিং ও ফ্যান স্থাপন",
+                        "বৈদ্যুতিক সরঞ্জাম মেরামত"
+                    ]
                 },
                 {
                     id: 2,
-                    name: 'প্লাম্বিং',
-                    icon: 'fa-faucet',
-                    description: 'পাইপ লিকেজ, ড্রেন ব্লকেজ, বাথরুম ও কিচেনের সকল প্লাম্বিং সমস্যার সমাধান।'
+                    title: "প্লাম্বিং কাজ",
+                    icon: "🔧",
+                    color: "#3498db",
+                    description: "পানির লাইন, ড্রেন ও স্যানিটারি সমস্যার পূর্ণ সমাধান।",
+                    features: [
+                        "পানি লিকেজ মেরামত",
+                        "ড্রেন ও সিভার লাইন পরিষ্কার",
+                        "নতুন ট্যাপ ও শাওয়ার স্থাপন",
+                        "বাথরুম ও রান্নাঘর প্লাম্বিং"
+                    ]
                 },
                 {
                     id: 3,
-                    name: 'রং ও সজ্জা',
-                    icon: 'fa-paint-roller',
-                    description: 'দেয়াল রং করা, ওয়ালপেপারিং, ছাদের রং ও সকল ধরনের পেইন্টিং কাজ।'
+                    title: "রং করার কাজ",
+                    icon: "🎨",
+                    color: "#9b59b6",
+                    description: "ঘর, অফিস, দোকান সহ সকল ধরনের রং করার কাজ।",
+                    features: [
+                        "ঘরের দেয়াল ও সিলিং রং",
+                        "উড ও মেটাল পলিশিং",
+                        "ওয়াটারপ্রুফ ও ডেকোরেটিভ পেইন্ট",
+                        "বাইরের দেয়াল রং"
+                    ]
                 },
                 {
                     id: 4,
-                    name: 'এয়ারকন্ডিশনিং',
-                    icon: 'fa-temperature-high',
-                    description: 'এসি ইনস্টলেশন, সার্ভিসিং, গ্যাস ফিলিং ও মেরামত কাজ।'
+                    title: "এসি ও ফ্রিজ সার্ভিস",
+                    icon: "❄️",
+                    color: "#1abc9c",
+                    description: "এয়ার কন্ডিশনার ও রেফ্রিজারেটর সার্ভিসিং ও মেরামত।",
+                    features: [
+                        "এসি গ্যাস রিচার্জ ও পরিষ্কার",
+                        "ফ্রিজ সার্ভিসিং ও মেরামত",
+                        "নতুন এসি/ফ্রিজ ইনস্টলেশন",
+                        "রেগুলার মেইনটেনেন্স"
+                    ]
                 },
                 {
                     id: 5,
-                    name: 'কাঠের কাজ',
-                    icon: 'fa-hammer',
-                    description: 'ফার্নিচার মেরামত, আলমারি তৈরি, শেলফিং ও কাস্টম কাঠের কাজ।'
+                    title: "গৃহস্থালি মেরামত",
+                    icon: "🏠",
+                    color: "#e74c3c",
+                    description: "ঘরের যেকোনো ধরনের ছোট-বড় মেরামতের কাজ।",
+                    features: [
+                        "দরজা-জানালা মেরামত",
+                        "ফার্নিচার মেরামত ও অ্যাসেম্বলিং",
+                        "টাইলস ও সিরামিক কাজ",
+                        "সামান্য সিভিল কাজ"
+                    ]
                 },
                 {
                     id: 6,
-                    name: 'সিভিল কাজ',
-                    icon: 'fa-hard-hat',
-                    description: 'ছাদের লিকেজ, টাইলস কাজ, প্লাস্টারিং ও ছোট ছোট সিভিল কাজ।'
+                    title: "ক্লিনিং সার্ভিস",
+                    icon: "🧹",
+                    color: "#2ecc71",
+                    description: "ঘর, অফিস, দোকানের জন্য পেশাদার পরিষ্কারকরণ সেবা।",
+                    features: [
+                        "ঘর ও কার্পেট পরিষ্কার",
+                        "বাথরুম ও রান্নাঘর পরিষ্কার",
+                        "কাচ ও জানালা পরিষ্কার",
+                        "বাড়ি/অফিস ডিপ ক্লিনিং"
+                    ]
                 }
             ];
 
             const servicesGrid = document.getElementById('servicesGrid');
-            const serviceTypeSelect = document.getElementById('serviceType');
             
-            servicesGrid.innerHTML = services.map(service => `
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas ${service.icon}"></i>
+            services.forEach(service => {
+                const serviceCard = document.createElement('div');
+                serviceCard.className = 'service-card animate-on-scroll';
+                
+                serviceCard.innerHTML = `
+                    <div class="service-icon" style="background: ${service.color}">
+                        ${service.icon}
                     </div>
-                    <h3>${service.name}</h3>
-                    <p>${service.description}</p>
-                    <button class="btn btn-primary" onclick="selectService(${service.id}, '${service.name}')">
-                        <i class="fas fa-calendar-alt"></i> বুকিং করুন
-                    </button>
-                </div>
-            `).join('');
+                    <div class="service-content">
+                        <h3 class="service-title">${service.title}</h3>
+                        <p class="service-description">${service.description}</p>
+                        <ul class="service-features">
+                            ${service.features.map(feature => `<li>${feature}</li>`).join('')}
+                        </ul>
+                        <a href="#contact" class="service-button" onclick="selectService(${service.id}, '${service.title}')">সেবা নিন</a>
+                    </div>
+                `;
+                
+                servicesGrid.appendChild(serviceCard);
+            });
 
+            // Also populate service type dropdown
+            const serviceTypeSelect = document.getElementById('serviceType');
             serviceTypeSelect.innerHTML = '<option value="">সেবা নির্বাচন করুন</option>' + 
-                services.map(service => `<option value="${service.id}">${service.name}</option>`).join('');
+                services.map(service => `<option value="${service.id}">${service.title}</option>`).join('');
         }
 
         // Load testimonials
@@ -1332,7 +1428,7 @@
 
             const testimonialsGrid = document.getElementById('testimonialsGrid');
             testimonialsGrid.innerHTML = testimonials.map(testimonial => `
-                <div class="testimonial-card">
+                <div class="testimonial-card animate-on-scroll">
                     <div style="margin-bottom: 1rem;">
                         ${'★'.repeat(testimonial.rating)}${'☆'.repeat(5 - testimonial.rating)}
                     </div>
@@ -1520,9 +1616,24 @@
                 showNotification('পেমেন্ট শুরু করতে সমস্যা হয়েছে।');
             }
         }
+
+        // Add scroll animation for service cards
+        function animateOnScroll() {
+            const cards = document.querySelectorAll('.service-card');
+            const windowHeight = window.innerHeight;
+            
+            cards.forEach(card => {
+                const cardPosition = card.getBoundingClientRect().top;
+                
+                if (cardPosition < windowHeight - 100) {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }
+            });
+        }
+
+        // Initialize scroll animation
+        window.addEventListener('scroll', animateOnScroll);
     </script>
 </body>
 </html>
-
-
-
