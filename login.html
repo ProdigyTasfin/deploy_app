@@ -701,6 +701,37 @@
             this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
         });
     }
+        function createDefaultAdmin() {
+    let users = JSON.parse(localStorage.getItem('nibash_users') || '[]');
+    
+    // Check if admin already exists
+    const adminExists = users.some(user => user.email === 'admin@nibash.com');
+    
+    if (!adminExists) {
+        const adminUser = {
+            email: 'admin@nibash.com',
+            password: 'admin123', // Change this in production!
+            fullName: 'System Admin',
+            role: 'admin',
+            accountType: 'admin',
+            status: 'active',
+            createdAt: new Date().toISOString(),
+            userId: 'ADMIN_001'
+        };
+        
+        users.push(adminUser);
+        localStorage.setItem('nibash_users', JSON.stringify(users));
+        
+        console.log('Default admin user created');
+        console.log('Email: admin@nibash.com');
+        console.log('Password: admin123');
+    }
+}
+
+// Call this on page load
+document.addEventListener('DOMContentLoaded', function() {
+    createDefaultAdmin();
+});
 
     // Role Selection
     function setupRoleSelection() {
