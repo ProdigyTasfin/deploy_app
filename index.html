@@ -1060,7 +1060,7 @@
         <span id="notificationText"></span>
     </div>
 
-    <script>
+        <script>
         // Initialize application - FIXED VERSION
         document.addEventListener('DOMContentLoaded', function() {
             // Show loading overlay for 1.5 seconds only
@@ -1154,13 +1154,16 @@
             });
         }
 
-        // Check login status - UNCHANGED
+        // Check login status with ADMIN SUPPORT
         async function checkLoginStatus() {
             const userData = localStorage.getItem('nibash_user');
             if (userData) {
                 try {
                     const user = JSON.parse(userData);
                     updateAuthUI(user);
+                    
+                    // Check if admin user exists, if not create one
+                    await ensureAdminUserExists();
                 } catch (error) {
                     console.error('Error parsing user data:', error);
                 }
@@ -1169,10 +1172,47 @@
             }
         }
 
-        // Update authentication UI - UNCHANGED
+        // Create admin user if not exists
+        async function ensureAdminUserExists() {
+            // Check if admin user already exists in localStorage
+            let users = JSON.parse(localStorage.getItem('nibash_users') || '[]');
+            let adminExists = users.some(user => user.email === 'admin@nibash.com');
+            
+            if (!adminExists) {
+                // Create admin user
+                const adminUser = {
+                    email: 'admin@nibash.com',
+                    fullName: 'সিস্টেম এডমিন',
+                    phone: '০১৬১২-৩৪৫৬৭৮',
+                    role: 'admin',
+                    accountType: 'admin',
+                    status: 'active',
+                    createdAt: new Date().toISOString()
+                };
+                
+                users.push(adminUser);
+                localStorage.setItem('nibash_users', JSON.stringify(users));
+                
+                // Also save admin credentials for login
+                let userCredentials = JSON.parse(localStorage.getItem('user_credentials') || '[]');
+                userCredentials.push({
+                    email: 'admin@nibash.com',
+                    password: 'admin123', // Default password
+                    role: 'admin'
+                });
+                localStorage.setItem('user_credentials', JSON.stringify(userCredentials));
+                
+                console.log('Admin user created successfully');
+            }
+        }
+
+        // Update authentication UI with ADMIN PANEL LINK
         function updateAuthUI(user) {
             const authSection = document.getElementById('authSection');
             const userInitial = user.fullName ? user.fullName.charAt(0).toUpperCase() : 'U';
+            
+            // Check if user is admin
+            const isAdmin = user.email === 'admin@nibash.com' || user.role === 'admin';
             
             authSection.innerHTML = `
                 <div class="user-menu">
@@ -1183,6 +1223,7 @@
                         <div style="padding: 0.5rem 1rem; border-bottom: 1px solid var(--border-color);">
                             <strong>${user.fullName || 'User'}</strong>
                             <div style="font-size: 0.8rem; color: var(--gray);">${user.email || ''}</div>
+                            ${isAdmin ? '<div style="font-size: 0.8rem; color: var(--primary);">সিস্টেম এডমিন</div>' : ''}
                         </div>
                         ${user.role === 'professional' ? 
                             `<a href="professional.html" class="dropdown-item">
@@ -1192,6 +1233,13 @@
                                 <i class="fas fa-tachometer-alt"></i> ড্যাশবোর্ড
                             </a>`
                         }
+                        
+                        ${isAdmin ? 
+                            `<a href="admin.html" class="dropdown-item" style="color: var(--primary); font-weight: bold;">
+                                <i class="fas fa-user-shield"></i> এডমিন ড্যাশবোর্ড
+                            </a>` : ''
+                        }
+                        
                         <a href="payment.html" class="dropdown-item">
                             <i class="fas fa-history"></i> পেমেন্ট ইতিহাস
                         </a>
@@ -1553,5 +1601,60 @@
             }
         }
     </script>
+    <div style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; display: flex; flex-direction: column; gap: 10px;">
+    <a href="admin.html" style="
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 20px;
+        background: linear-gradient(135deg, #5629be, #a78bfa);
+        color: white;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        box-shadow: 0 4px 15px rgba(86, 41, 190, 0.4);
+        transition: all 0.3s;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+    " onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 6px 20px rgba(86, 41, 190, 0.6)';" 
+    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(86, 41, 190, 0.4)';">
+        <i class="fas fa-user-shield"></i>
+        এডমিন প্যানেল
+    </a>
+    
+    <!-- Admin Login Info -->
+    <div style="
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 10px 15px;
+        border-radius: 8px;
+        font-size: 12px;
+        max-width: 200px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: none;
+    " id="adminInfo">
+        <div style="font-weight: bold; margin-bottom: 5px;">ডেমো এডমিন লগইন:</div>
+        <div><strong>ইমেইল:</strong> admin@nibash.com</div>
+        <div><strong>পাসওয়ার্ড:</strong> admin123</div>
+        <div style="margin-top: 5px; font-size: 11px; color: #a78bfa;">ক্লিক করলে লগইন পেজে যাবে</div>
+    </div>
+</div>
+
+<script>
+    // Show admin info on hover
+    const adminBtn = document.querySelector('a[href="admin.html"]');
+    const adminInfo = document.getElementById('adminInfo');
+    
+    if (adminBtn && adminInfo) {
+        adminBtn.addEventListener('mouseenter', () => {
+            adminInfo.style.display = 'block';
+        });
+        
+        adminBtn.addEventListener('mouseleave', () => {
+            adminInfo.style.display = 'none';
+        });
+    }
+</script>
 </body>
 </html>
+
