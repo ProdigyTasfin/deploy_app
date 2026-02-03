@@ -659,6 +659,110 @@
     // Theme Management
     const themeToggle = document.getElementById('themeToggle');
     const themeIcon = themeToggle.querySelector('i');
+    // login.html-এর script-এর মধ্যে নিচের ফাংশন যোগ করুন
+async function handleLogin(event) {
+    event.preventDefault();
+    
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const errorElement = document.getElementById('errorMessage');
+    
+    // Clear previous errors
+    errorElement.style.display = 'none';
+    
+    // Validate input
+    if (!email || !password) {
+        errorElement.textContent = 'ইমেইল এবং পাসওয়ার্ড প্রয়োজন';
+        errorElement.style.display = 'block';
+        return;
+    }
+    
+    try {
+        // Check user credentials from localStorage
+        const userCredentials = JSON.parse(localStorage.getItem('user_credentials') || '[]');
+        const users = JSON.parse(localStorage.getItem('nibash_users') || '[]');
+        
+        // Check for admin login
+        if (email === 'admin@nibash.com') {
+            // For admin, we'll use default password or create admin account
+            let adminUser = users.find(user => user.email === 'admin@nibash.com');
+            
+            if (!adminUser) {
+                // Create admin user
+                adminUser = {
+                    email: 'admin@nibash.com',
+                    fullName: 'সিস্টেম এডমিন',
+                    phone: '০১৬১২-৩৪৫৬৭৮',
+                    role: 'admin',
+                    accountType: 'admin',
+                    status: 'active',
+                    createdAt: new Date().toISOString()
+                };
+                users.push(adminUser);
+                localStorage.setItem('nibash_users', JSON.stringify(users));
+                
+                // Add credentials
+                userCredentials.push({
+                    email: 'admin@nibash.com',
+                    password: 'admin@123', // Strong default password
+                    role: 'admin'
+                });
+                localStorage.setItem('user_credentials', JSON.stringify(userCredentials));
+            }
+            
+            // Check password (default for demo)
+            const storedCred = userCredentials.find(cred => cred.email === 'admin@nibash.com');
+            if (!storedCred || password !== 'admin@123') {
+                errorElement.textContent = 'ভুল এডমিন পাসওয়ার্ড';
+                errorElement.style.display = 'block';
+                return;
+            }
+            
+            // Save admin session
+            localStorage.setItem('nibash_user', JSON.stringify(adminUser));
+            localStorage.setItem('user_role', 'admin');
+            
+            // Redirect to admin panel
+            window.location.href = 'admin.html';
+            return;
+        }
+        
+        // Regular user login
+        const userCredential = userCredentials.find(cred => cred.email === email && cred.password === password);
+        
+        if (!userCredential) {
+            errorElement.textContent = 'ভুল ইমেইল বা পাসওয়ার্ড';
+            errorElement.style.display = 'block';
+            return;
+        }
+        
+        // Find user details
+        const user = users.find(u => u.email === email);
+        if (!user) {
+            errorElement.textContent = 'ব্যবহারকারী খুঁজে পাওয়া যায়নি';
+            errorElement.style.display = 'block';
+            return;
+        }
+        
+        // Save user session
+        localStorage.setItem('nibash_user', JSON.stringify(user));
+        localStorage.setItem('user_role', user.role || 'customer');
+        
+        // Redirect based on user role
+        if (user.role === 'admin') {
+            window.location.href = 'admin.html';
+        } else if (user.role === 'professional') {
+            window.location.href = 'professional.html';
+        } else {
+            window.location.href = 'customer.html';
+        }
+        
+    } catch (error) {
+        console.error('Login error:', error);
+        errorElement.textContent = 'লগইন প্রক্রিয়ায় সমস্যা হয়েছে';
+        errorElement.style.display = 'block';
+    }
+}
     
     // Load theme from localStorage
     const savedTheme = localStorage.getItem('theme') || 'dark';
