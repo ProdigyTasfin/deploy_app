@@ -728,6 +728,7 @@
     </div>
 
     <script>
+        
         let currentAdmin = null;
         let selectedProfessional = null;
         let selectedRequest = null;
@@ -741,6 +742,46 @@
             loadAllServiceRequests();
         });
 
+        // admin.html-এর script-এর শুরুতে এই কোড যোগ করুন
+document.addEventListener('DOMContentLoaded', function() {
+    // Security check for admin access
+    const userData = localStorage.getItem('nibash_user');
+    const userRole = localStorage.getItem('user_role');
+    
+    if (!userData || userRole !== 'admin') {
+        // Redirect to login with message
+        alert('অনুগ্রহ করে প্রথমে এডমিন অ্যাকাউন্টে লগইন করুন');
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    try {
+        const user = JSON.parse(userData);
+        if (user.role !== 'admin' && user.email !== 'admin@nibash.com') {
+            alert('এই পেজে শুধুমাত্র এডমিন অ্যাক্সেস করতে পারে');
+            window.location.href = 'index.html';
+            return;
+        }
+        
+        // Continue with admin panel initialization
+        initAdminPanel(user);
+        
+    } catch (error) {
+        console.error('Error:', error);
+        window.location.href = 'login.html';
+    }
+});
+
+// Separate function for admin panel initialization
+function initAdminPanel(adminUser) {
+    // Your existing admin panel initialization code here
+    updateUserInfo(adminUser);
+    setupNavigation();
+    loadDashboardData();
+    loadAllProfessionals();
+    loadAllServiceRequests();
+}
+        
         // Check if user is admin
         async function checkAdminAccess() {
             const userData = localStorage.getItem('nibash_user');
