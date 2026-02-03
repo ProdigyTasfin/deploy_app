@@ -883,8 +883,8 @@
             submitBtn.disabled = true;
             
             try {
-                // ✅ YOUR ACTUAL VERCEL URL
-                const API_URL = 'https://deployapp-prodigytasfins-projects.vercel.app/api/signup';
+                // Use same-origin API to avoid CORS and support local development
+                const API_URL = '/api/signup';
                 
                 console.log('🌐 Calling API:', API_URL);
                 
@@ -973,8 +973,8 @@
         console.clear();
         console.log('🧪 Testing API Connection...');
         
-        // ✅ YOUR ACTUAL VERCEL URL
-        const API_BASE = 'https://deployapp-prodigytasfins-projects.vercel.app/api';
+        // Use same-origin API base to avoid CORS and support local development
+        const API_BASE = '/api';
         
         try {
             // Test 1: Check if API is reachable
@@ -1040,7 +1040,7 @@
     console.log('- Phone:', document.getElementById('phone') ? 'Found' : 'Missing');
     console.log('- Password:', document.getElementById('password') ? 'Found' : 'Missing');
     console.log('- Submit Button:', document.getElementById('submitBtn') ? 'Found' : 'Missing');
-    console.log('🌐 API URL configured: https://deployapp-prodigytasfins-projects.vercel.app/api/signup');
+    console.log('🌐 API URL configured: /api/signup');
 </script>
 </body>
 </html>
