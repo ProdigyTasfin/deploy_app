@@ -826,6 +826,19 @@
             } else {
                 showAuthButtons();
             }
+            // In checkLoginStatus() function, add:
+    if (user.email === 'admin@nibash.com') {
+        authSection.innerHTML = `
+            <div style="display: flex; gap: 1rem;">
+            <a href="admin.html" class="btn btn-primary">
+                <i class="fas fa-user-shield"></i> এডমিন ড্যাশবোর্ড
+            </a>
+            <button class="btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> লগআউট
+            </button>
+        </div>
+    `;
+}
         }
 
         // Update authentication UI
@@ -1168,4 +1181,5 @@
     </script>
 </body>
 </html>
+
 
