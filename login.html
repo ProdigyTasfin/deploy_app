@@ -655,7 +655,7 @@
         </div>
     </div>
 
-    <script>
+   <script>
     // Theme Management
     const themeToggle = document.getElementById('themeToggle');
     const themeIcon = themeToggle.querySelector('i');
@@ -683,12 +683,84 @@
     document.addEventListener('DOMContentLoaded', function() {
         console.log('🔍 Login page loaded');
         
+        // Create default users
+        createDefaultUsers();
+        
         setupPasswordToggle();
         setupRoleSelection();
         setupFormValidation();
         setupFormSubmission();
         checkAutoLogin();
+        
+        // Debug info
+        console.log('✅ login.js loaded successfully');
+        console.log('📝 Form elements:');
+        console.log('- Email:', document.getElementById('email') ? 'Found' : 'Missing');
+        console.log('- Password:', document.getElementById('password') ? 'Found' : 'Missing');
+        console.log('- Role:', document.getElementById('role') ? 'Found' : 'Missing');
+        console.log('- Submit Button:', document.getElementById('submitBtn') ? 'Found' : 'Missing');
+        console.log('🌐 API will use relative URL: /api/login');
     });
+
+    // Create default users in localStorage
+    function createDefaultUsers() {
+        let users = JSON.parse(localStorage.getItem('nibash_users') || '[]');
+        
+        const defaultUsers = [
+            {
+                email: 'admin@nibash.com',
+                password: 'admin123',
+                fullName: 'System Admin',
+                role: 'admin',
+                accountType: 'admin',
+                status: 'active',
+                userId: 'ADMIN_001',
+                createdAt: new Date().toISOString()
+            },
+            {
+                email: 'customer@example.com',
+                password: 'customer123',
+                fullName: 'Demo Customer',
+                role: 'customer',
+                accountType: 'customer',
+                status: 'active',
+                userId: 'CUSTOMER_001',
+                phone: '01712345678',
+                address: 'ঢাকা, বাংলাদেশ',
+                createdAt: new Date().toISOString()
+            },
+            {
+                email: 'professional@example.com',
+                password: 'professional123',
+                fullName: 'Demo Professional',
+                role: 'professional',
+                accountType: 'professional',
+                status: 'approved',
+                userId: 'PROFESSIONAL_001',
+                phone: '01787654321',
+                address: 'ঢাকা, বাংলাদেশ',
+                service: 'বৈদ্যুতিক কাজ',
+                experience: '৫-১০ বছর',
+                createdAt: new Date().toISOString()
+            }
+        ];
+        
+        let createdCount = 0;
+        
+        defaultUsers.forEach(defaultUser => {
+            const exists = users.some(u => u.email === defaultUser.email);
+            if (!exists) {
+                users.push(defaultUser);
+                createdCount++;
+                console.log('✅ Created default user:', defaultUser.email);
+            }
+        });
+        
+        if (createdCount > 0) {
+            localStorage.setItem('nibash_users', JSON.stringify(users));
+            console.log(`✅ Created ${createdCount} default users in localStorage`);
+        }
+    }
 
     // Password Toggle
     function setupPasswordToggle() {
@@ -701,37 +773,6 @@
             this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
         });
     }
-        function createDefaultAdmin() {
-    let users = JSON.parse(localStorage.getItem('nibash_users') || '[]');
-    
-    // Check if admin already exists
-    const adminExists = users.some(user => user.email === 'admin@nibash.com');
-    
-    if (!adminExists) {
-        const adminUser = {
-            email: 'admin@nibash.com',
-            password: 'admin123', // Change this in production!
-            fullName: 'System Admin',
-            role: 'admin',
-            accountType: 'admin',
-            status: 'active',
-            createdAt: new Date().toISOString(),
-            userId: 'ADMIN_001'
-        };
-        
-        users.push(adminUser);
-        localStorage.setItem('nibash_users', JSON.stringify(users));
-        
-        console.log('Default admin user created');
-        console.log('Email: admin@nibash.com');
-        console.log('Password: admin123');
-    }
-}
-
-// Call this on page load
-document.addEventListener('DOMContentLoaded', function() {
-    createDefaultAdmin();
-});
 
     // Role Selection
     function setupRoleSelection() {
@@ -815,7 +856,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Form Submission - FIXED VERSION
+    // Form Submission - MAIN LOGIN FUNCTION
     function setupFormSubmission() {
         const form = document.getElementById('loginForm');
         const submitBtn = document.getElementById('submitBtn');
@@ -854,77 +895,161 @@ document.addEventListener('DOMContentLoaded', function() {
             submitBtn.disabled = true;
             
             try {
-                // ✅ FIX: Use relative URL - no CORS issues
-                const apiUrl = '/api/login'; // Relative URL works on same domain
+                // Try API first
+                await loginWithAPI(formData);
+            } catch (apiError) {
+                console.log('🌐 API failed, trying localStorage:', apiError.message);
                 
-                console.log('🌐 Calling API:', apiUrl);
-                
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(formData)
-                });
-                
-                console.log('📨 Response status:', response.status);
-                
-                const data = await response.json();
-                console.log('📊 Response data:', data);
-                
-                if (response.ok && data.success) {
-                    console.log('✅ Login successful!');
-                    
-                    // Store user data in localStorage
-                    localStorage.setItem('nibash_user', JSON.stringify({
-                        id: data.user.id,
-                        email: data.user.email,
-                        fullName: data.user.fullName,
-                        role: data.user.role,
-                        phone: data.user.phone,
-                        address: data.user.address
-                    }));
-                    
-                    // Remember me
-                    const rememberCheckbox = document.getElementById('remember');
-                    if (rememberCheckbox.checked) {
-                        localStorage.setItem('remember_email', formData.email);
-                        localStorage.setItem('remember_role', formData.role);
-                    } else {
-                        localStorage.removeItem('remember_email');
-                        localStorage.removeItem('remember_role');
-                    }
-                    
-                    // Show success message
-                    alert('✅ লগইন সফল! ড্যাশবোর্ডে যাচ্ছে...');
-                    
-                    // Redirect based on role
-                    if (data.user.role === 'customer') {
-                        window.location.href = 'customer.html';
-                    } else if (data.user.role === 'professional') {
-                        window.location.href = 'professional.html';
-                    } else {
-                        window.location.href = 'index.html';
-                    }
-                    
-                } else {
-                    // Show error
-                    const errorMessage = data.error || 'Login failed. Please try again.';
-                    console.error('❌ API error:', errorMessage);
-                    alert('❌ ত্রুটি: ' + errorMessage);
+                // Try localStorage fallback
+                try {
+                    await loginWithLocalStorage(formData);
+                } catch (localError) {
+                    console.log('❌ All login methods failed');
+                    alert('❌ লগইন ব্যর্থ। ইমেইল ও পাসওয়ার্ড চেক করুন।');
                 }
-                
-            } catch (error) {
-                console.error('❌ Network error:', error);
-                alert('❌ নেটওয়ার্ক ত্রুটি। পুনরায় চেষ্টা করুন।\n\nError: ' + error.message);
-                
             } finally {
                 // Reset button
                 submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> লগইন করুন';
                 submitBtn.disabled = false;
             }
         });
+    }
+
+    // API Login
+    async function loginWithAPI(formData) {
+        console.log('🌐 Calling API: /api/login');
+        
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+        
+        console.log('📨 Response status:', response.status);
+        
+        const data = await response.json();
+        console.log('📊 Response data:', data);
+        
+        if (response.ok && data.success) {
+            console.log('✅ API login successful!');
+            
+            // Store user data
+            localStorage.setItem('nibash_user', JSON.stringify(data.user));
+            
+            // Remember me
+            const rememberCheckbox = document.getElementById('remember');
+            if (rememberCheckbox?.checked) {
+                localStorage.setItem('remember_email', formData.email);
+                localStorage.setItem('remember_role', formData.role);
+            } else {
+                localStorage.removeItem('remember_email');
+                localStorage.removeItem('remember_role');
+            }
+            
+            // Redirect
+            redirectUser(data.user);
+            return;
+        } else {
+            throw new Error(data.error || 'API login failed');
+        }
+    }
+
+    // LocalStorage Login (Fallback)
+    async function loginWithLocalStorage(formData) {
+        console.log('🔄 Trying localStorage login...');
+        
+        // Get users from localStorage
+        const users = JSON.parse(localStorage.getItem('nibash_users') || '[]');
+        
+        // Find user
+        const user = users.find(u => 
+            u.email === formData.email && u.password === formData.password
+        );
+        
+        // Check hardcoded admin
+        if (!user && formData.email === 'admin@nibash.com' && formData.password === 'admin123') {
+            const adminUser = {
+                id: 'ADMIN_001',
+                email: 'admin@nibash.com',
+                fullName: 'System Admin',
+                accountType: 'admin',
+                role: 'admin',
+                status: 'active',
+                createdAt: new Date().toISOString()
+            };
+            
+            console.log('✅ Admin login successful (local)');
+            localStorage.setItem('nibash_user', JSON.stringify(adminUser));
+            
+            // Remember me
+            const rememberCheckbox = document.getElementById('remember');
+            if (rememberCheckbox?.checked) {
+                localStorage.setItem('remember_email', formData.email);
+                localStorage.setItem('remember_role', formData.role);
+            }
+            
+            redirectUser(adminUser);
+            return;
+        }
+        
+        if (!user) {
+            throw new Error('Invalid email or password');
+        }
+        
+        // Check role if specified
+        if (formData.role && user.role !== formData.role) {
+            throw new Error(`This email is not registered as ${formData.role}`);
+        }
+        
+        console.log('✅ LocalStorage login successful');
+        
+        const userData = {
+            id: user.userId || 'user_' + Date.now(),
+            email: user.email,
+            fullName: user.fullName || 'User',
+            phone: user.phone || '',
+            address: user.address || '',
+            accountType: user.accountType || 'customer',
+            role: user.role || 'customer',
+            status: user.status || 'active',
+            createdAt: user.createdAt || new Date().toISOString()
+        };
+        
+        localStorage.setItem('nibash_user', JSON.stringify(userData));
+        
+        // Remember me
+        const rememberCheckbox = document.getElementById('remember');
+        if (rememberCheckbox?.checked) {
+            localStorage.setItem('remember_email', formData.email);
+            localStorage.setItem('remember_role', formData.role);
+        } else {
+            localStorage.removeItem('remember_email');
+            localStorage.removeItem('remember_role');
+        }
+        
+        redirectUser(userData);
+    }
+
+    // Redirect user after login
+    function redirectUser(userData) {
+        console.log('✅ Login successful for:', userData.email);
+        alert('✅ লগইন সফল! ড্যাশবোর্ডে যাচ্ছে...');
+        
+        // Redirect based on role/account type
+        setTimeout(() => {
+            if (userData.role === 'admin' || userData.accountType === 'admin') {
+                window.location.href = 'admin.html';
+            } else if (userData.role === 'customer' || userData.accountType === 'customer') {
+                window.location.href = 'customer.html';
+            } else if (userData.role === 'professional' || userData.accountType === 'professional') {
+                window.location.href = 'professional.html';
+            } else {
+                window.location.href = 'index.html';
+            }
+        }, 1000);
     }
 
     // Auto-login check
@@ -946,7 +1071,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
             
-            console.log('🔑 Auto-filled remembered login');
+            console.log('🔑 Auto-filled remembered login:', rememberedEmail);
         }
     }
 
@@ -969,45 +1094,48 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Debug helper
-    console.log('✅ login.js loaded successfully');
-    console.log('📝 Form elements:');
-    console.log('- Email:', document.getElementById('email') ? 'Found' : 'Missing');
-    console.log('- Password:', document.getElementById('password') ? 'Found' : 'Missing');
-    console.log('- Role:', document.getElementById('role') ? 'Found' : 'Missing');
-    console.log('- Submit Button:', document.getElementById('submitBtn') ? 'Found' : 'Missing');
-    console.log('🌐 API will use relative URL: /api/login');
-    
-    // Test login function (for debugging)
-    window.testLogin = async function(testEmail, testPassword, testRole) {
-        console.log('🧪 Testing login with:', { testEmail, testRole });
+    // Debug helper function
+    window.testLogin = async function() {
+        console.log('🧪 Testing login...');
         
-        try {
-            const response = await fetch('/api/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    email: testEmail || 'test@example.com',
-                    password: testPassword || 'test123456',
-                    role: testRole || 'customer'
-                })
-            });
-            
-            const data = await response.json();
-            console.log('🧪 Test result:', data);
-            
-            if (data.success) {
-                localStorage.setItem('nibash_user', JSON.stringify(data.user));
-                console.log('✅ Test login successful, user stored in localStorage');
-                alert('Test successful! Check console for details.');
-            } else {
-                console.error('❌ Test login failed:', data.error);
+        const testData = {
+            email: 'admin@nibash.com',
+            password: 'admin123',
+            role: 'admin'
+        };
+        
+        // Fill form
+        document.getElementById('email').value = testData.email;
+        document.getElementById('password').value = testData.password;
+        document.getElementById('role').value = testData.role;
+        
+        // Select admin role
+        const roleOptions = document.querySelectorAll('.role-option');
+        roleOptions.forEach(option => {
+            option.classList.remove('selected');
+            if (option.getAttribute('data-role') === testData.role) {
+                option.classList.add('selected');
             }
-            
-            return data;
-        } catch (error) {
-            console.error('❌ Test error:', error);
-            return { success: false, error: error.message };
+        });
+        
+        console.log('🧪 Form filled with test data');
+        alert('Test data filled! Click login button.');
+    };
+
+    // Test API endpoint
+    window.testAPI = async function() {
+        console.log('🧪 Testing API endpoints...');
+        
+        const endpoints = ['/api/login', '/api/signup', '/api/test'];
+        
+        for (const endpoint of endpoints) {
+            try {
+                console.log(`🔍 Testing: ${endpoint}`);
+                const response = await fetch(endpoint, { method: 'GET' });
+                console.log(`✅ ${endpoint}: ${response.status}`);
+            } catch (error) {
+                console.log(`❌ ${endpoint}: ${error.message}`);
+            }
         }
     };
 </script>
