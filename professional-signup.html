@@ -809,364 +809,453 @@
     </div>
 
     <script>
-        // Theme Management
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = themeToggle.querySelector('i');
-        
-        // Load theme from localStorage
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        document.body.classList.add(`${savedTheme}-mode`);
-        themeIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-        
-        themeToggle.addEventListener('click', () => {
-            if (document.body.classList.contains('dark-mode')) {
-                document.body.classList.remove('dark-mode');
-                document.body.classList.add('light-mode');
-                localStorage.setItem('theme', 'light');
-                themeIcon.className = 'fas fa-moon';
-            } else {
-                document.body.classList.remove('light-mode');
-                document.body.classList.add('dark-mode');
-                localStorage.setItem('theme', 'dark');
-                themeIcon.className = 'fas fa-sun';
-            }
-        });
+    // Theme Management
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = themeToggle.querySelector('i');
+    
+    // Load theme from localStorage
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    document.body.classList.add(`${savedTheme}-mode`);
+    themeIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    
+    themeToggle.addEventListener('click', () => {
+        if (document.body.classList.contains('dark-mode')) {
+            document.body.classList.remove('dark-mode');
+            document.body.classList.add('light-mode');
+            localStorage.setItem('theme', 'light');
+            themeIcon.className = 'fas fa-moon';
+        } else {
+            document.body.classList.remove('light-mode');
+            document.body.classList.add('dark-mode');
+            localStorage.setItem('theme', 'dark');
+            themeIcon.className = 'fas fa-sun';
+        }
+    });
 
-        // Initialize Signup Page
-        document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Signup Page
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Professional signup page loaded');
+        
+        // Check if elements exist before setting up
+        if (document.getElementById('togglePassword')) {
             setupPasswordToggle();
-            setupServiceSelection();
-            setupFileUploads();
-            setupFormValidation();
-            setupFormSubmission();
+        }
+        
+        setupServiceSelection();
+        setupFileUploads();
+        setupFormValidation();
+        setupFormSubmission();
+        
+        // Log for debugging
+        console.log('Form setup completed');
+        console.log('Form exists:', !!document.getElementById('professionalSignupForm'));
+        console.log('Submit button exists:', !!document.getElementById('submitBtn'));
+    });
+
+    // Password Toggle
+    function setupPasswordToggle() {
+        const toggleBtn = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        
+        toggleBtn.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
         });
+    }
 
-        // Password Toggle
-        function setupPasswordToggle() {
-            const toggleBtn = document.getElementById('togglePassword');
-            const passwordInput = document.getElementById('password');
-            
-            toggleBtn.addEventListener('click', function() {
-                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                passwordInput.setAttribute('type', type);
-                this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
-            });
+    // Service Selection
+    function setupServiceSelection() {
+        const serviceOptions = document.querySelectorAll('.service-option');
+        const selectedServiceInput = document.getElementById('selectedService');
+        
+        if (!serviceOptions.length || !selectedServiceInput) {
+            console.error('Service selection elements not found');
+            return;
         }
-
-        // Service Selection
-        function setupServiceSelection() {
-            const serviceOptions = document.querySelectorAll('.service-option');
-            const selectedServiceInput = document.getElementById('selectedService');
-            
-            serviceOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    // Remove selected class from all options
-                    serviceOptions.forEach(opt => opt.classList.remove('selected'));
-                    
-                    // Add selected class to clicked option
-                    this.classList.add('selected');
-                    
-                    // Update hidden input
-                    selectedServiceInput.value = this.dataset.service;
-                    
-                    // Clear error
-                    clearError('serviceError');
-                });
+        
+        serviceOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove selected class from all options
+                serviceOptions.forEach(opt => opt.classList.remove('selected'));
+                
+                // Add selected class to clicked option
+                this.classList.add('selected');
+                
+                // Update hidden input
+                selectedServiceInput.value = this.dataset.service;
+                
+                // Clear error
+                const serviceError = document.getElementById('serviceError');
+                if (serviceError) {
+                    clearError(serviceError);
+                }
             });
-        }
+        });
+    }
 
-        // File Uploads
-        function setupFileUploads() {
-            // Profile Photo Upload
-            const photoUpload = document.getElementById('photoUpload');
-            const profilePhotoInput = document.getElementById('profilePhoto');
-            const photoPreview = document.getElementById('photoPreview');
-            
+    // File Uploads
+    function setupFileUploads() {
+        // Profile Photo Upload
+        const photoUpload = document.getElementById('photoUpload');
+        const profilePhotoInput = document.getElementById('profilePhoto');
+        const photoPreview = document.getElementById('photoPreview');
+        
+        if (photoUpload && profilePhotoInput) {
             photoUpload.addEventListener('click', () => profilePhotoInput.click());
             
             profilePhotoInput.addEventListener('change', function(e) {
                 handleFileUpload(e, photoPreview, 'ছবি');
             });
-            
-            // NID Photo Upload
-            const nidUpload = document.getElementById('nidUpload');
-            const nidPhotoInput = document.getElementById('nidPhoto');
-            const nidPreview = document.getElementById('nidPreview');
-            
+        }
+        
+        // NID Photo Upload
+        const nidUpload = document.getElementById('nidUpload');
+        const nidPhotoInput = document.getElementById('nidPhoto');
+        const nidPreview = document.getElementById('nidPreview');
+        
+        if (nidUpload && nidPhotoInput) {
             nidUpload.addEventListener('click', () => nidPhotoInput.click());
             
             nidPhotoInput.addEventListener('change', function(e) {
                 handleFileUpload(e, nidPreview, 'এনআইডি');
             });
         }
+    }
 
-        function handleFileUpload(event, previewElement, fileType) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            // Validate file size
-            const maxSize = fileType === 'ছবি' ? 2 * 1024 * 1024 : 5 * 1024 * 1024; // 2MB or 5MB
-            if (file.size > maxSize) {
-                alert(`${fileType} এর আকার ${maxSize/1024/1024}MB এর বেশি হতে পারবে না`);
-                event.target.value = '';
-                return;
-            }
-            
-            // Show file info
-            previewElement.innerHTML = `
-                <div class="file-item">
-                    <div>
-                        <i class="fas fa-file"></i>
-                        ${file.name} (${(file.size/1024).toFixed(2)} KB)
-                    </div>
-                    <button type="button" onclick="removeFile('${event.target.id}')">
-                        <i class="fas fa-times"></i>
-                    </button>
+    function handleFileUpload(event, previewElement, fileType) {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        // Validate file size
+        const maxSize = fileType === 'ছবি' ? 2 * 1024 * 1024 : 5 * 1024 * 1024; // 2MB or 5MB
+        if (file.size > maxSize) {
+            alert(`${fileType} এর আকার ${maxSize/1024/1024}MB এর বেশি হতে পারবে না`);
+            event.target.value = '';
+            return;
+        }
+        
+        // Show file info
+        previewElement.innerHTML = `
+            <div class="file-item">
+                <div>
+                    <i class="fas fa-file"></i>
+                    ${file.name} (${(file.size/1024).toFixed(2)} KB)
                 </div>
-            `;
-            previewElement.style.display = 'block';
-            
-            // Clear error
-            if (event.target.id === 'nidPhoto') {
-                clearError('nidPhotoError');
+                <button type="button" onclick="removeFile('${event.target.id}')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        `;
+        previewElement.style.display = 'block';
+        
+        // Clear error
+        if (event.target.id === 'nidPhoto') {
+            const nidPhotoError = document.getElementById('nidPhotoError');
+            if (nidPhotoError) {
+                clearError(nidPhotoError);
             }
         }
+    }
 
-        function removeFile(inputId) {
-            const input = document.getElementById(inputId);
-            const previewId = inputId === 'profilePhoto' ? 'photoPreview' : 'nidPreview';
-            
+    function removeFile(inputId) {
+        const input = document.getElementById(inputId);
+        const previewId = inputId === 'profilePhoto' ? 'photoPreview' : 'nidPreview';
+        const previewElement = document.getElementById(previewId);
+        
+        if (input) {
             input.value = '';
-            document.getElementById(previewId).innerHTML = '';
-            document.getElementById(previewId).style.display = 'none';
         }
+        
+        if (previewElement) {
+            previewElement.innerHTML = '';
+            previewElement.style.display = 'none';
+        }
+    }
 
-        // Form Validation
-        function setupFormValidation() {
-            const form = document.getElementById('professionalSignupForm');
-            const inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
-            
-            inputs.forEach(input => {
-                input.addEventListener('blur', function() {
-                    validateField(this);
-                });
-                
-                input.addEventListener('input', function() {
-                    clearError(this.id + 'Error');
-                });
+    // Form Validation
+    function setupFormValidation() {
+        const form = document.getElementById('professionalSignupForm');
+        if (!form) return;
+        
+        const inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
+        
+        inputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                validateField(this);
             });
             
-            // Special validation for NID
-            document.getElementById('nid').addEventListener('input', function() {
+            input.addEventListener('input', function() {
+                const errorId = this.id + 'Error';
+                const errorElement = document.getElementById(errorId);
+                if (errorElement) {
+                    clearError(errorElement);
+                }
+            });
+        });
+        
+        // Special validation for NID
+        const nidInput = document.getElementById('nid');
+        if (nidInput) {
+            nidInput.addEventListener('input', function() {
                 const value = this.value.trim();
-                if (value.length === 10 || value.length === 13 || value.length === 17) {
-                    clearError('nidError');
+                const errorElement = document.getElementById('nidError');
+                if (errorElement && (value.length === 10 || value.length === 13 || value.length === 17)) {
+                    clearError(errorElement);
                 }
             });
         }
+    }
 
-        function validateField(field) {
-            const value = field.value.trim();
-            const errorId = field.id + 'Error';
-            const errorElement = document.getElementById(errorId);
-            
-            switch(field.id) {
-                case 'fullName':
-                    if (value.length < 2) {
-                        showError(errorElement, 'নাম কমপক্ষে ২ অক্ষরের হতে হবে');
-                        return false;
-                    }
-                    break;
-                    
-                case 'email':
-                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    if (!emailRegex.test(value)) {
-                        showError(errorElement, 'সঠিক ইমেইল ঠিকানা দিন');
-                        return false;
-                    }
-                    break;
-                    
-                case 'phone':
-                    const phoneRegex = /^01[3-9]\d{8}$/;
-                    const phoneDigits = value.replace(/\D/g, '');
-                    if (!phoneRegex.test(phoneDigits)) {
-                        showError(errorElement, 'সঠিক ফোন নম্বর দিন (01XXXXXXXXX)');
-                        return false;
-                    }
-                    break;
-                    
-                case 'password':
-                    if (value.length < 8) {
-                        showError(errorElement, 'পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে');
-                        return false;
-                    }
-                    break;
-                    
-                case 'confirmPassword':
-                    const password = document.getElementById('password').value;
-                    if (value !== password) {
-                        showError(errorElement, 'পাসওয়ার্ড মিলছে না');
-                        return false;
-                    }
-                    break;
-                    
-                case 'nid':
-                    if (![10, 13, 17].includes(value.length)) {
-                        showError(errorElement, 'সঠিক এনআইডি নম্বর দিন (১০, ১৩ বা ১৭ ডিজিট)');
-                        return false;
-                    }
-                    break;
-                    
-                case 'selectedService':
-                    if (!value) {
-                        showError(document.getElementById('serviceError'), 'সেবার ধরন নির্বাচন করুন');
-                        return false;
-                    }
-                    break;
-                    
-                case 'experience':
-                    if (!value) {
-                        showError(errorElement, 'অভিজ্ঞতা নির্বাচন করুন');
-                        return false;
-                    }
-                    break;
-                    
-                case 'address':
-                    if (value.length < 10) {
-                        showError(errorElement, 'বিস্তারিত ঠিকানা লিখুন');
-                        return false;
-                    }
-                    break;
-                    
-                case 'nidPhoto':
-                    const file = field.files[0];
-                    if (!file) {
-                        showError(errorElement, 'এনআইডির ছবি আপলোড করুন');
-                        return false;
-                    }
-                    break;
-            }
-            
-            clearError(errorId);
+    function validateField(field) {
+        const value = field.value.trim();
+        const errorId = field.id + 'Error';
+        const errorElement = document.getElementById(errorId);
+        
+        if (!errorElement) {
+            console.log(`Error element not found: ${errorId}`);
             return true;
         }
+        
+        switch(field.id) {
+            case 'fullName':
+                if (value.length < 2) {
+                    showError(errorElement, 'নাম কমপক্ষে ২ অক্ষরের হতে হবে');
+                    return false;
+                }
+                break;
+                
+            case 'email':
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(value)) {
+                    showError(errorElement, 'সঠিক ইমেইল ঠিকানা দিন');
+                    return false;
+                }
+                break;
+                
+            case 'phone':
+                // Allow different phone formats
+                const phoneDigits = value.replace(/\D/g, '');
+                if (phoneDigits.length !== 11 || !phoneDigits.startsWith('01')) {
+                    showError(errorElement, 'সঠিক ফোন নম্বর দিন (11 ডিজিট, 01 দিয়ে শুরু)');
+                    return false;
+                }
+                break;
+                
+            case 'password':
+                if (value.length < 8) {
+                    showError(errorElement, 'পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে');
+                    return false;
+                }
+                break;
+                
+            case 'confirmPassword':
+                const password = document.getElementById('password')?.value || '';
+                if (value !== password) {
+                    showError(errorElement, 'পাসওয়ার্ড মিলছে না');
+                    return false;
+                }
+                break;
+                
+            case 'nid':
+                if (![10, 13, 17].includes(value.length)) {
+                    showError(errorElement, 'সঠিক এনআইডি নম্বর দিন (১০, ১৩ বা ১৭ ডিজিট)');
+                    return false;
+                }
+                break;
+                
+            case 'selectedService':
+                if (!value) {
+                    const serviceError = document.getElementById('serviceError');
+                    if (serviceError) {
+                        showError(serviceError, 'সেবার ধরন নির্বাচন করুন');
+                    }
+                    return false;
+                }
+                break;
+                
+            case 'experience':
+                if (!value) {
+                    showError(errorElement, 'অভিজ্ঞতা নির্বাচন করুন');
+                    return false;
+                }
+                break;
+                
+            case 'address':
+                if (value.length < 10) {
+                    showError(errorElement, 'বিস্তারিত ঠিকানা লিখুন');
+                    return false;
+                }
+                break;
+                
+            case 'nidPhoto':
+                const file = field.files?.[0];
+                if (!file) {
+                    showError(errorElement, 'এনআইডির ছবি আপলোড করুন');
+                    return false;
+                }
+                break;
+        }
+        
+        clearError(errorElement);
+        return true;
+    }
 
-        function showError(element, message) {
+    function showError(element, message) {
+        if (element) {
             element.textContent = message;
             element.classList.add('show');
         }
+    }
 
-        function clearError(errorId) {
-            const element = document.getElementById(errorId);
-            if (element) {
-                element.textContent = '';
-                element.classList.remove('show');
+    function clearError(element) {
+        if (element) {
+            element.textContent = '';
+            element.classList.remove('show');
+        }
+    }
+
+    // Form Submission
+    function setupFormSubmission() {
+        const form = document.getElementById('professionalSignupForm');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        if (!form || !submitBtn) {
+            console.error('Form or submit button not found');
+            return;
+        }
+        
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('Form submission started');
+            
+            // Validate all fields
+            const inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
+            let isValid = true;
+            
+            inputs.forEach(input => {
+                if (!validateField(input)) {
+                    isValid = false;
+                }
+            });
+            
+            // Check service selection
+            const selectedService = document.getElementById('selectedService')?.value;
+            if (!selectedService) {
+                const serviceError = document.getElementById('serviceError');
+                if (serviceError) {
+                    showError(serviceError, 'সেবার ধরন নির্বাচন করুন');
+                }
+                isValid = false;
             }
-        }
-
-        // Form Submission
-        function setupFormSubmission() {
-            const form = document.getElementById('professionalSignupForm');
-            const submitBtn = document.getElementById('submitBtn');
             
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
+            // Check terms agreement
+            const termsCheckbox = document.getElementById('terms');
+            if (!termsCheckbox?.checked) {
+                alert('দয়া করে বিশেষজ্ঞ চুক্তিতে সম্মতি দিন');
+                isValid = false;
+            }
+            
+            if (isValid) {
+                console.log('Form is valid, submitting...');
+                // Disable submit button and show loading
+                submitBtn.innerHTML = '<span class="loading"></span> প্রক্রিয়াধীন...';
+                submitBtn.disabled = true;
                 
-                // Validate all fields
-                const inputs = form.querySelectorAll('input[required], select[required], textarea[required]');
-                let isValid = true;
-                
-                inputs.forEach(input => {
-                    if (!validateField(input)) {
-                        isValid = false;
-                    }
-                });
-                
-                // Check service selection
-                const selectedService = document.getElementById('selectedService').value;
-                if (!selectedService) {
-                    showError(document.getElementById('serviceError'), 'সেবার ধরন নির্বাচন করুন');
-                    isValid = false;
-                }
-                
-                // Check terms agreement
-                const termsCheckbox = document.getElementById('terms');
-                if (!termsCheckbox.checked) {
-                    alert('দয়া করে বিশেষজ্ঞ চুক্তিতে সম্মতি দিন');
-                    isValid = false;
-                }
-                
-                if (isValid) {
-                    // Disable submit button and show loading
-                    submitBtn.innerHTML = '<span class="loading"></span> প্রক্রিয়াধীন...';
-                    submitBtn.disabled = true;
+                // Simulate API call
+                setTimeout(() => {
+                    // Save professional data to localStorage
+                    saveProfessionalData();
                     
-                    // Simulate API call
-                    setTimeout(() => {
-                        // Save professional data to localStorage
-                        saveProfessionalData();
-                        
-                        // Show success modal
-                        document.getElementById('successModal').style.display = 'flex';
-                        
-                        // Reset form and button
-                        submitBtn.innerHTML = '<i class="fas fa-user-cog"></i> বিশেষজ্ঞ হিসেবে নিবন্ধন করুন';
-                        submitBtn.disabled = false;
-                    }, 2000);
-                }
-            });
-        }
-
-        function saveProfessionalData() {
-            const professionalData = {
-                fullName: document.getElementById('fullName').value,
-                email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value,
-                nid: document.getElementById('nid').value,
-                service: document.getElementById('selectedService').value,
-                experience: document.getElementById('experience').value,
-                address: document.getElementById('address').value,
-                applicationDate: new Date().toISOString(),
-                accountType: 'professional',
-                status: 'pending' // Pending approval
-            };
-            
-            // Save to localStorage (in real app, this would be an API call)
-            localStorage.setItem('professional_application', JSON.stringify(professionalData));
-            
-            // Create a professional record in applications list
-            let applications = JSON.parse(localStorage.getItem('nibash_applications') || '[]');
-            applications.push({
-                ...professionalData,
-                password: document.getElementById('password').value, // In real app, this should be hashed
-                createdAt: new Date().toISOString()
-            });
-            localStorage.setItem('nibash_applications', JSON.stringify(applications));
-            
-            // Also add to users list for login
-            let users = JSON.parse(localStorage.getItem('nibash_users') || '[]');
-            users.push({
-                email: professionalData.email,
-                phone: professionalData.phone,
-                password: document.getElementById('password').value,
-                accountType: 'professional',
-                status: 'pending',
-                createdAt: new Date().toISOString()
-            });
-            localStorage.setItem('nibash_users', JSON.stringify(users));
-        }
-
-        // Navigation
-        function goToHome() {
-            window.location.href = 'index.html';
-        }
-
-        // Close modal when clicking outside
-        window.addEventListener('click', (e) => {
-            if (e.target === document.getElementById('successModal')) {
-                document.getElementById('successModal').style.display = 'none';
+                    // Show success modal
+                    const successModal = document.getElementById('successModal');
+                    if (successModal) {
+                        successModal.style.display = 'flex';
+                    }
+                    
+                    // Reset form and button
+                    submitBtn.innerHTML = '<i class="fas fa-user-cog"></i> বিশেষজ্ঞ হিসেবে নিবন্ধন করুন';
+                    submitBtn.disabled = false;
+                    
+                    // Reset form
+                    form.reset();
+                    
+                    // Reset service selection
+                    const serviceOptions = document.querySelectorAll('.service-option');
+                    serviceOptions.forEach(opt => opt.classList.remove('selected'));
+                    document.getElementById('selectedService').value = '';
+                    
+                    // Reset file previews
+                    const previews = document.querySelectorAll('.uploaded-files');
+                    previews.forEach(preview => {
+                        preview.innerHTML = '';
+                        preview.style.display = 'none';
+                    });
+                    
+                }, 2000);
+            } else {
+                console.log('Form validation failed');
             }
         });
-    </script>
+    }
+
+    function saveProfessionalData() {
+        const professionalData = {
+            fullName: document.getElementById('fullName')?.value || '',
+            email: document.getElementById('email')?.value || '',
+            phone: document.getElementById('phone')?.value || '',
+            nid: document.getElementById('nid')?.value || '',
+            service: document.getElementById('selectedService')?.value || '',
+            experience: document.getElementById('experience')?.value || '',
+            address: document.getElementById('address')?.value || '',
+            applicationDate: new Date().toISOString(),
+            accountType: 'professional',
+            status: 'pending' // Pending approval
+        };
+        
+        console.log('Saving professional data:', professionalData);
+        
+        // Save to localStorage (in real app, this would be an API call)
+        localStorage.setItem('professional_application', JSON.stringify(professionalData));
+        
+        // Create a professional record in applications list
+        let applications = JSON.parse(localStorage.getItem('nibash_applications') || '[]');
+        applications.push({
+            ...professionalData,
+            password: document.getElementById('password')?.value || '',
+            createdAt: new Date().toISOString(),
+            applicationId: 'PROF_' + Date.now()
+        });
+        localStorage.setItem('nibash_applications', JSON.stringify(applications));
+        
+        // Also add to users list for login
+        let users = JSON.parse(localStorage.getItem('nibash_users') || '[]');
+        users.push({
+            email: professionalData.email,
+            phone: professionalData.phone,
+            password: document.getElementById('password')?.value || '',
+            fullName: professionalData.fullName,
+            accountType: 'professional',
+            status: 'pending',
+            createdAt: new Date().toISOString(),
+            userId: 'USER_' + Date.now()
+        });
+        localStorage.setItem('nibash_users', JSON.stringify(users));
+        
+        console.log('Professional application saved successfully');
+    }
+
+    function goToHome() {
+        window.location.href = 'index.html';
+    }
+
+    // Close modal when clicking outside
+    window.addEventListener('click', (e) => {
+        const successModal = document.getElementById('successModal');
+        if (successModal && e.target === successModal) {
+            successModal.style.display = 'none';
+        }
+    });
+</script>
 </body>
 </html>
