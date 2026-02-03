@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>নিবাস - এডমিন লগইন</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Kalpurush&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #5629be;
+            --primary-light: #a78bfa;
+            --secondary: #0eaa69c5;
+            --dark-bg: #0f172a;
+            --dark-card: #1e293b;
+            --dark-text: #f1f5f9;
+            --dark-border: #334155;
+            --light-bg: #f8fafc;
+            --light-card: #ffffff;
+            --light-text: #1e293b;
+            --light-border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Hind Siliguri', 'Kalpurush', system-ui, sans-serif;
+        }
+
+        body {
+            background: var(--dark-bg);
+            color: var(--dark-text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-card {
+            background: var(--dark-card);
+            border-radius: 16px;
+            padding: 2.5rem;
+            border: 1px solid var(--dark-border);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 2rem;
+            color: var(--primary);
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .admin-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(86, 41, 190, 0.2);
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            justify-content: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #cbd5e1;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--dark-border);
+            border-radius: 8px;
+            color: var(--dark-text);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(86, 41, 190, 0.2);
+        }
+
+        .form-control::placeholder {
+            color: #64748b;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.875rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(86, 41, 190, 0.3);
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            color: #f87171;
+            padding: 0.875rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        .back-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-top: 1.5rem;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: var(--primary);
+        }
+
+        .security-note {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 1.5rem;
+            }
+            
+            .logo-text {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="logo">
+                <i class="fas fa-user-shield"></i>
+                <div class="logo-text">নিবাস</div>
+            </div>
+            
+            <div class="admin-badge">
+                <i class="fas fa-lock"></i>
+                সিস্টেম এডমিন লগইন
+            </div>
+            
+            <div class="error-message" id="errorMessage">
+                <!-- Error messages will appear here -->
+            </div>
+            
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label class="form-label">এডমিন ইমেইল</label>
+                    <input type="email" 
+                           id="adminEmail" 
+                           class="form-control" 
+                           placeholder="admin@nibash.com"
+                           autocomplete="username"
+                           required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">পাসওয়ার্ড</label>
+                    <input type="password" 
+                           id="adminPassword" 
+                           class="form-control" 
+                           placeholder="পাসওয়ার্ড লিখুন"
+                           autocomplete="current-password"
+                           required>
+                </div>
+                
+                <button type="submit" class="btn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    এডমিন প্যানেলে প্রবেশ করুন
+                </button>
+            </form>
+            
+            <div class="security-note">
+                <i class="fas fa-info-circle"></i>
+                শুধুমাত্র অনুমোদিত এডমিন কর্মচারীদের জন্য
+            </div>
+            
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i>
+                মূল সাইটে ফিরে যান
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('adminLoginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('adminEmail').value;
+            const password = document.getElementById('adminPassword').value;
+            const errorElement = document.getElementById('errorMessage');
+            
+            // Clear previous errors
+            errorElement.style.display = 'none';
+            
+            // Validate input
+            if (!email || !password) {
+                showError('ইমেইল এবং পাসওয়ার্ড প্রয়োজন');
+                return;
+            }
+            
+            try {
+                // Check for admin credentials
+                const userCredentials = JSON.parse(localStorage.getItem('user_credentials') || '[]');
+                const users = JSON.parse(localStorage.getItem('nibash_users') || '[]');
+                
+                // Find admin user
+                const adminUser = users.find(user => 
+                    user.email === email && 
+                    user.role === 'admin'
+                );
+                
+                if (!adminUser) {
+                    showError('এডমিন অ্যাকাউন্ট খুঁজে পাওয়া যায়নি');
+                    return;
+                }
+                
+                // Verify password
+                const storedCred = userCredentials.find(cred => 
+                    cred.email === email && 
+                    cred.password === password &&
+                    cred.role === 'admin'
+                );
+                
+                if (!storedCred) {
+                    showError('ভুল ইমেইল বা পাসওয়ার্ড');
+                    return;
+                }
+                
+                // For default admin account
+                if (email === 'admin@nibash.com' && password === 'admin@123') {
+                    if (!storedCred) {
+                        // Create default admin credentials
+                        userCredentials.push({
+                            email: 'admin@nibash.com',
+                            password: 'admin@123',
+                            role: 'admin'
+                        });
+                        localStorage.setItem('user_credentials', JSON.stringify(userCredentials));
+                    }
+                }
+                
+                // Save admin session
+                localStorage.setItem('nibash_user', JSON.stringify(adminUser));
+                localStorage.setItem('user_role', 'admin');
+                localStorage.setItem('admin_session', new Date().toISOString());
+                
+                // Redirect to admin panel
+                window.location.href = 'admin.html';
+                
+            } catch (error) {
+                console.error('Admin login error:', error);
+                showError('লগইন প্রক্রিয়ায় সমস্যা হয়েছে');
+            }
+        });
+        
+        function showError(message) {
+            const errorElement = document.getElementById('errorMessage');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+        
+        // Auto-focus on email field
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('adminEmail').focus();
+        });
+    </script>
+</body>
+</html>
