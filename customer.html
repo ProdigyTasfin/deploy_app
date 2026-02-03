@@ -1023,7 +1023,77 @@
                 }
             });
         });
+        // customer-signup.html script-এ যোগ করুন
+function toggleAdminForm() {
+    const form = document.getElementById('adminRegistrationForm');
+    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+}
+
+function hideAdminForm() {
+    document.getElementById('adminRegistrationForm').style.display = 'none';
+}
+
+// Admin signup form submission
+document.getElementById('adminSignupForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const adminCode = document.getElementById('adminCode').value;
+    const fullName = document.getElementById('adminFullName').value;
+    const email = document.getElementById('adminEmail').value;
+    const password = document.getElementById('adminPassword').value;
+    const confirmPassword = document.getElementById('adminConfirmPassword').value;
+    
+    // Validate admin code (for demo, use a simple code)
+    if (adminCode !== 'NIBASH_ADMIN_2024') {
+        alert('ভুল এডমিন কোড');
+        return;
+    }
+    
+    if (password !== confirmPassword) {
+        alert('পাসওয়ার্ড মিলছে না');
+        return;
+    }
+    
+    if (password.length < 8) {
+        alert('পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে');
+        return;
+    }
+    
+    // Create admin user
+    const users = JSON.parse(localStorage.getItem('nibash_users') || '[]');
+    const credentials = JSON.parse(localStorage.getItem('user_credentials') || '[]');
+    
+    // Check if email already exists
+    if (users.some(user => user.email === email)) {
+        alert('এই ইমেইল ইতিমধ্যে ব্যবহৃত হচ্ছে');
+        return;
+    }
+    
+    const adminUser = {
+        email: email,
+        fullName: fullName,
+        phone: '',
+        role: 'admin',
+        accountType: 'admin',
+        status: 'active',
+        createdAt: new Date().toISOString()
+    };
+    
+    users.push(adminUser);
+    localStorage.setItem('nibash_users', JSON.stringify(users));
+    
+    credentials.push({
+        email: email,
+        password: password,
+        role: 'admin'
+    });
+    localStorage.setItem('user_credentials', JSON.stringify(credentials));
+    
+    alert('এডমিন অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে! এখন লগইন করুন।');
+    window.location.href = 'login.html';
+});
     </script>
 </body>
 </html>
+
 
