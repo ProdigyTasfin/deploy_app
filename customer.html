@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nibash - Customer Dashboard</title>
+    <title>নিবাস - গ্রাহক ড্যাশবোর্ড</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Kalpurush&display=swap" rel="stylesheet">
     
@@ -118,7 +118,7 @@
             font-size: 1rem;
         }
 
-        /* Dashboard Layout */
+        /* ড্যাশবোর্ড Layout */
         .dashboard {
             display: grid;
             grid-template-columns: 250px 1fr;
@@ -175,7 +175,7 @@
             display: block;
         }
 
-        /* Dashboard Section */
+        /* ড্যাশবোর্ড Section */
         .welcome-banner {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
@@ -494,6 +494,20 @@
             margin-bottom: 1rem;
             opacity: 0.5;
         }
+    
+        /* Global glass hover enhancement */
+        body, button, input, select, textarea {
+            font-family: 'Hind Siliguri', 'Kalpurush', system-ui, sans-serif;
+        }
+        .card, .stat-card, .service-card, .signup-card, .login-card, .feature-card, .section {
+            transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+        }
+        .card:hover, .stat-card:hover, .service-card:hover, .signup-card:hover, .login-card:hover, .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 35px rgba(86, 41, 190, 0.18);
+            border-color: rgba(167, 139, 250, 0.5);
+        }
+
     </style>
 </head>
 <body class="dark-mode">
@@ -501,7 +515,7 @@
     <header class="header">
         <a href="index.html" class="logo">
             <i class="fas fa-home"></i>
-            <span>Nibash Customer</span>
+            <span>নিবাস গ্রাহক</span>
         </a>
         
         <div class="user-info">
@@ -514,7 +528,7 @@
         </div>
     </header>
 
-    <!-- Dashboard -->
+    <!-- ড্যাশবোর্ড -->
     <div class="dashboard">
         <!-- Sidebar -->
         <nav class="sidebar">
@@ -522,7 +536,7 @@
                 <li class="nav-item">
                     <a class="nav-link active" data-section="dashboard">
                         <i class="fas fa-tachometer-alt"></i>
-                        Dashboard
+                        ড্যাশবোর্ড
                     </a>
                 </li>
                 <li class="nav-item">
@@ -540,7 +554,7 @@
                 <li class="nav-item">
                     <a class="nav-link" data-section="profile">
                         <i class="fas fa-user-cog"></i>
-                        Profile
+                        প্রোফাইল
                     </a>
                 </li>
                 <li class="nav-item">
@@ -554,7 +568,7 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Dashboard Section -->
+            <!-- ড্যাশবোর্ড Section -->
             <div class="section active" id="dashboardSection">
                 <div class="welcome-banner">
                     <h1 id="welcomeMessage">Welcome!</h1>
@@ -568,7 +582,7 @@
                     </div>
                     <div class="stat-card">
                         <div class="stat-value" id="activeServices">0</div>
-                        <div>Active Services</div>
+                        <div>চলমান সেবা</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-value" id="totalSpent">৳ 0</div>
@@ -619,9 +633,9 @@
                 </div>
             </div>
 
-            <!-- Profile Section -->
+            <!-- প্রোফাইল Section -->
             <div class="section" id="profileSection">
-                <h2 style="margin-bottom: 1rem;">Profile</h2>
+                <h2 style="margin-bottom: 1rem;">প্রোফাইল</h2>
                 
                 <div class="form-container" style="max-width: 600px;">
                     <form id="profileForm">
@@ -646,7 +660,7 @@
                         </div>
                         
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Update Profile
+                            <i class="fas fa-save"></i> Update প্রোফাইল
                         </button>
                     </form>
                 </div>
@@ -697,8 +711,8 @@
                 </form>
             </div>
             <div class="modal-header" style="border-top: 1px solid var(--border-color);">
-                <button type="button" class="btn btn-secondary" onclick="closeModal('serviceModal')">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="submitNewService()">Submit Request</button>
+                <button type="button" class="btn btn-secondary" onclick="closeModal('serviceModal')">বাতিল</button>
+                <button type="button" class="btn btn-primary" onclick="submitNewService()">অনুরোধ জমা দিন</button>
             </div>
         </div>
     </div>
@@ -709,7 +723,7 @@
 
         // Initialize dashboard when page loads
         document.addEventListener('DOMContentLoaded', async function() {
-            await initializeDashboard();
+            await initializeড্যাশবোর্ড();
             setupTheme();
             setupNavigation();
             loadQuickServices();
@@ -719,7 +733,7 @@
             document.getElementById('preferredDate').min = today;
         });
 
-        async function initializeDashboard() {
+        async function initializeড্যাশবোর্ড() {
             const userData = localStorage.getItem('nibash_user');
             const userToken = localStorage.getItem('nibash_token');
             
@@ -733,17 +747,17 @@
                 
                 // Verify user is a customer
                 if (currentUser.role !== 'customer' && currentUser.accountType !== 'customer') {
-                    showNotification('Customer access only. Redirecting to login...', 'error');
+                    showNotification('শুধু গ্রাহক অ্যাক্সেস। লগইনে নেওয়া হচ্ছে...', 'error');
                     localStorage.clear();
                     window.location.href = 'login.html';
                     return;
                 }
                 
                 updateUserDisplay();
-                await loadDashboardData();
+                await loadড্যাশবোর্ডData();
                 await loadMyServices();
                 await loadPayments();
-                setupProfileForm();
+                setupপ্রোফাইলForm();
                 
             } catch (error) {
                 console.error('Session error:', error);
@@ -818,7 +832,7 @@
             });
         }
 
-        async function loadDashboardData() {
+        async function loadড্যাশবোর্ডData() {
             // Load user statistics
             const services = JSON.parse(localStorage.getItem('user_services') || '[]');
             const payments = JSON.parse(localStorage.getItem('user_payments') || '[]');
@@ -933,7 +947,7 @@
                         <span class="status-badge ${payment.status === 'completed' ? 'status-completed' : 
                             payment.status === 'pending' ? 'status-pending' : 'status-cancelled'}">
                             ${payment.status === 'completed' ? 'Completed' : 
-                             payment.status === 'pending' ? 'Pending' : 'Cancelled'}
+                             payment.status === 'pending' ? 'Pending' : 'বাতিলled'}
                         </span>
                     </td>
                     <td>
@@ -951,7 +965,7 @@
             `).join('');
         }
 
-        function setupProfileForm() {
+        function setupপ্রোফাইলForm() {
             const form = document.getElementById('profileForm');
             if (!form || !currentUser) return;
             
@@ -976,7 +990,7 @@
                     currentUser = updatedUser;
                     updateUserDisplay();
                     
-                    showNotification('Profile updated successfully!', 'success');
+                    showNotification('প্রোফাইল updated successfully!', 'success');
                 } catch (error) {
                     console.error('Error updating profile:', error);
                     showNotification('Failed to update profile', 'error');
@@ -1056,7 +1070,7 @@
                 closeModal('serviceModal');
                 
                 // Update UI
-                await loadDashboardData();
+                await loadড্যাশবোর্ডData();
                 await loadMyServices();
                 await loadPayments();
                 
@@ -1090,7 +1104,7 @@
                     localStorage.setItem('user_payments', JSON.stringify(payments));
                     
                     // Update dashboard
-                    loadDashboardData();
+                    loadড্যাশবোর্ডData();
                     loadPayments();
                     
                     showNotification('Payment completed successfully!', 'success');
@@ -1259,74 +1273,26 @@
 
         function getStatusText(status) {
             const texts = {
-                'pending': 'Pending',
-                'active': 'Active',
-                'in-progress': 'In Progress',
-                'completed': 'Completed',
-                'cancelled': 'Cancelled'
+                'pending': 'অপেক্ষমাণ',
+                'active': 'চলমান',
+                'in-progress': 'প্রক্রিয়াধীন',
+                'completed': 'সম্পন্ন',
+                'cancelled': 'বাতিল'
             };
             return texts[status] || status;
         }
 
-        // Initialize dummy data if none exists
-        function initializeDummyData() {
-            if (!localStorage.getItem('user_services') || JSON.parse(localStorage.getItem('user_services')).length === 0) {
-                const dummyServices = [
-                    {
-                        id: 'SVC-1',
-                        type: '1',
-                        typeName: 'Electrical Issues',
-                        description: 'Bedroom lights not working properly',
-                        date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                        time: 'Morning 9-12',
-                        address: 'Dhanmondi, Dhaka',
-                        status: 'completed',
-                        amount: 1500,
-                        createdAt: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
-                        customerName: currentUser?.fullName || 'John Doe'
-                    },
-                    {
-                        id: 'SVC-2',
-                        type: '2',
-                        typeName: 'Plumbing Problems',
-                        description: 'Bathroom tap is leaking',
-                        date: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                        time: 'Afternoon 12-4',
-                        address: 'Dhanmondi, Dhaka',
-                        status: 'pending',
-                        amount: null,
-                        createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-                        customerName: currentUser?.fullName || 'John Doe'
-                    }
-                ];
-                localStorage.setItem('user_services', JSON.stringify(dummyServices));
+        function initializeStorage() {
+            if (!localStorage.getItem('user_services')) {
+                localStorage.setItem('user_services', JSON.stringify([]));
             }
-            
-            if (!localStorage.getItem('user_payments') || JSON.parse(localStorage.getItem('user_payments')).length === 0) {
-                const dummyPayments = [
-                    {
-                        id: 'PAY-1',
-                        serviceId: 'SVC-1',
-                        description: 'Payment for Electrical Issues',
-                        amount: 1500,
-                        status: 'completed',
-                        date: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString()
-                    },
-                    {
-                        id: 'PAY-2',
-                        serviceId: 'SVC-2',
-                        description: 'Payment for Plumbing Problems',
-                        amount: 1200,
-                        status: 'pending',
-                        date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
-                    }
-                ];
-                localStorage.setItem('user_payments', JSON.stringify(dummyPayments));
+
+            if (!localStorage.getItem('user_payments')) {
+                localStorage.setItem('user_payments', JSON.stringify([]));
             }
         }
 
-        // Call this function to initialize dummy data
-        initializeDummyData();
+        initializeStorage();
     </script>
 </body>
 </html>

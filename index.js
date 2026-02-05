@@ -12,6 +12,8 @@ app.use('/api/payment/initiate', require('./api/payment/initiate'));
 app.use('/api/payment/validate', require('./api/payment/validate'));
 app.use('/api/auth/login', require('./api/auth/login'));
 app.use('/api/auth/signup', require('./api/auth/signup'));
+app.use('/api/login', require('./api/login'));
+app.use('/api/signup', require('./api/signup'));
 
 // Test endpoint
 app.get('/api/test', (req, res) => {
