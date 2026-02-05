@@ -197,6 +197,20 @@
                 font-size: 1.5rem;
             }
         }
+    
+        /* Global glass hover enhancement */
+        body, button, input, select, textarea {
+            font-family: 'Hind Siliguri', 'Kalpurush', system-ui, sans-serif;
+        }
+        .card, .stat-card, .service-card, .signup-card, .login-card, .feature-card, .section {
+            transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+        }
+        .card:hover, .stat-card:hover, .service-card:hover, .signup-card:hover, .login-card:hover, .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 35px rgba(86, 41, 190, 0.18);
+            border-color: rgba(167, 139, 250, 0.5);
+        }
+
     </style>
 </head>
 <body>
@@ -258,75 +272,43 @@
     <script>
         document.getElementById('adminLoginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
-            const email = document.getElementById('adminEmail').value;
+
+            const email = document.getElementById('adminEmail').value.trim();
             const password = document.getElementById('adminPassword').value;
-            const errorElement = document.getElementById('errorMessage');
-            
-            // Clear previous errors
-            errorElement.style.display = 'none';
-            
-            // Validate input
+
             if (!email || !password) {
                 showError('ইমেইল এবং পাসওয়ার্ড প্রয়োজন');
                 return;
             }
-            
+
             try {
-                // Check for admin credentials
-                const userCredentials = JSON.parse(localStorage.getItem('user_credentials') || '[]');
-                const users = JSON.parse(localStorage.getItem('nibash_users') || '[]');
-                
-                // Find admin user
-                const adminUser = users.find(user => 
-                    user.email === email && 
-                    user.role === 'admin'
-                );
-                
-                if (!adminUser) {
-                    showError('এডমিন অ্যাকাউন্ট খুঁজে পাওয়া যায়নি');
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password, role: 'admin' })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    showError(data.error || 'ভুল ইমেইল বা পাসওয়ার্ড');
                     return;
                 }
-                
-                // Verify password
-                const storedCred = userCredentials.find(cred => 
-                    cred.email === email && 
-                    cred.password === password &&
-                    cred.role === 'admin'
-                );
-                
-                if (!storedCred) {
-                    showError('ভুল ইমেইল বা পাসওয়ার্ড');
-                    return;
+
+                localStorage.setItem('nibash_user', JSON.stringify(data.user));
+                if (data.token) {
+                    localStorage.setItem('nibash_token', data.token);
                 }
-                
-                // For default admin account
-                if (email === 'admin@nibash.com' && password === 'admin@123') {
-                    if (!storedCred) {
-                        // Create default admin credentials
-                        userCredentials.push({
-                            email: 'admin@nibash.com',
-                            password: 'admin@123',
-                            role: 'admin'
-                        });
-                        localStorage.setItem('user_credentials', JSON.stringify(userCredentials));
-                    }
-                }
-                
-                // Save admin session
-                localStorage.setItem('nibash_user', JSON.stringify(adminUser));
                 localStorage.setItem('user_role', 'admin');
                 localStorage.setItem('admin_session', new Date().toISOString());
-                
-                // Redirect to admin panel
+
                 window.location.href = 'admin.html';
-                
             } catch (error) {
                 console.error('Admin login error:', error);
                 showError('লগইন প্রক্রিয়ায় সমস্যা হয়েছে');
             }
         });
-        
+
         function showError(message) {
             const errorElement = document.getElementById('errorMessage');
             errorElement.textContent = message;
