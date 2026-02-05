@@ -782,9 +782,9 @@
                     <label for="terms" class="terms-text">
                         আমি নিবাসের 
                         <a href="#" class="terms-link">বিশেষজ্ঞ চুক্তি</a>, 
-                        <a href="#" class="terms-link">সেবার শর্তাবলী</a> 
+                        <a href="terms-of-service.html" class="terms-link">সেবার শর্তাবলী</a> 
                         এবং 
-                        <a href="#" class="terms-link">গোপনীয়তা নীতি</a> 
+                        <a href="privacy-policy.html" class="terms-link">গোপনীয়তা নীতি</a> 
                         পড়েছি এবং তা মেনে চলতে সম্মত আছি।
                     </label>
                 </div>
@@ -1208,6 +1208,22 @@
             }
 
             localStorage.setItem('nibash_user', JSON.stringify(data.user));
+
+            // Admin approval flow এর জন্য আবেদন সংরক্ষণ
+            const applications = JSON.parse(localStorage.getItem('nibash_applications') || '[]');
+            applications.unshift({
+                fullName: payload.fullName,
+                email: payload.email,
+                phone: payload.phone,
+                service: payload.serviceType,
+                experience: payload.experience,
+                address: payload.address,
+                status: 'pending',
+                accountType: 'professional',
+                createdAt: new Date().toISOString()
+            });
+            localStorage.setItem('nibash_applications', JSON.stringify(applications));
+
 
             const successModal = document.getElementById('successModal');
             if (successModal) {
