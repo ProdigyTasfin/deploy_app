@@ -554,6 +554,20 @@
                 font-size: 1.5rem;
             }
         }
+    
+        /* Global glass hover enhancement */
+        body, button, input, select, textarea {
+            font-family: 'Hind Siliguri', 'Kalpurush', system-ui, sans-serif;
+        }
+        .card, .stat-card, .service-card, .signup-card, .login-card, .feature-card, .section {
+            transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+        }
+        .card:hover, .stat-card:hover, .service-card:hover, .signup-card:hover, .login-card:hover, .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 35px rgba(86, 41, 190, 0.18);
+            border-color: rgba(167, 139, 250, 0.5);
+        }
+
     </style>
 </head>
 <body class="dark-mode">
@@ -641,9 +655,9 @@
                     <input type="checkbox" class="terms-checkbox" id="terms" required>
                     <label for="terms" class="terms-text">
                         আমি নিবাসের 
-                        <a href="#" class="terms-link">সেবার শর্তাবলী</a> 
+                        <a href="terms-of-service.html" class="terms-link">সেবার শর্তাবলী</a> 
                         এবং 
-                        <a href="#" class="terms-link">গোপনীয়তা নীতি</a> 
+                        <a href="privacy-policy.html" class="terms-link">গোপনীয়তা নীতি</a> 
                         পড়েছি এবং তা মেনে চলতে সম্মত আছি।
                     </label>
                 </div>
@@ -1011,12 +1025,12 @@
     // Social Signup
     function signupWithFacebook() {
         console.log('Facebook signup clicked');
-        alert('Facebook দিয়ে নিবন্ধন করা হবে। (Demo Mode)');
+        alert('Facebook নিবন্ধন শীঘ্রই যুক্ত হবে।');
     }
 
     function signupWithGoogle() {
         console.log('Google signup clicked');
-        alert('Google দিয়ে নিবন্ধন করা হবে। (Demo Mode)');
+        alert('Google নিবন্ধন শীঘ্রই যুক্ত হবে।');
     }
 
     // Navigation

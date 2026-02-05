@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nibash - Customer Dashboard</title>
+    <title>নিবাস - গ্রাহক ড্যাশবোর্ড</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Kalpurush&display=swap" rel="stylesheet">
     
@@ -118,7 +118,7 @@
             font-size: 1rem;
         }
 
-        /* Dashboard Layout */
+        /* ড্যাশবোর্ড Layout */
         .dashboard {
             display: grid;
             grid-template-columns: 250px 1fr;
@@ -175,7 +175,7 @@
             display: block;
         }
 
-        /* Dashboard Section */
+        /* ড্যাশবোর্ড Section */
         .welcome-banner {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
@@ -501,7 +501,7 @@
     <header class="header">
         <a href="index.html" class="logo">
             <i class="fas fa-home"></i>
-            <span>Nibash Customer</span>
+            <span>নিবাস গ্রাহক</span>
         </a>
         
         <div class="user-info">
@@ -514,7 +514,7 @@
         </div>
     </header>
 
-    <!-- Dashboard -->
+    <!-- ড্যাশবোর্ড -->
     <div class="dashboard">
         <!-- Sidebar -->
         <nav class="sidebar">
@@ -522,31 +522,31 @@
                 <li class="nav-item">
                     <a class="nav-link active" data-section="dashboard">
                         <i class="fas fa-tachometer-alt"></i>
-                        Dashboard
+                        ড্যাশবোর্ড
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-section="services">
                         <i class="fas fa-concierge-bell"></i>
-                        My Services
+                        আমার সার্ভিস
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-section="payments">
                         <i class="fas fa-credit-card"></i>
-                        Payments
+                        পেমেন্ট
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-section="profile">
                         <i class="fas fa-user-cog"></i>
-                        Profile
+                        প্রোফাইল
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" onclick="logout()">
                         <i class="fas fa-sign-out-alt"></i>
-                        Logout
+                        লগআউট
                     </a>
                 </li>
             </ul>
@@ -554,30 +554,30 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Dashboard Section -->
+            <!-- ড্যাশবোর্ড Section -->
             <div class="section active" id="dashboardSection">
                 <div class="welcome-banner">
-                    <h1 id="welcomeMessage">Welcome!</h1>
-                    <p>Check your latest service status in the "My Services" section</p>
+                    <h1 id="welcomeMessage">স্বাগতম!</h1>
+                    <p>আপনার সর্বশেষ সার্ভিস স্ট্যাটাস "আমার সার্ভিস" অংশে দেখুন</p>
                 </div>
 
                 <div class="stats-cards">
                     <div class="stat-card">
                         <div class="stat-value" id="totalServices">0</div>
-                        <div>Total Services</div>
+                        <div>মোট সার্ভিস</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-value" id="activeServices">0</div>
-                        <div>Active Services</div>
+                        <div>চলমান সার্ভিস</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-value" id="totalSpent">৳ 0</div>
-                        <div>Total Spent</div>
+                        <div>মোট পরিশোধ</div>
                     </div>
                 </div>
 
                 <div style="margin-top: 2rem;">
-                    <h2 style="margin-bottom: 1rem;">Quick Service Request</h2>
+                    <h2 style="margin-bottom: 1rem;">দ্রুত সার্ভিস অনুরোধ</h2>
                     <div class="services-grid" id="quickServices">
                         <!-- Quick service options will be loaded here -->
                     </div>
@@ -586,9 +586,9 @@
 
             <!-- Services Section -->
             <div class="section" id="servicesSection">
-                <h2 style="margin-bottom: 1rem;">My Services</h2>
+                <h2 style="margin-bottom: 1rem;">আমার সার্ভিস</h2>
                 <button class="btn btn-primary" onclick="requestNewService()">
-                    <i class="fas fa-plus"></i> Request New Service
+                    <i class="fas fa-plus"></i> নতুন সার্ভিস অনুরোধ
                 </button>
                 
                 <div class="services-grid" id="myServices">
@@ -596,37 +596,37 @@
                 </div>
             </div>
 
-            <!-- Payments Section -->
+            <!-- পেমেন্ট Section -->
             <div class="section" id="paymentsSection">
-                <h2 style="margin-bottom: 1rem;">Payment History</h2>
+                <h2 style="margin-bottom: 1rem;">পেমেন্ট ইতিহাস</h2>
                 
                 <div class="payment-history">
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Date</th>
-                                <th>Description</th>
-                                <th>Amount</th>
-                                <th>Status</th>
-                                <th>Action</th>
+                                <th>আইডি</th>
+                                <th>তারিখ</th>
+                                <th>বিবরণ</th>
+                                <th>পরিমাণ</th>
+                                <th>স্ট্যাটাস</th>
+                                <th>অ্যাকশন</th>
                             </tr>
                         </thead>
                         <tbody id="paymentsTable">
-                            <!-- Payments will be loaded here -->
+                            <!-- পেমেন্টগুলো এখানে লোড হবে -->
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Profile Section -->
+            <!-- প্রোফাইল Section -->
             <div class="section" id="profileSection">
-                <h2 style="margin-bottom: 1rem;">Profile</h2>
+                <h2 style="margin-bottom: 1rem;">প্রোফাইল</h2>
                 
                 <div class="form-container" style="max-width: 600px;">
                     <form id="profileForm">
                         <div class="form-group">
-                            <label class="form-label">Full Name</label>
+                            <label class="form-label">পূর্ণ নাম</label>
                             <input type="text" class="form-control" id="fullName" required>
                         </div>
                         
@@ -646,7 +646,7 @@
                         </div>
                         
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Update Profile
+                            <i class="fas fa-save"></i> Update প্রোফাইল
                         </button>
                     </form>
                 </div>
@@ -697,8 +697,8 @@
                 </form>
             </div>
             <div class="modal-header" style="border-top: 1px solid var(--border-color);">
-                <button type="button" class="btn btn-secondary" onclick="closeModal('serviceModal')">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="submitNewService()">Submit Request</button>
+                <button type="button" class="btn btn-secondary" onclick="closeModal('serviceModal')">বাতিল</button>
+                <button type="button" class="btn btn-primary" onclick="submitNewService()">অনুরোধ জমা দিন</button>
             </div>
         </div>
     </div>
@@ -743,7 +743,7 @@
                 await loadDashboardData();
                 await loadMyServices();
                 await loadPayments();
-                setupProfileForm();
+                setupপ্রোফাইলForm();
                 
             } catch (error) {
                 console.error('Session error:', error);
@@ -925,25 +925,25 @@
             
             paymentsTable.innerHTML = payments.map(payment => `
                 <tr>
-                    <td>${payment.id || payment._id || 'N/A'}</td>
+                    <td>${payment.id || payment._id || 'প্রযোজ্য নয়'}</td>
                     <td>${new Date(payment.date || payment.createdAt).toLocaleDateString()}</td>
-                    <td>${payment.description || 'Service Payment'}</td>
+                    <td>${payment.description || 'সার্ভিস পেমেন্ট'}</td>
                     <td>৳ ${parseFloat(payment.amount || 0).toLocaleString()}</td>
                     <td>
                         <span class="status-badge ${payment.status === 'completed' ? 'status-completed' : 
                             payment.status === 'pending' ? 'status-pending' : 'status-cancelled'}">
-                            ${payment.status === 'completed' ? 'Completed' : 
-                             payment.status === 'pending' ? 'Pending' : 'Cancelled'}
+                            ${payment.status === 'completed' ? 'সম্পন্ন' : 
+                             payment.status === 'pending' ? 'অপেক্ষমাণ' : 'বাতিল'}
                         </span>
                     </td>
                     <td>
                         ${payment.status === 'completed' ? `
                             <button class="btn btn-secondary" onclick="viewReceipt('${payment.id || payment._id}')">
-                                <i class="fas fa-receipt"></i> Receipt
+                                <i class="fas fa-receipt"></i> রসিদ
                             </button>
                         ` : payment.status === 'pending' ? `
                             <button class="btn btn-primary" onclick="makePayment('${payment.id || payment._id}')">
-                                Pay Now
+                                এখনই পরিশোধ
                             </button>
                         ` : ''}
                     </td>
@@ -951,7 +951,7 @@
             `).join('');
         }
 
-        function setupProfileForm() {
+        function setupপ্রোফাইলForm() {
             const form = document.getElementById('profileForm');
             if (!form || !currentUser) return;
             
@@ -976,7 +976,7 @@
                     currentUser = updatedUser;
                     updateUserDisplay();
                     
-                    showNotification('Profile updated successfully!', 'success');
+                    showNotification('প্রোফাইল updated successfully!', 'success');
                 } catch (error) {
                     console.error('Error updating profile:', error);
                     showNotification('Failed to update profile', 'error');
@@ -1005,15 +1005,15 @@
             // Validation
             if (!serviceType.value || !problemDescription.value || !preferredDate.value || 
                 !preferredTime.value || !serviceAddress.value) {
-                showNotification('Please fill all required fields', 'error');
+                showNotification('সব প্রয়োজনীয় ঘর পূরণ করুন', 'error');
                 return;
             }
             
             const serviceTypes = {
-                '1': 'Electrical Issues',
-                '2': 'Plumbing Problems',
-                '3': 'Painting Work',
-                '4': 'AC Service'
+                '1': 'বৈদ্যুতিক সমস্যা',
+                '2': 'প্লাম্বিং সমস্যা',
+                '3': 'রং করার কাজ',
+                '4': 'এসি সার্ভিস'
             };
             
             const newService = {
@@ -1027,7 +1027,7 @@
                 status: 'pending',
                 amount: null,
                 createdAt: new Date().toISOString(),
-                customerName: currentUser.fullName || 'Unknown',
+                customerName: currentUser.fullName || 'গ্রাহক',
                 customerId: currentUser.id || currentUser._id || 'unknown'
             };
             
@@ -1036,12 +1036,29 @@
                 const existingServices = JSON.parse(localStorage.getItem('user_services') || '[]');
                 existingServices.unshift(newService); // Add to beginning
                 localStorage.setItem('user_services', JSON.stringify(existingServices));
+
+                // Admin panel এর জন্য সার্ভিস রিকোয়েস্ট সংরক্ষণ
+                const existingRequests = JSON.parse(localStorage.getItem('service_requests') || '[]');
+                existingRequests.unshift({
+                    id: newService.id,
+                    serviceType: newService.type,
+                    problemDescription: newService.description,
+                    preferredDate: newService.date,
+                    preferredTime: newService.time,
+                    customerName: currentUser.fullName || 'গ্রাহক',
+                    customerPhone: currentUser.phone || '',
+                    customerAddress: newService.address,
+                    status: 'pending',
+                    createdAt: newService.createdAt
+                });
+                localStorage.setItem('service_requests', JSON.stringify(existingRequests));
+
                 
                 // Create a pending payment
                 const payment = {
                     id: 'PAY-' + Date.now(),
                     serviceId: newService.id,
-                    description: `Payment for ${newService.typeName}`,
+                    description: `${newService.typeName} এর পেমেন্ট`,
                     amount: calculateServiceAmount(newService.type),
                     status: 'pending',
                     date: new Date().toISOString()
@@ -1060,10 +1077,10 @@
                 await loadMyServices();
                 await loadPayments();
                 
-                showNotification('Service request submitted successfully!', 'success');
+                showNotification('সার্ভিস অনুরোধ সফলভাবে জমা হয়েছে!', 'success');
             } catch (error) {
                 console.error('Error submitting service:', error);
-                showNotification('Failed to submit service request', 'error');
+                showNotification('সার্ভিস অনুরোধ জমা দিতে ব্যর্থ হয়েছে', 'error');
             }
         }
 
@@ -1078,24 +1095,19 @@
         }
 
         function makePayment(paymentId) {
-            // Simulate payment
-            showNotification('Redirecting to payment gateway...', 'success');
-            
+            const payments = JSON.parse(localStorage.getItem('user_payments') || '[]');
+            const payment = payments.find(p => p.id === paymentId || p._id === paymentId);
+
+            if (!payment) {
+                showNotification('পেমেন্ট তথ্য পাওয়া যায়নি', 'error');
+                return;
+            }
+
+            showNotification('পেমেন্ট গেটওয়েতে নেওয়া হচ্ছে...', 'success');
+            const redirectUrl = `payment.html?payment_id=${encodeURIComponent(payment.id || payment._id)}`;
             setTimeout(() => {
-                const payments = JSON.parse(localStorage.getItem('user_payments') || '[]');
-                const paymentIndex = payments.findIndex(p => p.id === paymentId || p._id === paymentId);
-                
-                if (paymentIndex !== -1) {
-                    payments[paymentIndex].status = 'completed';
-                    localStorage.setItem('user_payments', JSON.stringify(payments));
-                    
-                    // Update dashboard
-                    loadDashboardData();
-                    loadPayments();
-                    
-                    showNotification('Payment completed successfully!', 'success');
-                }
-            }, 1500);
+                window.location.href = redirectUrl;
+            }, 300);
         }
 
         function viewReceipt(paymentId) {
@@ -1107,7 +1119,7 @@
                 receiptWindow.document.write(`
                     <html>
                     <head>
-                        <title>Receipt - Payment #${payment.id}</title>
+                        <title>রসিদ - Payment #${payment.id}</title>
                         <style>
                             body { font-family: 'Hind Siliguri', sans-serif; padding: 20px; }
                             .header { text-align: center; margin-bottom: 30px; }
@@ -1121,13 +1133,13 @@
                     </head>
                     <body>
                         <div class="header">
-                            <h1>Nibash - Receipt</h1>
-                            <p>Service Payment Receipt</p>
+                            <h1>Nibash - রসিদ</h1>
+                            <p>Service Payment রসিদ</p>
                         </div>
                         <div class="receipt">
                             <div class="details">
                                 <div class="detail-row">
-                                    <div class="detail-label">Receipt No:</div>
+                                    <div class="detail-label">রসিদ No:</div>
                                     <div>#${payment.id}</div>
                                 </div>
                                 <div class="detail-row">
@@ -1157,7 +1169,7 @@
                             </div>
                         </div>
                         <div style="text-align: center; margin-top: 20px;">
-                            <button onclick="window.print()">Print Receipt</button>
+                            <button onclick="window.print()">Print রসিদ</button>
                         </div>
                     </body>
                     </html>
@@ -1238,12 +1250,12 @@
 
         function getServiceName(serviceType) {
             const names = {
-                '1': 'Electrical Issues',
-                '2': 'Plumbing Problems',
-                '3': 'Painting Work',
-                '4': 'AC Service'
+                '1': 'বৈদ্যুতিক সমস্যা',
+                '2': 'প্লাম্বিং সমস্যা',
+                '3': 'রং করার কাজ',
+                '4': 'এসি সার্ভিস'
             };
-            return names[serviceType] || 'Custom Service';
+            return names[serviceType] || 'কাস্টম সেবা';
         }
 
         function getStatusClass(status) {
@@ -1259,74 +1271,40 @@
 
         function getStatusText(status) {
             const texts = {
-                'pending': 'Pending',
-                'active': 'Active',
-                'in-progress': 'In Progress',
-                'completed': 'Completed',
-                'cancelled': 'Cancelled'
+                'pending': 'অপেক্ষমাণ',
+                'active': 'চলমান',
+                'in-progress': 'প্রক্রিয়াধীন',
+                'completed': 'সম্পন্ন',
+                'cancelled': 'বাতিল'
             };
             return texts[status] || status;
         }
 
-        // Initialize dummy data if none exists
-        function initializeDummyData() {
-            if (!localStorage.getItem('user_services') || JSON.parse(localStorage.getItem('user_services')).length === 0) {
-                const dummyServices = [
-                    {
-                        id: 'SVC-1',
-                        type: '1',
-                        typeName: 'Electrical Issues',
-                        description: 'Bedroom lights not working properly',
-                        date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                        time: 'Morning 9-12',
-                        address: 'Dhanmondi, Dhaka',
-                        status: 'completed',
-                        amount: 1500,
-                        createdAt: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
-                        customerName: currentUser?.fullName || 'John Doe'
-                    },
-                    {
-                        id: 'SVC-2',
-                        type: '2',
-                        typeName: 'Plumbing Problems',
-                        description: 'Bathroom tap is leaking',
-                        date: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                        time: 'Afternoon 12-4',
-                        address: 'Dhanmondi, Dhaka',
-                        status: 'pending',
-                        amount: null,
-                        createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-                        customerName: currentUser?.fullName || 'John Doe'
-                    }
-                ];
-                localStorage.setItem('user_services', JSON.stringify(dummyServices));
+        function initializeStorage() {
+            // পুরোনো ডামি ডেটা থাকলে সরিয়ে দিন
+            const legacyServiceIds = new Set(['SVC-1', 'SVC-2']);
+            const legacyPaymentIds = new Set(['PAY-1', 'PAY-2']);
+
+            if (!localStorage.getItem('user_services')) {
+                localStorage.setItem('user_services', JSON.stringify([]));
+            } else {
+                const cleanedServices = JSON.parse(localStorage.getItem('user_services') || '[]')
+                    .filter(item => !legacyServiceIds.has(item.id));
+                localStorage.setItem('user_services', JSON.stringify(cleanedServices));
             }
-            
-            if (!localStorage.getItem('user_payments') || JSON.parse(localStorage.getItem('user_payments')).length === 0) {
-                const dummyPayments = [
-                    {
-                        id: 'PAY-1',
-                        serviceId: 'SVC-1',
-                        description: 'Payment for Electrical Issues',
-                        amount: 1500,
-                        status: 'completed',
-                        date: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString()
-                    },
-                    {
-                        id: 'PAY-2',
-                        serviceId: 'SVC-2',
-                        description: 'Payment for Plumbing Problems',
-                        amount: 1200,
-                        status: 'pending',
-                        date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
-                    }
-                ];
-                localStorage.setItem('user_payments', JSON.stringify(dummyPayments));
+            if (!localStorage.getItem('user_payments')) {
+                localStorage.setItem('user_payments', JSON.stringify([]));
+            } else {
+                const cleanedPayments = JSON.parse(localStorage.getItem('user_payments') || '[]')
+                    .filter(item => !legacyPaymentIds.has(item.id));
+                localStorage.setItem('user_payments', JSON.stringify(cleanedPayments));
+            }
+            if (!localStorage.getItem('service_requests')) {
+                localStorage.setItem('service_requests', JSON.stringify([]));
             }
         }
 
-        // Call this function to initialize dummy data
-        initializeDummyData();
+        initializeStorage();
     </script>
 </body>
 </html>

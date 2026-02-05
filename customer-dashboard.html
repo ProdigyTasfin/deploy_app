@@ -3,57 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>গ্রাহক ড্যাশবোর্ড</title>
+    <title>গ্রাহক ড্যাশবোর্ড | নিবাস</title>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Kalpurush&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #5629be;
+            --secondary: #0eaa69;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --bg1: #0b1022;
+            --bg2: #111b3b;
+            --glass: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        * { box-sizing: border-box; }
         body {
-            font-family: Arial, sans-serif;
-            background: #f8fafc;
             margin: 0;
-            padding: 40px 16px;
-            color: #1e293b;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            font-family: 'Hind Siliguri', 'Kalpurush', system-ui, sans-serif;
+            color: var(--text);
+            background: radial-gradient(circle at 10% 20%, #1e1b4b 0%, transparent 35%),
+                        radial-gradient(circle at 80% 10%, #0f766e 0%, transparent 40%),
+                        linear-gradient(135deg, var(--bg1), var(--bg2));
+            overflow: hidden;
         }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: -20%;
+            background: conic-gradient(from 180deg, rgba(86,41,190,0.25), rgba(14,170,105,0.2), rgba(59,130,246,0.22), rgba(86,41,190,0.25));
+            filter: blur(80px);
+            animation: pulse 12s ease-in-out infinite alternate;
+            pointer-events: none;
+            z-index: 0;
+        }
+
         .card {
-            max-width: 720px;
-            margin: 0 auto;
-            background: #fff;
-            border-radius: 12px;
+            width: min(920px, 100%);
+            position: relative;
+            z-index: 1;
+            border: 1px solid var(--glass-border);
+            background: var(--glass);
+            backdrop-filter: blur(14px);
+            border-radius: 22px;
             padding: 32px;
-            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+            box-shadow: 0 20px 45px rgba(0,0,0,0.28);
+            transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+            animation: floatIn .7s ease both;
         }
-        h1 {
-            margin-top: 0;
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.32);
+            border-color: rgba(255,255,255,0.35);
         }
-        .actions {
-            margin-top: 24px;
-            display: flex;
+
+        h1 { margin: 0 0 8px; font-size: clamp(1.6rem, 2.8vw, 2.3rem); }
+        p { margin: 0; color: var(--muted); }
+
+        .highlights {
+            margin-top: 22px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
             gap: 12px;
+        }
+
+        .highlight {
+            border: 1px solid rgba(255,255,255,0.16);
+            background: rgba(255,255,255,0.06);
+            border-radius: 14px;
+            padding: 14px;
+            transition: all .3s ease;
+        }
+        .highlight:hover { background: rgba(255,255,255,0.12); transform: translateY(-4px); }
+
+        .actions {
+            margin-top: 26px;
+            display: flex;
             flex-wrap: wrap;
+            gap: 12px;
         }
-        a {
-            text-decoration: none;
-            color: #2563eb;
-        }
+
         .button {
-            display: inline-block;
-            padding: 10px 16px;
-            background: #2563eb;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 11px 18px;
+            border-radius: 10px;
+            font-weight: 600;
             color: #fff;
-            border-radius: 6px;
+            border: 1px solid transparent;
+            transition: all .25s ease;
         }
-        .button.secondary {
-            background: #e2e8f0;
-            color: #1e293b;
-        }
+
+        .button.primary { background: linear-gradient(135deg, #6d3dfa, #5629be); }
+        .button.secondary { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
+        .button:hover { transform: translateY(-2px); filter: brightness(1.08); }
+
+        @keyframes pulse { from { transform: scale(1);} to { transform: scale(1.14);} }
+        @keyframes floatIn { from { opacity:0; transform: translateY(16px);} to { opacity:1; transform: translateY(0);} }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h1>গ্রাহক ড্যাশবোর্ড</h1>
-        <p>এই পেজটি পেমেন্ট ফ্লো থেকে রিডাইরেক্ট ঠিক রাখতে যোগ করা হয়েছে।</p>
+    <section class="card">
+        <h1>গ্রাহক ড্যাশবোর্ডে স্বাগতম 👋</h1>
+        <p>আপনার চলমান সার্ভিস, পেমেন্ট অবস্থা এবং প্রোফাইল আপডেট এখন এক জায়গায় সুন্দরভাবে দেখুন।</p>
+
+        <div class="highlights">
+            <article class="highlight"><strong>দ্রুত এক্সেস</strong><br>সক্রিয় সার্ভিস, পেমেন্ট ও প্রোফাইল</article>
+            <article class="highlight"><strong>নিরাপদ সেশন</strong><br>লগইন থাকা অবস্থায় ধারাবাহিক ব্যবহার</article>
+            <article class="highlight"><strong>বাংলা অভিজ্ঞতা</strong><br>একই ফন্ট ও ভিজ্যুয়াল স্টাইলে ইন্টারফেস</article>
+        </div>
+
         <div class="actions">
-            <a class="button" href="customer.html">মূল ড্যাশবোর্ডে যান</a>
+            <a class="button primary" href="customer.html">মূল ড্যাশবোর্ডে যান</a>
+            <a class="button secondary" href="payment.html">পেমেন্ট পেজে যান</a>
             <a class="button secondary" href="index.html">হোম পেজ</a>
         </div>
-    </div>
+    </section>
 </body>
 </html>
