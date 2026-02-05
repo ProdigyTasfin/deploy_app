@@ -1157,92 +1157,66 @@
             }
             
             if (isValid) {
-                console.log('Form is valid, submitting...');
-                // Disable submit button and show loading
-                submitBtn.innerHTML = '<span class="loading"></span> প্রক্রিয়াধীন...';
-                submitBtn.disabled = true;
-                
-                // Simulate API call
-                setTimeout(() => {
-                    // Save professional data to localStorage
-                    saveProfessionalData();
-                    
-                    // Show success modal
-                    const successModal = document.getElementById('successModal');
-                    if (successModal) {
-                        successModal.style.display = 'flex';
-                    }
-                    
-                    // Reset form and button
-                    submitBtn.innerHTML = '<i class="fas fa-user-cog"></i> বিশেষজ্ঞ হিসেবে নিবন্ধন করুন';
-                    submitBtn.disabled = false;
-                    
-                    // Reset form
-                    form.reset();
-                    
-                    // Reset service selection
-                    const serviceOptions = document.querySelectorAll('.service-option');
-                    serviceOptions.forEach(opt => opt.classList.remove('selected'));
-                    document.getElementById('selectedService').value = '';
-                    
-                    // Reset file previews
-                    const previews = document.querySelectorAll('.uploaded-files');
-                    previews.forEach(preview => {
-                        preview.innerHTML = '';
-                        preview.style.display = 'none';
-                    });
-                    
-                }, 2000);
+                submitProfessionalSignup(form, submitBtn);
             } else {
                 console.log('Form validation failed');
             }
         });
     }
 
-    function saveProfessionalData() {
-        const professionalData = {
-            fullName: document.getElementById('fullName')?.value || '',
-            email: document.getElementById('email')?.value || '',
-            phone: document.getElementById('phone')?.value || '',
-            nid: document.getElementById('nid')?.value || '',
-            service: document.getElementById('selectedService')?.value || '',
+    async function submitProfessionalSignup(form, submitBtn) {
+        const payload = {
+            fullName: document.getElementById('fullName')?.value?.trim() || '',
+            email: document.getElementById('email')?.value?.trim() || '',
+            password: document.getElementById('password')?.value || '',
+            phone: document.getElementById('phone')?.value?.trim() || '',
+            address: document.getElementById('address')?.value?.trim() || '',
+            role: 'professional',
+            serviceType: document.getElementById('selectedService')?.value || '',
             experience: document.getElementById('experience')?.value || '',
-            address: document.getElementById('address')?.value || '',
-            applicationDate: new Date().toISOString(),
-            accountType: 'professional',
-            status: 'pending' // Pending approval
+            nid: document.getElementById('nid')?.value || ''
         };
-        
-        console.log('Saving professional data:', professionalData);
-        
-        // Save to localStorage (in real app, this would be an API call)
-        localStorage.setItem('professional_application', JSON.stringify(professionalData));
-        
-        // Create a professional record in applications list
-        let applications = JSON.parse(localStorage.getItem('nibash_applications') || '[]');
-        applications.push({
-            ...professionalData,
-            password: document.getElementById('password')?.value || '',
-            createdAt: new Date().toISOString(),
-            applicationId: 'PROF_' + Date.now()
-        });
-        localStorage.setItem('nibash_applications', JSON.stringify(applications));
-        
-        // Also add to users list for login
-        let users = JSON.parse(localStorage.getItem('nibash_users') || '[]');
-        users.push({
-            email: professionalData.email,
-            phone: professionalData.phone,
-            password: document.getElementById('password')?.value || '',
-            fullName: professionalData.fullName,
-            accountType: 'professional',
-            status: 'pending',
-            createdAt: new Date().toISOString(),
-            userId: 'USER_' + Date.now()
-        });
-        localStorage.setItem('nibash_users', JSON.stringify(users));
-        
-        console.log('Professional application saved successfully');
+
+        submitBtn.innerHTML = '<span class="loading"></span> প্রক্রিয়াধীন...';
+        submitBtn.disabled = true;
+
+        try {
+            const response = await fetch('/api/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+
+            if (!response.ok || !data.success) {
+                throw new Error(data.error || 'নিবন্ধন ব্যর্থ হয়েছে');
+            }
+
+            localStorage.setItem('nibash_user', JSON.stringify(data.user));
+
+            const successModal = document.getElementById('successModal');
+            if (successModal) {
+                successModal.style.display = 'flex';
+            }
+
+            form.reset();
+            const serviceOptions = document.querySelectorAll('.service-option');
+            serviceOptions.forEach(opt => opt.classList.remove('selected'));
+            document.getElementById('selectedService').value = '';
+
+            const previews = document.querySelectorAll('.uploaded-files');
+            previews.forEach(preview => {
+                preview.innerHTML = '';
+                preview.style.display = 'none';
+            });
+        } catch (error) {
+            console.error('Professional signup failed:', error);
+            alert(error.message || 'নিবন্ধন ব্যর্থ হয়েছে, আবার চেষ্টা করুন।');
+        } finally {
+            submitBtn.innerHTML = '<i class="fas fa-user-cog"></i> বিশেষজ্ঞ হিসেবে নিবন্ধন করুন';
+            submitBtn.disabled = false;
+        }
     }
 
     function goToHome() {

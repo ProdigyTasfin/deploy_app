@@ -659,111 +659,8 @@
     // Theme Management
     const themeToggle = document.getElementById('themeToggle');
     const themeIcon = themeToggle.querySelector('i');
-    // login.html-এর script-এর মধ্যে নিচের ফাংশন যোগ করুন
-async function handleLogin(event) {
-    event.preventDefault();
-    
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const errorElement = document.getElementById('errorMessage');
-    
-    // Clear previous errors
-    errorElement.style.display = 'none';
-    
-    // Validate input
-    if (!email || !password) {
-        errorElement.textContent = 'ইমেইল এবং পাসওয়ার্ড প্রয়োজন';
-        errorElement.style.display = 'block';
-        return;
-    }
-    
-    try {
-        // Check user credentials from localStorage
-        const userCredentials = JSON.parse(localStorage.getItem('user_credentials') || '[]');
-        const users = JSON.parse(localStorage.getItem('nibash_users') || '[]');
-        
-        // Check for admin login
-        if (email === 'admin@nibash.com') {
-            // For admin, we'll use default password or create admin account
-            let adminUser = users.find(user => user.email === 'admin@nibash.com');
-            
-            if (!adminUser) {
-                // Create admin user
-                adminUser = {
-                    email: 'admin@nibash.com',
-                    fullName: 'সিস্টেম এডমিন',
-                    phone: '০১৬১২-৩৪৫৬৭৮',
-                    role: 'admin',
-                    accountType: 'admin',
-                    status: 'active',
-                    createdAt: new Date().toISOString()
-                };
-                users.push(adminUser);
-                localStorage.setItem('nibash_users', JSON.stringify(users));
-                
-                // Add credentials
-                userCredentials.push({
-                    email: 'admin@nibash.com',
-                    password: 'admin@123', // Strong default password
-                    role: 'admin'
-                });
-                localStorage.setItem('user_credentials', JSON.stringify(userCredentials));
-            }
-            
-            // Check password (default for demo)
-            const storedCred = userCredentials.find(cred => cred.email === 'admin@nibash.com');
-            if (!storedCred || password !== 'admin@123') {
-                errorElement.textContent = 'ভুল এডমিন পাসওয়ার্ড';
-                errorElement.style.display = 'block';
-                return;
-            }
-            
-            // Save admin session
-            localStorage.setItem('nibash_user', JSON.stringify(adminUser));
-            localStorage.setItem('user_role', 'admin');
-            
-            // Redirect to admin panel
-            window.location.href = 'admin.html';
-            return;
-        }
-        
-        // Regular user login
-        const userCredential = userCredentials.find(cred => cred.email === email && cred.password === password);
-        
-        if (!userCredential) {
-            errorElement.textContent = 'ভুল ইমেইল বা পাসওয়ার্ড';
-            errorElement.style.display = 'block';
-            return;
-        }
-        
-        // Find user details
-        const user = users.find(u => u.email === email);
-        if (!user) {
-            errorElement.textContent = 'ব্যবহারকারী খুঁজে পাওয়া যায়নি';
-            errorElement.style.display = 'block';
-            return;
-        }
-        
-        // Save user session
-        localStorage.setItem('nibash_user', JSON.stringify(user));
-        localStorage.setItem('user_role', user.role || 'customer');
-        
-        // Redirect based on user role
-        if (user.role === 'admin') {
-            window.location.href = 'admin.html';
-        } else if (user.role === 'professional') {
-            window.location.href = 'professional.html';
-        } else {
-            window.location.href = 'customer.html';
-        }
-        
-    } catch (error) {
-        console.error('Login error:', error);
-        errorElement.textContent = 'লগইন প্রক্রিয়ায় সমস্যা হয়েছে';
-        errorElement.style.display = 'block';
-    }
-}
-    
+        // Legacy localStorage login flow removed.
+
     // Load theme from localStorage
     const savedTheme = localStorage.getItem('theme') || 'dark';
     document.body.classList.add(`${savedTheme}-mode`);
@@ -787,8 +684,7 @@ async function handleLogin(event) {
     document.addEventListener('DOMContentLoaded', function() {
         console.log('🔍 Login page loaded');
         
-        // Create default users
-        createDefaultUsers();
+        // Production mode: no local dummy users are created.
         
         setupPasswordToggle();
         setupRoleSelection();
@@ -805,66 +701,6 @@ async function handleLogin(event) {
         console.log('- Submit Button:', document.getElementById('submitBtn') ? 'Found' : 'Missing');
         console.log('🌐 API will use relative URL: /api/login');
     });
-
-    // Create default users in localStorage
-    function createDefaultUsers() {
-        let users = JSON.parse(localStorage.getItem('nibash_users') || '[]');
-        
-        const defaultUsers = [
-            {
-                email: 'admin@nibash.com',
-                password: 'admin123',
-                fullName: 'System Admin',
-                role: 'admin',
-                accountType: 'admin',
-                status: 'active',
-                userId: 'ADMIN_001',
-                createdAt: new Date().toISOString()
-            },
-            {
-                email: 'customer@example.com',
-                password: 'customer123',
-                fullName: 'Demo Customer',
-                role: 'customer',
-                accountType: 'customer',
-                status: 'active',
-                userId: 'CUSTOMER_001',
-                phone: '01712345678',
-                address: 'ঢাকা, বাংলাদেশ',
-                createdAt: new Date().toISOString()
-            },
-            {
-                email: 'professional@example.com',
-                password: 'professional123',
-                fullName: 'Demo Professional',
-                role: 'professional',
-                accountType: 'professional',
-                status: 'approved',
-                userId: 'PROFESSIONAL_001',
-                phone: '01787654321',
-                address: 'ঢাকা, বাংলাদেশ',
-                service: 'বৈদ্যুতিক কাজ',
-                experience: '৫-১০ বছর',
-                createdAt: new Date().toISOString()
-            }
-        ];
-        
-        let createdCount = 0;
-        
-        defaultUsers.forEach(defaultUser => {
-            const exists = users.some(u => u.email === defaultUser.email);
-            if (!exists) {
-                users.push(defaultUser);
-                createdCount++;
-                console.log('✅ Created default user:', defaultUser.email);
-            }
-        });
-        
-        if (createdCount > 0) {
-            localStorage.setItem('nibash_users', JSON.stringify(users));
-            console.log(`✅ Created ${createdCount} default users in localStorage`);
-        }
-    }
 
     // Password Toggle
     function setupPasswordToggle() {
@@ -999,18 +835,10 @@ async function handleLogin(event) {
             submitBtn.disabled = true;
             
             try {
-                // Try API first
                 await loginWithAPI(formData);
             } catch (apiError) {
-                console.log('🌐 API failed, trying localStorage:', apiError.message);
-                
-                // Try localStorage fallback
-                try {
-                    await loginWithLocalStorage(formData);
-                } catch (localError) {
-                    console.log('❌ All login methods failed');
-                    alert('❌ লগইন ব্যর্থ। ইমেইল ও পাসওয়ার্ড চেক করুন।');
-                }
+                console.log('❌ API login failed:', apiError.message);
+                alert('❌ লগইন ব্যর্থ। ইমেইল ও পাসওয়ার্ড চেক করুন।');
             } finally {
                 // Reset button
                 submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> লগইন করুন';
@@ -1040,8 +868,12 @@ async function handleLogin(event) {
         if (response.ok && data.success) {
             console.log('✅ API login successful!');
             
-            // Store user data
+            // Store authenticated session
             localStorage.setItem('nibash_user', JSON.stringify(data.user));
+            if (data.token) {
+                localStorage.setItem('nibash_token', data.token);
+            }
+            localStorage.setItem('user_role', data.user.role || data.user.accountType || 'customer');
             
             // Remember me
             const rememberCheckbox = document.getElementById('remember');
@@ -1059,82 +891,6 @@ async function handleLogin(event) {
         } else {
             throw new Error(data.error || 'API login failed');
         }
-    }
-
-    // LocalStorage Login (Fallback)
-    async function loginWithLocalStorage(formData) {
-        console.log('🔄 Trying localStorage login...');
-        
-        // Get users from localStorage
-        const users = JSON.parse(localStorage.getItem('nibash_users') || '[]');
-        
-        // Find user
-        const user = users.find(u => 
-            u.email === formData.email && u.password === formData.password
-        );
-        
-        // Check hardcoded admin
-        if (!user && formData.email === 'admin@nibash.com' && formData.password === 'admin123') {
-            const adminUser = {
-                id: 'ADMIN_001',
-                email: 'admin@nibash.com',
-                fullName: 'System Admin',
-                accountType: 'admin',
-                role: 'admin',
-                status: 'active',
-                createdAt: new Date().toISOString()
-            };
-            
-            console.log('✅ Admin login successful (local)');
-            localStorage.setItem('nibash_user', JSON.stringify(adminUser));
-            
-            // Remember me
-            const rememberCheckbox = document.getElementById('remember');
-            if (rememberCheckbox?.checked) {
-                localStorage.setItem('remember_email', formData.email);
-                localStorage.setItem('remember_role', formData.role);
-            }
-            
-            redirectUser(adminUser);
-            return;
-        }
-        
-        if (!user) {
-            throw new Error('Invalid email or password');
-        }
-        
-        // Check role if specified
-        if (formData.role && user.role !== formData.role) {
-            throw new Error(`This email is not registered as ${formData.role}`);
-        }
-        
-        console.log('✅ LocalStorage login successful');
-        
-        const userData = {
-            id: user.userId || 'user_' + Date.now(),
-            email: user.email,
-            fullName: user.fullName || 'User',
-            phone: user.phone || '',
-            address: user.address || '',
-            accountType: user.accountType || 'customer',
-            role: user.role || 'customer',
-            status: user.status || 'active',
-            createdAt: user.createdAt || new Date().toISOString()
-        };
-        
-        localStorage.setItem('nibash_user', JSON.stringify(userData));
-        
-        // Remember me
-        const rememberCheckbox = document.getElementById('remember');
-        if (rememberCheckbox?.checked) {
-            localStorage.setItem('remember_email', formData.email);
-            localStorage.setItem('remember_role', formData.role);
-        } else {
-            localStorage.removeItem('remember_email');
-            localStorage.removeItem('remember_role');
-        }
-        
-        redirectUser(userData);
     }
 
     // Redirect user after login
@@ -1267,34 +1023,6 @@ async function handleLogin(event) {
             alert('পাসওয়ার্ড রিসেট লিংক ' + email + ' ঠিকানায় পাঠানো হয়েছে। (Demo Mode)');
         }
     }
-
-    // Debug helper function
-    window.testLogin = async function() {
-        console.log('🧪 Testing login...');
-        
-        const testData = {
-            email: 'admin@nibash.com',
-            password: 'admin123',
-            role: 'admin'
-        };
-        
-        // Fill form
-        document.getElementById('email').value = testData.email;
-        document.getElementById('password').value = testData.password;
-        document.getElementById('role').value = testData.role;
-        
-        // Select admin role
-        const roleOptions = document.querySelectorAll('.role-option');
-        roleOptions.forEach(option => {
-            option.classList.remove('selected');
-            if (option.getAttribute('data-role') === testData.role) {
-                option.classList.add('selected');
-            }
-        });
-        
-        console.log('🧪 Form filled with test data');
-        alert('Test data filled! Click login button.');
-    };
 
     // Test API endpoint
     window.testAPI = async function() {

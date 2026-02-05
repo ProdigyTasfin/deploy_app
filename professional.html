@@ -1150,58 +1150,17 @@
             return texts[status] || status;
         }
 
-        // Initialize dummy data if none exists
-        function initializeDummyData() {
+        function initializeStorage() {
             if (!localStorage.getItem('user_services')) {
-                const dummyServices = [
-                    {
-                        id: '1',
-                        type: 'বৈদ্যুতিক সমস্যা',
-                        description: 'বেডরুমের লাইট কাজ করছে না',
-                        date: '2024-01-15',
-                        time: 'সকাল ৯-১২',
-                        address: 'ধানমন্ডি, ঢাকা',
-                        status: 'completed',
-                        amount: 1200,
-                        createdAt: '2024-01-10T10:30:00Z'
-                    },
-                    {
-                        id: '2',
-                        type: 'প্লাম্বিং সমস্যা',
-                        description: 'বাথরুমের ট্যাপ লিক করছে',
-                        date: '2024-01-20',
-                        time: 'বিকাল ১২-৪',
-                        address: 'ধানমন্ডি, ঢাকা',
-                        status: 'active',
-                        createdAt: '2024-01-18T14:20:00Z'
-                    }
-                ];
-                localStorage.setItem('user_services', JSON.stringify(dummyServices));
+                localStorage.setItem('user_services', JSON.stringify([]));
             }
-            
+
             if (!localStorage.getItem('user_payments')) {
-                const dummyPayments = [
-                    {
-                        id: 'PAY001',
-                        date: '2024-01-16',
-                        description: 'বৈদ্যুতিক সমস্যা সেবা',
-                        amount: 1200,
-                        status: 'completed'
-                    },
-                    {
-                        id: 'PAY002',
-                        date: '2024-01-25',
-                        description: 'প্লাম্বিং সেবা',
-                        amount: 1800,
-                        status: 'pending'
-                    }
-                ];
-                localStorage.setItem('user_payments', JSON.stringify(dummyPayments));
+                localStorage.setItem('user_payments', JSON.stringify([]));
             }
         }
 
-        // Call this function to initialize dummy data
-        initializeDummyData();
+        initializeStorage();
     </script>
 </body>
 </html>
