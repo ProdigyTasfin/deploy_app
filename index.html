@@ -103,6 +103,7 @@
 
         /* Loading Overlay */
         .loading-overlay {
+            animation: loaderAutoHide 0.6s ease 1.6s forwards;
             position: fixed;
             top: 0;
             left: 0;
@@ -120,6 +121,15 @@
         .loading-overlay.hidden {
             opacity: 0;
             visibility: hidden;
+            pointer-events: none;
+        }
+
+        @keyframes loaderAutoHide {
+            to {
+                opacity: 0;
+                visibility: hidden;
+                pointer-events: none;
+            }
         }
 
         .loader {
@@ -815,6 +825,20 @@
                 opacity: 1;
             }
         }
+    
+        /* Global glass hover enhancement */
+        body, button, input, select, textarea {
+            font-family: 'Hind Siliguri', 'Kalpurush', system-ui, sans-serif;
+        }
+        .card, .stat-card, .service-card, .signup-card, .login-card, .feature-card, .section {
+            transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+        }
+        .card:hover, .stat-card:hover, .service-card:hover, .signup-card:hover, .login-card:hover, .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 35px rgba(86, 41, 190, 0.18);
+            border-color: rgba(167, 139, 250, 0.5);
+        }
+
     </style>
 </head>
 <body class="dark-mode">
@@ -837,6 +861,24 @@
         </div>
     </div>
 
+    <script>
+        // Emergency loader fallback (prevents permanent block)
+        (function forceHideLoader(){
+            const hide = () => {
+                const overlay = document.getElementById('loadingOverlay');
+                if (!overlay) return;
+                overlay.classList.add('hidden');
+                overlay.style.opacity = '0';
+                overlay.style.visibility = 'hidden';
+                overlay.style.pointerEvents = 'none';
+                overlay.style.display = 'none';
+            };
+            setTimeout(hide, 2500);
+            window.addEventListener('error', hide);
+            window.addEventListener('load', hide);
+        })();
+    </script>
+
     <!-- Theme Toggle -->
     <button class="theme-toggle" id="themeToggle">
         <i class="fas fa-moon"></i>
@@ -855,7 +897,7 @@
                     <li><a href="#home" class="nav-link active">হোম</a></li>
                     <li><a href="#services" class="nav-link">সেবাসমূহ</a></li>
                     <li><a href="#how-it-works" class="nav-link">কিভাবে কাজ করে</a></li>
-                    <li><a href="#about" class="nav-link">আমাদের সম্পর্কে</a></li>
+                    <li><a href="about-us.html" class="nav-link">আমাদের সম্পর্কে</a></li>
                     <li><a href="#contact" class="nav-link">যোগাযোগ</a></li>
                 </ul>
             </nav>
@@ -948,7 +990,7 @@
 
         <!-- Testimonials -->
         <section class="testimonials">
-            <h2 class="section-title" style="color: var(--text-color);">গ্রাহকদের মতামত</h2>
+            <h2 class="section-title" style="color: var(--text-color);">সেবা নিশ্চয়তা ও অঙ্গীকার</h2>
             <div class="testimonial-grid" id="testimonialsGrid">
                 <!-- Testimonials will be loaded dynamically -->
             </div>
@@ -994,8 +1036,9 @@
                 <ul class="footer-links">
                     <li><a href="#home">হোম</a></li>
                     <li><a href="#how-it-works">কিভাবে কাজ করে</a></li>
-                    <li><a href="#">গোপনীয়তা নীতি</a></li>
-                    <li><a href="#">সেবার শর্তাবলী</a></li>
+                    <li><a href="about-us.html">আমাদের সম্পর্কে</a></li>
+                    <li><a href="privacy-policy.html">গোপনীয়তা নীতি</a></li>
+                    <li><a href="terms-of-service.html">সেবার শর্তাবলী</a></li>
                     <li><a href="#contact">যোগাযোগ</a></li>
                 </ul>
             </div>
@@ -1063,23 +1106,31 @@
         <script>
         // Initialize application - FIXED VERSION
         document.addEventListener('DOMContentLoaded', function() {
-            // Show loading overlay for 1.5 seconds only
             setTimeout(() => {
-                document.getElementById('loadingOverlay').classList.add('hidden');
-                
-                // Initialize everything else immediately
-                setupTheme();
-                setupGlassCursor();
-                checkLoginStatus();
-                loadServices();
-                loadTestimonials();
-                setupNavigation();
-                setupScrollAnimations();
-                
-                // Remove cursor none to prevent issues
-                document.body.style.cursor = 'auto';
-                
-            }, 1500); // Reduced from 2000ms to 1500ms
+                const overlay = document.getElementById('loadingOverlay');
+                if (overlay) {
+                    overlay.classList.add('hidden');
+                    overlay.style.display = 'none';
+                }
+
+                try {
+                    setupTheme();
+                    setupGlassCursor();
+                    checkLoginStatus();
+                    loadServices();
+                    loadTestimonials();
+                    setupNavigation();
+                    setupScrollAnimations();
+                    document.body.style.cursor = 'auto';
+                } catch (err) {
+                    console.error('Init error:', err);
+                }
+            }, 600);
+        });
+
+        window.addEventListener('load', function() {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) overlay.classList.add('hidden');
         });
 
         // Glass Cursor Setup - OPTIMIZED
@@ -1399,38 +1450,32 @@
 
         // Load testimonials - OPTIMIZED
         function loadTestimonials() {
-            const testimonials = [
+            const commitments = [
                 {
-                    name: 'আহসান হাবীব',
-                    location: 'ধানমন্ডি, ঢাকা',
-                    text: 'রাত ১০টায় বিদ্যুৎ সমস্যা হওয়ায় কল করি। ৩০ মিনিটের মধ্যে বিশেষজ্ঞ এসে সমস্যা সমাধান করে গেলেন। অসাধারণ সেবা!',
-                    rating: 5
+                    title: 'যাচাইকৃত বিশেষজ্ঞ',
+                    text: 'প্রতিটি পেশাদারকে যাচাই ও প্রোফাইল রিভিউ করে তারপর প্ল্যাটফর্মে যুক্ত করা হয়।',
+                    icon: 'fa-user-check'
                 },
                 {
-                    name: 'ফারজানা আক্তার',
-                    location: 'গুলশান, ঢাকা',
-                    text: 'নিবাসের মাধ্যমে রং করার কাজ করিয়েছি। দামও যুক্তিসঙ্গত, কাজের মানও ভালো। সত্যিই খুব সন্তুষ্ট।',
-                    rating: 5
+                    title: 'সময়মতো সেবা',
+                    text: 'অর্ডার কনফার্মের পর নির্ধারিত সময়ে পৌঁছানোর জন্য রিয়েল-টাইম সমন্বয় করা হয়।',
+                    icon: 'fa-clock'
                 },
                 {
-                    name: 'রাকিবুল হাসান',
-                    location: 'মিরপুর, ঢাকা',
-                    text: 'প্লাম্বিং সমস্যা ছিল কয়েকদিন ধরে। নিবাসের বিশেষজ্ঞ ১ ঘণ্টার মধ্যে সমাধান করে দিলেন। ধন্যবাদ নিবাস টিমকে।',
-                    rating: 4
+                    title: 'স্বচ্ছ মূল্যনীতি',
+                    text: 'লুকানো চার্জ ছাড়া সেবার আগে সম্ভাব্য খরচ দেখানো হয়।',
+                    icon: 'fa-file-invoice-dollar'
                 }
             ];
 
             const testimonialsGrid = document.getElementById('testimonialsGrid');
-            testimonialsGrid.innerHTML = testimonials.map(testimonial => `
+            testimonialsGrid.innerHTML = commitments.map(item => `
                 <div class="testimonial-card">
-                    <div style="margin-bottom: 1rem;">
-                        ${'★'.repeat(testimonial.rating)}${'☆'.repeat(5 - testimonial.rating)}
+                    <div style="width:50px;height:50px;border-radius:12px;background:linear-gradient(135deg,var(--primary),var(--secondary));display:flex;align-items:center;justify-content:center;margin-bottom:1rem;">
+                        <i class="fas ${item.icon}" style="color:#fff;font-size:1.2rem;"></i>
                     </div>
-                    <p style="font-style: italic; margin-bottom: 1rem;">"${testimonial.text}"</p>
-                    <div>
-                        <strong>${testimonial.name}</strong>
-                        <div style="color: var(--gray); font-size: 0.9rem;">${testimonial.location}</div>
-                    </div>
+                    <h3 style="margin-bottom:.6rem;">${item.title}</h3>
+                    <p style="line-height:1.6;">${item.text}</p>
                 </div>
             `).join('');
         }
@@ -1441,9 +1486,13 @@
             
             navLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href') || '';
+                    if (!href.startsWith('#')) {
+                        return;
+                    }
+
                     e.preventDefault();
-                    
-                    const targetId = this.getAttribute('href').substring(1);
+                    const targetId = href.substring(1);
                     const targetSection = document.getElementById(targetId);
                     
                     if (targetSection) {

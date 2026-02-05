@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="bn"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>গোপনীয়তা নীতি | নিবাস</title><link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Kalpurush&display=swap" rel="stylesheet">
+    <style>
+        body{margin:0;padding:24px;background:#0f172a;color:#e2e8f0;font-family:'Hind Siliguri','Kalpurush',system-ui,sans-serif;}
+        .wrap{max-width:960px;margin:0 auto;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:28px;backdrop-filter:blur(10px);}
+        h1{margin-top:0;color:#a78bfa;} h2{margin-top:24px;color:#c4b5fd;} p,li{line-height:1.8;}
+        a{color:#93c5fd;}
+    
+        .glass-cursor-mini{position:fixed;width:26px;height:26px;border:1px solid rgba(167,139,250,.55);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);backdrop-filter:blur(3px);transition:transform .15s ease;}
+        .glass-cursor-dot-mini{position:fixed;width:6px;height:6px;background:#a78bfa;border-radius:50%;pointer-events:none;z-index:10000;transform:translate(-50%,-50%);}</head>
+<body><div class="glass-cursor-mini" id="gcm"></div><div class="glass-cursor-dot-mini" id="gcd"></div><main class="wrap"><h1>গোপনীয়তা নীতি</h1>
+<p>নিবাস আপনার ব্যক্তিগত তথ্যের সুরক্ষাকে সর্বোচ্চ গুরুত্ব দেয়।</p>
+<h2>আমরা কী তথ্য সংগ্রহ করি</h2><ul><li>নাম, ফোন, ইমেইল, ঠিকানা</li><li>সেবা অনুরোধের তথ্য</li><li>পেমেন্ট সম্পর্কিত সীমিত তথ্য</li></ul>
+<h2>তথ্য ব্যবহারের উদ্দেশ্য</h2><ul><li>সেবা প্রদান ও সমন্বয়</li><li>গ্রাহক সহায়তা</li><li>নিরাপত্তা ও প্রতারণা প্রতিরোধ</li></ul>
+<h2>তথ্য সুরক্ষা</h2><p>আমরা যুক্তিসংগত প্রযুক্তিগত ও প্রশাসনিক ব্যবস্থা ব্যবহার করি।</p>
+<p><a href="index.html">হোমে ফিরে যান</a></p>
+    <div style="margin-top:28px;padding-top:18px;border-top:1px solid rgba(255,255,255,.2);">
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:14px;">
+            <li><a href="about-us.html">আমাদের সম্পর্কে</a></li>
+            <li><a href="privacy-policy.html">গোপনীয়তা নীতি</a></li>
+            <li><a href="terms-of-service.html">সেবার শর্তাবলী</a></li>
+            <li><a href="#">গোপনীয়তা নীতি</a></li>
+            <li><a href="#">সেবার শর্তাবলী</a></li>
+            <li><a href="#contact">যোগাযোগ</a></li>
+        </ul>
+    </div>
+</main><script>
+            (function(){
+                const c=document.getElementById('gcm'); const d=document.getElementById('gcd');
+                if(!c||!d) return;
+                let x=0,y=0,cx=0,cy=0;
+                document.addEventListener('mousemove',(e)=>{x=e.clientX;y=e.clientY; d.style.left=x+'px'; d.style.top=y+'px';});
+                function raf(){cx+=(x-cx)*0.18; cy+=(y-cy)*0.18; c.style.left=cx+'px'; c.style.top=cy+'px'; requestAnimationFrame(raf);} raf();
+            })();
+        </script></body></html>
