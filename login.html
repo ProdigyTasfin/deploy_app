@@ -868,8 +868,12 @@
         if (response.ok && data.success) {
             console.log('✅ API login successful!');
             
-            // Store user data
+            // Store authenticated session
             localStorage.setItem('nibash_user', JSON.stringify(data.user));
+            if (data.token) {
+                localStorage.setItem('nibash_token', data.token);
+            }
+            localStorage.setItem('user_role', data.user.role || data.user.accountType || 'customer');
             
             // Remember me
             const rememberCheckbox = document.getElementById('remember');
