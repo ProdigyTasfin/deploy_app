@@ -1,8 +1,5 @@
-// api/payment/initiate.js - ENHANCED VERSION
-const crypto = require('crypto');
-
+// api/payment/initiate.js
 module.exports = async (req, res) => {
-  // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -12,71 +9,65 @@ module.exports = async (req, res) => {
   }
   
   if (req.method !== 'POST') {
-    return res.status(405).json({ success: false, error: 'Method not allowed' });
+    return res.status(405).json({ error: 'Method not allowed' });
   }
   
   try {
     const {
       total_amount,
       currency = 'BDT',
+      tran_id,
+      success_url,
+      fail_url,
+      cancel_url,
       cus_name,
       cus_email,
       cus_phone,
       cus_add1,
-      product_name = 'Nibash Service Payment',
-      service_request_id,
-      customer_id
+      product_name = 'Nibash Service'
     } = req.body || {};
     
-    console.log('💳 Payment initiation:', { total_amount, cus_email });
+    console.log('Payment initiation:', { total_amount, cus_email });
     
-    // ================= VALIDATION =================
-    if (!total_amount || total_amount <= 0) {
+    if (!total_amount || !currency || !cus_email) {
       return res.status(400).json({ 
         success: false, 
-        error: 'Valid amount is required' 
+        error: 'Missing required payment fields' 
       });
     }
     
-    if (!cus_email || !cus_name || !cus_phone) {
-      return res.status(400).json({ 
-        success: false, 
-        error: 'Customer information is required' 
-      });
-    }
+    // Generate transaction ID if not provided
+    const transactionId = tran_id || `NIBASH_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     
-    // ================= GENERATE TRANSACTION ID =================
-    const tran_id = `NIBASH_${Date.now()}_${crypto.randomBytes(4).toString('hex')}`;
+    // SSLCommerz configuration
+    const storeId = process.env.SSLCOMMERZ_STORE_ID || 'testbox';
+    const storePassword = process.env.SSLCOMMERZ_STORE_PASSWORD || 'qwerty';
+    const isSandbox = !process.env.SSLCOMMERZ_STORE_ID;
     
-    // ================= SSLCOMMERZ CONFIGURATION =================
-    const store_id = process.env.SSLCOMMERZ_STORE_ID || 'testbox';
-    const store_passwd = process.env.SSLCOMMERZ_STORE_PASSWORD || 'qwerty';
-    const is_sandbox = !process.env.SSLCOMMERZ_STORE_ID; // Use sandbox if no store ID
+    const baseUrl = process.env.VERCEL_URL 
+      ? `https://${process.env.VERCEL_URL}` 
+      : (process.env.BASE_URL || 'http://localhost:3000');
     
-    const base_url = process.env.BASE_URL || 'http://localhost:3000';
-    
-    // ================= SSLCOMMERZ PAYMENT DATA =================
+    // Prepare SSLCommerz data
     const postData = {
-      store_id: store_id,
-      store_passwd: store_passwd,
+      store_id: storeId,
+      store_passwd: storePassword,
       total_amount: parseFloat(total_amount).toFixed(2),
       currency: currency,
-      tran_id: tran_id,
-      success_url: `${base_url}/payment-success.html?tran_id=${tran_id}&status=success`,
-      fail_url: `${base_url}/payment-failed.html?tran_id=${tran_id}&status=failed`,
-      cancel_url: `${base_url}/payment-cancel.html?tran_id=${tran_id}&status=canceled`,
-      ipn_url: `${base_url}/api/payment/validate`,
+      tran_id: transactionId,
+      success_url: success_url || `${baseUrl}/payment-success.html?tran_id=${transactionId}&status=success`,
+      fail_url: fail_url || `${baseUrl}/payment-failed.html?tran_id=${transactionId}&status=failed`,
+      cancel_url: cancel_url || `${baseUrl}/payment-cancel.html?tran_id=${transactionId}&status=canceled`,
+      ipn_url: `${baseUrl}/api/payment/validate`,
       
       // Customer info
-      cus_name: cus_name,
+      cus_name: cus_name || 'Customer',
       cus_email: cus_email,
+      cus_phone: cus_phone || '01700000000',
       cus_add1: cus_add1 || 'Dhaka, Bangladesh',
-      cus_add2: '',
       cus_city: 'Dhaka',
-      cus_state: 'Dhaka',
-      cus_postcode: '1000',
       cus_country: 'Bangladesh',
-      cus_phone: cus_phone,
+      cus_postcode: '1000',
       
       // Product info
       product_name: product_name,
@@ -87,19 +78,16 @@ module.exports = async (req, res) => {
       shipping_method: 'NO',
       num_of_item: 1,
       
-      // Additional info for callback
-      value_a: service_request_id || 'N/A', // Service request ID
-      value_b: customer_id || 'N/A', // Customer ID
-      value_c: 'nibash_payment_2024', // Platform identifier
-      value_d: `${total_amount}_${currency}` // Amount and currency
+      // Additional parameters
+      value_a: 'payment_reference',
+      value_b: 'customer_info',
+      value_c: 'service_details'
     };
     
-    // ================= SEND TO SSLCOMMERZ =================
-    const sslcommerzUrl = is_sandbox 
+    // Send to SSLCommerz
+    const sslcommerzUrl = isSandbox 
       ? 'https://sandbox.sslcommerz.com/gwprocess/v4/api.php'
       : 'https://securepay.sslcommerz.com/gwprocess/v4/api.php';
-    
-    console.log('🔄 Sending to SSLCommerz:', sslcommerzUrl);
     
     try {
       const response = await fetch(sslcommerzUrl, {
@@ -107,67 +95,38 @@ module.exports = async (req, res) => {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         },
-        body: new URLSearchParams(Object.entries(postData))
+        body: new URLSearchParams(postData)
       });
       
       const result = await response.json();
       
-      console.log('SSLCommerz Response:', result);
-      
       if (result.status === 'SUCCESS') {
         return res.json({
           success: true,
-          message: 'Payment initiated successfully',
-          data: {
-            GatewayPageURL: result.GatewayPageURL,
-            tran_id: tran_id,
-            session_key: result.sessionkey,
-            gateway: 'sslcommerz',
-            is_sandbox: is_sandbox,
-            amount: total_amount,
-            currency: currency,
-            customer_email: cus_email,
-            redirect_url: result.GatewayPageURL,
-            instructions: 'Redirecting to payment gateway...'
-          }
+          GatewayPageURL: result.GatewayPageURL,
+          tran_id: transactionId,
+          amount: total_amount,
+          currency: currency,
+          gateway: 'sslcommerz',
+          is_sandbox: isSandbox
         });
       } else {
-        // Fallback to mock if SSLCommerz fails
-        console.warn('SSLCommerz failed, using mock response');
-        return res.json({
-          success: true,
-          message: 'Payment initiated (mock mode)',
-          data: {
-            GatewayPageURL: 'https://sandbox.sslcommerz.com/gwprocess/v4/gateway.php?Q=PAY&SESSIONKEY=mock_session',
-            tran_id: tran_id,
-            gateway: 'sslcommerz_mock',
-            is_sandbox: true,
-            amount: total_amount,
-            currency: currency,
-            customer_email: cus_email,
-            redirect_url: `${base_url}/payment-success.html?tran_id=${tran_id}&status=success_mock`,
-            instructions: 'Mock payment - redirecting to success page'
-          }
-        });
+        throw new Error(result.failedreason || 'SSLCommerz payment failed');
       }
       
     } catch (fetchError) {
-      console.error('SSLCommerz fetch error:', fetchError);
-      // Fallback to mock response
+      console.error('SSLCommerz error:', fetchError);
+      
+      // Fallback to mock response for development
       return res.json({
         success: true,
-        message: 'Payment initiated (fallback mode)',
-        data: {
-          GatewayPageURL: `${base_url}/payment-success.html?tran_id=${tran_id}&status=success_fallback`,
-          tran_id: tran_id,
-          gateway: 'fallback',
-          is_sandbox: true,
-          amount: total_amount,
-          currency: currency,
-          customer_email: cus_email,
-          redirect_url: `${base_url}/payment-success.html?tran_id=${tran_id}&status=success_fallback`,
-          instructions: 'Fallback payment mode'
-        }
+        GatewayPageURL: `${baseUrl}/payment-success.html?tran_id=${transactionId}&status=success_mock`,
+        tran_id: transactionId,
+        amount: total_amount,
+        currency: currency,
+        gateway: 'mock',
+        is_sandbox: true,
+        message: 'Using mock payment for development'
       });
     }
     

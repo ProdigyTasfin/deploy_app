@@ -1,15 +1,8 @@
-// api/auth/signup.js - ENHANCED VERSION
+// api/auth/signup.js
+const { supabase } = require('../db');
 const bcrypt = require('bcryptjs');
-const { createClient } = require('@supabase/supabase-js');
 
-// Supabase configuration
-const supabase = createClient(
-  'https://kohswrhxjvfygzrldyyk.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtvaHN3cmh4anZmeWd6cmxkeXlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwMzUzODgsImV4cCI6MjA4NTYxMTM4OH0.rK-SYCs-uC63581jLtuTDdYklsiL7vKtdCO7TuIdKII'
-);
-
-module.exports = async function handler(req, res) {
-  // CORS headers
+module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -34,53 +27,45 @@ module.exports = async function handler(req, res) {
       service_type
     } = req.body;
     
-    console.log('📥 Signup attempt for:', email, 'Role:', role);
+    console.log('Signup attempt for:', email, 'Role:', role);
     
-    // ================= VALIDATION =================
-    const errors = [];
-    
-    // Email validation
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      errors.push('Valid email is required');
-    }
-    
-    // Password validation
-    if (!password || password.length < 8) {
-      errors.push('Password must be at least 8 characters');
-    }
-    
-    // Name validation
-    if (!full_name || full_name.trim().length < 2) {
-      errors.push('Full name is required');
-    }
-    
-    // Phone validation (Bangladesh format)
-    if (phone && !/^(?:\+88|01)?\d{11}$/.test(phone.replace(/\s/g, ''))) {
-      errors.push('Valid Bangladeshi phone number is required');
-    }
-    
-    // Professional-specific validation
-    if (role === 'professional') {
-      if (!nid_number || nid_number.length < 10) {
-        errors.push('NID number is required for professionals');
-      }
-      if (!service_type) {
-        errors.push('Service type is required for professionals');
-      }
-    }
-    
-    if (errors.length > 0) {
+    // Validation
+    if (!email || !password || !full_name || !phone) {
       return res.status(400).json({
         success: false,
-        errors: errors
+        error: 'All required fields must be filled'
       });
     }
     
-    // ================= CHECK IF USER EXISTS =================
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Valid email is required'
+      });
+    }
+    
+    if (password.length < 8) {
+      return res.status(400).json({
+        success: false,
+        error: 'Password must be at least 8 characters'
+      });
+    }
+    
+    // Professional validation
+    if (role === 'professional') {
+      if (!nid_number || !service_type) {
+        return res.status(400).json({
+          success: false,
+          error: 'NID number and service type are required for professionals'
+        });
+      }
+    }
+    
+    // Check if user exists
     const { data: existingUser } = await supabase
       .from('users')
       .select('id')
-      .eq('email', email.toLowerCase().trim())
+      .eq('email', email)
       .single();
     
     if (existingUser) {
@@ -90,14 +75,15 @@ module.exports = async function handler(req, res) {
       });
     }
     
-    // ================= CREATE USER =================
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 12);
     
+    // Create user
     const userData = {
       email: email.toLowerCase().trim(),
       password: hashedPassword,
       full_name: full_name.trim(),
-      phone: phone ? phone.replace(/\s/g, '') : null,
+      phone: phone.replace(/\s/g, ''),
       role: role,
       address: address || null,
       status: role === 'professional' ? 'pending' : 'active',
@@ -105,7 +91,7 @@ module.exports = async function handler(req, res) {
       updated_at: new Date().toISOString()
     };
     
-    const { data: newUser, error: userError } = await supabase
+    const { data: user, error: userError } = await supabase
       .from('users')
       .insert([userData])
       .select()
@@ -115,74 +101,47 @@ module.exports = async function handler(req, res) {
       console.error('Supabase error:', userError);
       return res.status(500).json({
         success: false,
-        error: 'Database error'
+        error: 'Database error: ' + userError.message
       });
     }
     
-    // ================= CREATE PROFILE BASED ON ROLE =================
+    // Create profile based on role
     if (role === 'professional') {
-      // Create professional verification
       await supabase
         .from('professional_verifications')
         .insert([{
-          user_id: newUser.id,
+          user_id: user.id,
           nid_number: nid_number,
           service_type: service_type,
           status: 'pending',
           created_at: new Date().toISOString()
         }]);
-      
-      // Create professional profile
-      await supabase
-        .from('professional_profiles')
-        .insert([{
-          user_id: newUser.id,
-          service_radius_km: 10,
-          hourly_rate: 0,
-          total_earnings: 0,
-          completed_jobs: 0,
-          rating: 0
-        }]);
-        
-    } else if (role === 'customer') {
-      // Create customer profile
-      await supabase
-        .from('customer_profiles')
-        .insert([{
-          user_id: newUser.id,
-          address: address,
-          total_spent: 0,
-          loyalty_points: 0
-        }]);
     }
     
-    // ================= PREPARE RESPONSE =================
+    // Prepare response
     const userResponse = {
-      id: newUser.id,
-      email: newUser.email,
-      full_name: newUser.full_name,
-      phone: newUser.phone,
-      role: newUser.role,
-      status: newUser.status,
-      created_at: newUser.created_at
+      id: user.id,
+      email: user.email,
+      full_name: user.full_name,
+      phone: user.phone,
+      role: user.role,
+      status: user.status,
+      created_at: user.created_at
     };
     
-    return res.status(201).json({
+    res.status(201).json({
       success: true,
       message: role === 'professional' 
-        ? 'Registration successful! Your account is pending admin approval.' 
+        ? 'Registration successful! Account pending admin approval.' 
         : 'Registration successful!',
-      user: userResponse,
-      next_steps: role === 'professional' 
-        ? ['Wait for admin approval', 'Complete your profile'] 
-        : ['Verify your email', 'Complete your profile']
+      user: userResponse
     });
     
   } catch (error) {
     console.error('Signup error:', error);
-    return res.status(500).json({
+    res.status(500).json({
       success: false,
-      error: 'Registration failed. Please try again.'
+      error: 'Registration failed: ' + error.message
     });
   }
 };
