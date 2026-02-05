@@ -1178,6 +1178,76 @@ async function handleLogin(event) {
             console.log('🔑 Auto-filled remembered login:', rememberedEmail);
         }
     }
+    async function loginUser() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const role = document.getElementById('role').value;
+    
+    if (!email || !password || !role) {
+        showNotification('Please fill in all fields');
+        return;
+    }
+    
+    const loginBtn = document.querySelector('.login-btn');
+    const originalText = loginBtn.innerHTML;
+    loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+    loginBtn.disabled = true;
+    
+    try {
+        console.log('Login attempt:', { email, role });
+        
+        const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password,
+                role: role
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.error || 'Login failed');
+        }
+        
+        if (data.success) {
+            localStorage.setItem('nibash_user', JSON.stringify(data.user));
+            localStorage.setItem('nibash_token', data.token);
+            
+            showNotification('Login successful! Redirecting...', 'success');
+            
+            setTimeout(() => {
+                if (data.redirectTo) {
+                    window.location.href = data.redirectTo;
+                } else {
+                    switch(role) {
+                        case 'admin':
+                            window.location.href = '/admin.html';
+                            break;
+                        case 'professional':
+                            window.location.href = '/professional.html';
+                            break;
+                        case 'customer':
+                        default:
+                            window.location.href = '/customer.html';
+                    }
+                }
+            }, 1000);
+        } else {
+            throw new Error(data.error || 'Login failed');
+        }
+        
+    } catch (error) {
+        console.error('Login error:', error);
+        showNotification(error.message || 'Login failed. Please try again.');
+        loginBtn.innerHTML = originalText;
+        loginBtn.disabled = false;
+    }
+}
 
     // Social Login
     function loginWithFacebook() {

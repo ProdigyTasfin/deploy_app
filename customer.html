@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>নিবাস - গ্রাহক ড্যাশবোর্ড</title>
+    <title>Nibash - Customer Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Kalpurush&display=swap" rel="stylesheet">
     
@@ -30,7 +30,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Hind Siliguri', 'Kalpurush', system-ui, sans-serif;
+            font-family: 'Hind Siliguri', system-ui, sans-serif;
             transition: background-color 0.3s, color 0.3s, border-color 0.3s;
         }
 
@@ -149,6 +149,10 @@
             text-decoration: none;
             transition: all 0.3s;
             cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
         }
 
         .nav-link:hover, .nav-link.active {
@@ -215,6 +219,7 @@
             border-radius: 12px;
             border: 1px solid var(--border-color);
             transition: all 0.3s;
+            cursor: pointer;
         }
 
         .service-card:hover {
@@ -275,6 +280,7 @@
             border-radius: 20px;
             font-size: 0.85rem;
             font-weight: 500;
+            display: inline-block;
         }
 
         .status-completed {
@@ -285,6 +291,11 @@
         .status-pending {
             background: rgba(245, 158, 11, 0.15);
             color: var(--warning);
+        }
+
+        .status-cancelled {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
         }
 
         /* Buttons */
@@ -298,6 +309,7 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
+            font-size: 0.9rem;
         }
 
         .btn-primary {
@@ -309,6 +321,15 @@
             background: var(--primary-light);
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(86, 41, 190, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--border-color);
+            color: var(--text-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--hover-bg);
         }
 
         /* Modal */
@@ -344,6 +365,18 @@
             align-items: center;
         }
 
+        .modal-header h3 {
+            margin: 0;
+        }
+
+        .modal-header button {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
         .modal-body {
             padding: 1.5rem;
         }
@@ -374,6 +407,37 @@
             border-color: var(--primary);
         }
 
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            z-index: 9999;
+            animation: slideIn 0.3s ease;
+        }
+
+        .notification.success {
+            background: var(--success);
+        }
+
+        .notification.error {
+            background: var(--danger);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .dashboard {
@@ -391,6 +455,44 @@
             .services-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .header {
+                padding: 1rem;
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .welcome-banner {
+                padding: 1.5rem;
+            }
+            
+            .table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+
+        /* Form container */
+        .form-container {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--border-color);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
         }
     </style>
 </head>
@@ -399,7 +501,7 @@
     <header class="header">
         <a href="index.html" class="logo">
             <i class="fas fa-home"></i>
-            <span>নিবাস গ্রাহক</span>
+            <span>Nibash Customer</span>
         </a>
         
         <div class="user-info">
@@ -420,31 +522,31 @@
                 <li class="nav-item">
                     <a class="nav-link active" data-section="dashboard">
                         <i class="fas fa-tachometer-alt"></i>
-                        ড্যাশবোর্ড
+                        Dashboard
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-section="services">
                         <i class="fas fa-concierge-bell"></i>
-                        আমার সেবাসমূহ
+                        My Services
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-section="payments">
                         <i class="fas fa-credit-card"></i>
-                        পেমেন্ট
+                        Payments
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-section="profile">
                         <i class="fas fa-user-cog"></i>
-                        প্রোফাইল
+                        Profile
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" onclick="logout()">
                         <i class="fas fa-sign-out-alt"></i>
-                        লগআউট
+                        Logout
                     </a>
                 </li>
             </ul>
@@ -455,27 +557,27 @@
             <!-- Dashboard Section -->
             <div class="section active" id="dashboardSection">
                 <div class="welcome-banner">
-                    <h1 id="welcomeMessage">স্বাগতম!</h1>
-                    <p>আপনার সর্বশেষ সেবার স্ট্যাটাস দেখতে "আমার সেবাসমূহ" সেকশন দেখুন</p>
+                    <h1 id="welcomeMessage">Welcome!</h1>
+                    <p>Check your latest service status in the "My Services" section</p>
                 </div>
 
                 <div class="stats-cards">
                     <div class="stat-card">
-                        <div class="stat-value" id="totalServices">০</div>
-                        <div>মোট সেবা গ্রহণ</div>
+                        <div class="stat-value" id="totalServices">0</div>
+                        <div>Total Services</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value" id="activeServices">০</div>
-                        <div>চলমান সেবা</div>
+                        <div class="stat-value" id="activeServices">0</div>
+                        <div>Active Services</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value" id="totalSpent">৳ ০</div>
-                        <div>মোট ব্যয়</div>
+                        <div class="stat-value" id="totalSpent">৳ 0</div>
+                        <div>Total Spent</div>
                     </div>
                 </div>
 
                 <div style="margin-top: 2rem;">
-                    <h2 style="margin-bottom: 1rem;">দ্রুত সেবা অনুরোধ</h2>
+                    <h2 style="margin-bottom: 1rem;">Quick Service Request</h2>
                     <div class="services-grid" id="quickServices">
                         <!-- Quick service options will be loaded here -->
                     </div>
@@ -484,9 +586,9 @@
 
             <!-- Services Section -->
             <div class="section" id="servicesSection">
-                <h2 style="margin-bottom: 1rem;">আমার সেবাসমূহ</h2>
+                <h2 style="margin-bottom: 1rem;">My Services</h2>
                 <button class="btn btn-primary" onclick="requestNewService()">
-                    <i class="fas fa-plus"></i> নতুন সেবা চাই
+                    <i class="fas fa-plus"></i> Request New Service
                 </button>
                 
                 <div class="services-grid" id="myServices">
@@ -496,18 +598,18 @@
 
             <!-- Payments Section -->
             <div class="section" id="paymentsSection">
-                <h2 style="margin-bottom: 1rem;">পেমেন্ট ইতিহাস</h2>
+                <h2 style="margin-bottom: 1rem;">Payment History</h2>
                 
                 <div class="payment-history">
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>আইডি</th>
-                                <th>তারিখ</th>
-                                <th>বিবরণ</th>
-                                <th>পরিমাণ</th>
-                                <th>স্ট্যাটাস</th>
-                                <th>অ্যাকশন</th>
+                                <th>ID</th>
+                                <th>Date</th>
+                                <th>Description</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody id="paymentsTable">
@@ -519,32 +621,32 @@
 
             <!-- Profile Section -->
             <div class="section" id="profileSection">
-                <h2 style="margin-bottom: 1rem;">প্রোফাইল</h2>
+                <h2 style="margin-bottom: 1rem;">Profile</h2>
                 
                 <div class="form-container" style="max-width: 600px;">
                     <form id="profileForm">
                         <div class="form-group">
-                            <label class="form-label">পুরো নাম</label>
-                            <input type="text" class="form-control" id="fullName">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="fullName" required>
                         </div>
                         
                         <div class="form-group">
-                            <label class="form-label">ইমেইল</label>
+                            <label class="form-label">Email</label>
                             <input type="email" class="form-control" id="email" disabled>
                         </div>
                         
                         <div class="form-group">
-                            <label class="form-label">ফোন নম্বর</label>
-                            <input type="tel" class="form-control" id="phone">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="phone" required>
                         </div>
                         
                         <div class="form-group">
-                            <label class="form-label">ঠিকানা</label>
-                            <textarea class="form-control" id="address" rows="3"></textarea>
+                            <label class="form-label">Address</label>
+                            <textarea class="form-control" id="address" rows="3" required></textarea>
                         </div>
                         
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> আপডেট করুন
+                            <i class="fas fa-save"></i> Update Profile
                         </button>
                     </form>
                 </div>
@@ -556,88 +658,97 @@
     <div class="modal" id="serviceModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>নতুন সেবা অনুরোধ</h3>
+                <h3>New Service Request</h3>
                 <button onclick="closeModal('serviceModal')">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="newServiceForm">
                     <div class="form-group">
-                        <label class="form-label">সেবার ধরন</label>
+                        <label class="form-label">Service Type</label>
                         <select class="form-control" id="serviceType" required>
-                            <option value="">সেবা নির্বাচন করুন</option>
+                            <option value="">Select Service</option>
                         </select>
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label">সমস্যার বর্ণনা</label>
+                        <label class="form-label">Problem Description</label>
                         <textarea class="form-control" id="problemDescription" rows="3" required></textarea>
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label">পছন্দের তারিখ</label>
+                        <label class="form-label">Preferred Date</label>
                         <input type="date" class="form-control" id="preferredDate" required>
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label">পছন্দের সময়</label>
+                        <label class="form-label">Preferred Time</label>
                         <select class="form-control" id="preferredTime" required>
-                            <option value="">সময় নির্বাচন করুন</option>
-                            <option value="সকাল ৯-১২">সকাল ৯-১২</option>
-                            <option value="বিকাল ১২-৪">বিকাল ১২-৪</option>
-                            <option value="সন্ধ্যা ৪-৮">সন্ধ্যা ৪-৮</option>
+                            <option value="">Select Time</option>
+                            <option value="Morning 9-12">Morning 9-12</option>
+                            <option value="Afternoon 12-4">Afternoon 12-4</option>
+                            <option value="Evening 4-8">Evening 4-8</option>
                         </select>
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label">ঠিকানা</label>
+                        <label class="form-label">Address</label>
                         <textarea class="form-control" id="serviceAddress" rows="2" required></textarea>
                     </div>
                 </form>
             </div>
             <div class="modal-header" style="border-top: 1px solid var(--border-color);">
-                <button class="btn" onclick="closeModal('serviceModal')">বাতিল</button>
-                <button class="btn btn-primary" onclick="submitNewService()">অনুরোধ পাঠান</button>
+                <button type="button" class="btn btn-secondary" onclick="closeModal('serviceModal')">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="submitNewService()">Submit Request</button>
             </div>
         </div>
     </div>
-
-    </form>
-</div>
-
-<!-- টগল বাটন -->
-<div style="text-align: center; margin: 20px 0;">
-    <button onclick="toggleAdminForm()" style="background: transparent; color: #5629be; border: none; cursor: pointer; font-size: 14px;">
-        <i class="fas fa-user-shield"></i> এডমিন অ্যাকাউন্ট তৈরি করুন
-    </button>
-</div>
 
     <script>
         let currentUser = null;
         let servicesData = [];
 
+        // Initialize dashboard when page loads
         document.addEventListener('DOMContentLoaded', async function() {
             await initializeDashboard();
             setupTheme();
             setupNavigation();
             loadQuickServices();
+            
+            // Set minimum date to today for preferred date
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('preferredDate').min = today;
         });
 
         async function initializeDashboard() {
             const userData = localStorage.getItem('nibash_user');
-            if (!userData) {
+            const userToken = localStorage.getItem('nibash_token');
+            
+            if (!userData || !userToken) {
                 window.location.href = 'login.html';
                 return;
             }
 
             try {
                 currentUser = JSON.parse(userData);
+                
+                // Verify user is a customer
+                if (currentUser.role !== 'customer' && currentUser.accountType !== 'customer') {
+                    showNotification('Customer access only. Redirecting to login...', 'error');
+                    localStorage.clear();
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
                 updateUserDisplay();
                 await loadDashboardData();
                 await loadMyServices();
                 await loadPayments();
                 setupProfileForm();
+                
             } catch (error) {
-                console.error('Error initializing dashboard:', error);
+                console.error('Session error:', error);
+                showNotification('Session expired. Please login again.', 'error');
+                localStorage.clear();
                 window.location.href = 'login.html';
             }
         }
@@ -675,36 +786,35 @@
                 <div class="user-avatar">${userInitial}</div>
                 <div>
                     <div style="font-weight: 600;">${currentUser.fullName || 'User'}</div>
-                    <div style="font-size: 0.85rem; color: #94a3b8;">গ্রাহক</div>
+                    <div style="font-size: 0.85rem; color: #94a3b8;">Customer</div>
                 </div>
             `;
             
             if (welcomeMessage) {
-                welcomeMessage.textContent = `স্বাগতম, ${currentUser.fullName || 'User'}!`;
+                welcomeMessage.textContent = `Welcome, ${currentUser.fullName || 'User'}!`;
             }
         }
 
         function setupNavigation() {
-            const navLinks = document.querySelectorAll('.nav-link');
+            const navLinks = document.querySelectorAll('.nav-link[data-section]');
             const sections = document.querySelectorAll('.section');
             
             navLinks.forEach(link => {
-                if (link.getAttribute('data-section')) {
-                    link.addEventListener('click', function() {
-                        const sectionId = this.getAttribute('data-section');
-                        
-                        // Update active states
-                        navLinks.forEach(l => l.classList.remove('active'));
-                        this.classList.add('active');
-                        
-                        sections.forEach(section => {
-                            section.classList.remove('active');
-                            if (section.id === sectionId + 'Section') {
-                                section.classList.add('active');
-                            }
-                        });
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sectionId = this.getAttribute('data-section');
+                    
+                    // Update active states
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    sections.forEach(section => {
+                        section.classList.remove('active');
+                        if (section.id === sectionId + 'Section') {
+                            section.classList.add('active');
+                        }
                     });
-                }
+                });
             });
         }
 
@@ -715,7 +825,9 @@
             
             const totalServices = services.length;
             const activeServices = services.filter(s => s.status === 'active' || s.status === 'pending').length;
-            const totalSpent = payments.reduce((sum, payment) => sum + (parseFloat(payment.amount) || 0), 0);
+            const totalSpent = payments
+                .filter(p => p.status === 'completed')
+                .reduce((sum, payment) => sum + (parseFloat(payment.amount) || 0), 0);
             
             document.getElementById('totalServices').textContent = totalServices;
             document.getElementById('activeServices').textContent = activeServices;
@@ -724,10 +836,10 @@
 
         function loadQuickServices() {
             const quickServices = [
-                { id: 1, name: 'বৈদ্যুতিক সমস্যা', icon: 'fa-bolt' },
-                { id: 2, name: 'প্লাম্বিং সমস্যা', icon: 'fa-faucet' },
-                { id: 3, name: 'রং করার কাজ', icon: 'fa-paint-roller' },
-                { id: 4, name: 'এসি সার্ভিস', icon: 'fa-temperature-high' }
+                { id: 1, name: 'Electrical Issues', icon: 'fa-bolt' },
+                { id: 2, name: 'Plumbing Problems', icon: 'fa-faucet' },
+                { id: 3, name: 'Painting Work', icon: 'fa-paint-roller' },
+                { id: 4, name: 'AC Service', icon: 'fa-temperature-high' }
             ];
             
             const quickServicesDiv = document.getElementById('quickServices');
@@ -741,11 +853,11 @@
                         </div>
                         <h3>${service.name}</h3>
                     </div>
-                    <p style="color: #94a3b8; font-size: 0.9rem;">দ্রুত সেবা পেতে ক্লিক করুন</p>
+                    <p style="color: #94a3b8; font-size: 0.9rem;">Click for quick service request</p>
                 </div>
             `).join('');
             
-            serviceTypeSelect.innerHTML = '<option value="">সেবা নির্বাচন করুন</option>' + 
+            serviceTypeSelect.innerHTML = '<option value="">Select Service</option>' + 
                 quickServices.map(service => `<option value="${service.id}">${service.name}</option>`).join('');
         }
 
@@ -757,12 +869,12 @@
             
             if (services.length === 0) {
                 myServicesDiv.innerHTML = `
-                    <div style="text-align: center; padding: 3rem; color: #94a3b8;">
-                        <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                        <h3>কোন সেবা নেই</h3>
-                        <p>আপনি এখনো কোন সেবা অনুরোধ করেননি</p>
-                        <button class="btn btn-primary" onclick="requestNewService()">
-                            প্রথম সেবা চাই
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <h3>No Services Yet</h3>
+                        <p>You haven't requested any services yet</p>
+                        <button class="btn btn-primary" onclick="requestNewService()" style="margin-top: 1rem;">
+                            Request First Service
                         </button>
                     </div>
                 `;
@@ -776,18 +888,18 @@
                             <i class="fas ${getServiceIcon(service.type)}"></i>
                         </div>
                         <div>
-                            <h3>${service.type}</h3>
+                            <h3>${getServiceName(service.type)}</h3>
                             <div style="font-size: 0.9rem; color: #94a3b8;">
-                                ${new Date(service.date).toLocaleDateString('bn-BD')}
+                                ${new Date(service.date || service.createdAt).toLocaleDateString()}
                             </div>
                         </div>
                     </div>
-                    <p style="margin-bottom: 1rem;">${service.description.substring(0, 100)}...</p>
+                    <p style="margin-bottom: 1rem;">${service.description.substring(0, 100)}${service.description.length > 100 ? '...' : ''}</p>
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <span class="status-badge ${getStatusClass(service.status)}">
                             ${getStatusText(service.status)}
                         </span>
-                        ${service.status === 'completed' && service.amount ? `
+                        ${service.amount ? `
                             <span style="font-weight: bold; color: var(--primary);">৳ ${service.amount}</span>
                         ` : ''}
                     </div>
@@ -802,9 +914,9 @@
             if (payments.length === 0) {
                 paymentsTable.innerHTML = `
                     <tr>
-                        <td colspan="6" style="text-align: center; padding: 2rem; color: #94a3b8;">
-                            <i class="fas fa-credit-card" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
-                            <div>কোন পেমেন্ট ইতিহাস নেই</div>
+                        <td colspan="6" class="empty-state" style="padding: 2rem;">
+                            <i class="fas fa-credit-card"></i>
+                            <div style="margin-top: 1rem;">No payment history found</div>
                         </td>
                     </tr>
                 `;
@@ -813,24 +925,27 @@
             
             paymentsTable.innerHTML = payments.map(payment => `
                 <tr>
-                    <td>${payment.id.substring(0, 8)}</td>
-                    <td>${new Date(payment.date).toLocaleDateString('bn-BD')}</td>
-                    <td>${payment.description}</td>
-                    <td>৳ ${parseFloat(payment.amount).toLocaleString()}</td>
-                    <td><span class="status-badge ${payment.status === 'completed' ? 'status-completed' : 'status-pending'}">
-                        ${payment.status === 'completed' ? 'সম্পন্ন' : 'অপেক্ষমান'}
-                    </span></td>
+                    <td>${payment.id || payment._id || 'N/A'}</td>
+                    <td>${new Date(payment.date || payment.createdAt).toLocaleDateString()}</td>
+                    <td>${payment.description || 'Service Payment'}</td>
+                    <td>৳ ${parseFloat(payment.amount || 0).toLocaleString()}</td>
+                    <td>
+                        <span class="status-badge ${payment.status === 'completed' ? 'status-completed' : 
+                            payment.status === 'pending' ? 'status-pending' : 'status-cancelled'}">
+                            ${payment.status === 'completed' ? 'Completed' : 
+                             payment.status === 'pending' ? 'Pending' : 'Cancelled'}
+                        </span>
+                    </td>
                     <td>
                         ${payment.status === 'completed' ? `
-                            <button class="btn" style="padding: 0.25rem 0.5rem; font-size: 0.85rem;">
-                                <i class="fas fa-receipt"></i> রসিদ
+                            <button class="btn btn-secondary" onclick="viewReceipt('${payment.id || payment._id}')">
+                                <i class="fas fa-receipt"></i> Receipt
                             </button>
-                        ` : `
-                            <button class="btn btn-primary" style="padding: 0.25rem 0.5rem; font-size: 0.85rem;" 
-                                    onclick="makePayment('${payment.id}')">
-                                পরিশোধ করুন
+                        ` : payment.status === 'pending' ? `
+                            <button class="btn btn-primary" onclick="makePayment('${payment.id || payment._id}')">
+                                Pay Now
                             </button>
-                        `}
+                        ` : ''}
                     </td>
                 </tr>
             `).join('');
@@ -842,7 +957,7 @@
             
             document.getElementById('fullName').value = currentUser.fullName || '';
             document.getElementById('email').value = currentUser.email || '';
-            document.getElementById('phone').value = currentUser.phone || '';
+            document.getElementById('phone').value = currentUser.phone || currentUser.phoneNumber || '';
             document.getElementById('address').value = currentUser.address || '';
             
             form.addEventListener('submit', async function(e) {
@@ -861,61 +976,244 @@
                     currentUser = updatedUser;
                     updateUserDisplay();
                     
-                    showNotification('প্রোফাইল সফলভাবে আপডেট করা হয়েছে');
+                    showNotification('Profile updated successfully!', 'success');
                 } catch (error) {
-                    showNotification('প্রোফাইল আপডেট করতে সমস্যা হয়েছে');
+                    console.error('Error updating profile:', error);
+                    showNotification('Failed to update profile', 'error');
                 }
             });
         }
 
         function requestNewService() {
-            openModal('serviceModal');
+            document.getElementById('serviceAddress').value = currentUser.address || '';
+            document.getElementById('serviceModal').style.display = 'flex';
         }
 
         function requestQuickService(serviceId) {
-            openModal('serviceModal');
-            setTimeout(() => {
-                document.getElementById('serviceType').value = serviceId;
-            }, 100);
+            document.getElementById('serviceType').value = serviceId;
+            document.getElementById('serviceAddress').value = currentUser.address || '';
+            document.getElementById('serviceModal').style.display = 'flex';
         }
 
         async function submitNewService() {
-            const serviceData = {
-                type: document.getElementById('serviceType').value,
-                description: document.getElementById('problemDescription').value,
-                date: document.getElementById('preferredDate').value,
-                time: document.getElementById('preferredTime').value,
-                address: document.getElementById('serviceAddress').value,
-                status: 'pending',
-                createdAt: new Date().toISOString(),
-                id: 'SVC-' + Date.now()
-            };
+            const serviceType = document.getElementById('serviceType');
+            const problemDescription = document.getElementById('problemDescription');
+            const preferredDate = document.getElementById('preferredDate');
+            const preferredTime = document.getElementById('preferredTime');
+            const serviceAddress = document.getElementById('serviceAddress');
             
-            if (!serviceData.type || !serviceData.description || !serviceData.date) {
-                showNotification('দয়া করে সকল প্রয়োজনীয় তথ্য প্রদান করুন');
+            // Validation
+            if (!serviceType.value || !problemDescription.value || !preferredDate.value || 
+                !preferredTime.value || !serviceAddress.value) {
+                showNotification('Please fill all required fields', 'error');
                 return;
             }
             
+            const serviceTypes = {
+                '1': 'Electrical Issues',
+                '2': 'Plumbing Problems',
+                '3': 'Painting Work',
+                '4': 'AC Service'
+            };
+            
+            const newService = {
+                id: 'SVC-' + Date.now(),
+                type: serviceType.value,
+                typeName: serviceTypes[serviceType.value] || 'Custom Service',
+                description: problemDescription.value,
+                date: preferredDate.value,
+                time: preferredTime.value,
+                address: serviceAddress.value,
+                status: 'pending',
+                amount: null,
+                createdAt: new Date().toISOString(),
+                customerName: currentUser.fullName || 'Unknown',
+                customerId: currentUser.id || currentUser._id || 'unknown'
+            };
+            
             try {
-                const services = JSON.parse(localStorage.getItem('user_services') || '[]');
-                services.push(serviceData);
-                localStorage.setItem('user_services', JSON.stringify(services));
+                // Save to localStorage
+                const existingServices = JSON.parse(localStorage.getItem('user_services') || '[]');
+                existingServices.unshift(newService); // Add to beginning
+                localStorage.setItem('user_services', JSON.stringify(existingServices));
                 
-                showNotification('সেবা অনুরোধ সফলভাবে জমা দেওয়া হয়েছে!');
-                closeModal('serviceModal');
+                // Create a pending payment
+                const payment = {
+                    id: 'PAY-' + Date.now(),
+                    serviceId: newService.id,
+                    description: `Payment for ${newService.typeName}`,
+                    amount: calculateServiceAmount(newService.type),
+                    status: 'pending',
+                    date: new Date().toISOString()
+                };
+                
+                const existingPayments = JSON.parse(localStorage.getItem('user_payments') || '[]');
+                existingPayments.unshift(payment);
+                localStorage.setItem('user_payments', JSON.stringify(existingPayments));
+                
+                // Reset form and close modal
                 document.getElementById('newServiceForm').reset();
+                closeModal('serviceModal');
                 
+                // Update UI
                 await loadDashboardData();
                 await loadMyServices();
+                await loadPayments();
+                
+                showNotification('Service request submitted successfully!', 'success');
             } catch (error) {
-                showNotification('অনুরোধ জমা দিতে সমস্যা হয়েছে');
+                console.error('Error submitting service:', error);
+                showNotification('Failed to submit service request', 'error');
             }
         }
 
-        function makePayment(paymentId) {
-            // Redirect to payment page
-            window.location.href = `payment.html?payment_id=${paymentId}`;
+        function calculateServiceAmount(serviceType) {
+            const amounts = {
+                '1': 1500, // Electrical
+                '2': 1200, // Plumbing
+                '3': 5000, // Painting
+                '4': 2000  // AC Service
+            };
+            return amounts[serviceType] || 1000;
         }
+
+        function makePayment(paymentId) {
+            // Simulate payment
+            showNotification('Redirecting to payment gateway...', 'success');
+            
+            setTimeout(() => {
+                const payments = JSON.parse(localStorage.getItem('user_payments') || '[]');
+                const paymentIndex = payments.findIndex(p => p.id === paymentId || p._id === paymentId);
+                
+                if (paymentIndex !== -1) {
+                    payments[paymentIndex].status = 'completed';
+                    localStorage.setItem('user_payments', JSON.stringify(payments));
+                    
+                    // Update dashboard
+                    loadDashboardData();
+                    loadPayments();
+                    
+                    showNotification('Payment completed successfully!', 'success');
+                }
+            }, 1500);
+        }
+
+        function viewReceipt(paymentId) {
+            const payments = JSON.parse(localStorage.getItem('user_payments') || '[]');
+            const payment = payments.find(p => p.id === paymentId || p._id === paymentId);
+            
+            if (payment) {
+                const receiptWindow = window.open('', '_blank');
+                receiptWindow.document.write(`
+                    <html>
+                    <head>
+                        <title>Receipt - Payment #${payment.id}</title>
+                        <style>
+                            body { font-family: 'Hind Siliguri', sans-serif; padding: 20px; }
+                            .header { text-align: center; margin-bottom: 30px; }
+                            .receipt { max-width: 600px; margin: 0 auto; border: 2px solid #333; padding: 20px; }
+                            .details { margin: 20px 0; }
+                            .detail-row { display: flex; margin: 10px 0; }
+                            .detail-label { font-weight: bold; width: 150px; }
+                            .footer { margin-top: 30px; text-align: center; color: #666; }
+                            @media print { button { display: none; } }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="header">
+                            <h1>Nibash - Receipt</h1>
+                            <p>Service Payment Receipt</p>
+                        </div>
+                        <div class="receipt">
+                            <div class="details">
+                                <div class="detail-row">
+                                    <div class="detail-label">Receipt No:</div>
+                                    <div>#${payment.id}</div>
+                                </div>
+                                <div class="detail-row">
+                                    <div class="detail-label">Date:</div>
+                                    <div>${new Date(payment.date).toLocaleDateString()}</div>
+                                </div>
+                                <div class="detail-row">
+                                    <div class="detail-label">Description:</div>
+                                    <div>${payment.description}</div>
+                                </div>
+                                <div class="detail-row">
+                                    <div class="detail-label">Amount:</div>
+                                    <div><strong>৳ ${payment.amount}</strong></div>
+                                </div>
+                                <div class="detail-row">
+                                    <div class="detail-label">Status:</div>
+                                    <div>Completed</div>
+                                </div>
+                                <div class="detail-row">
+                                    <div class="detail-label">Customer Name:</div>
+                                    <div>${currentUser.fullName || 'Unknown'}</div>
+                                </div>
+                            </div>
+                            <div class="footer">
+                                <p>Thank you for choosing Nibash</p>
+                                <p>Keep this receipt for your records</p>
+                            </div>
+                        </div>
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button onclick="window.print()">Print Receipt</button>
+                        </div>
+                    </body>
+                    </html>
+                `);
+                receiptWindow.document.close();
+            }
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('nibash_token');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Show notification
+        function showNotification(message, type = 'success') {
+            // Remove existing notifications
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(n => n.remove());
+            
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+                ${message}
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
+            }
+        });
 
         // Helper functions
         function getServiceIcon(serviceType) {
@@ -930,18 +1228,29 @@
 
         function getServiceColor(serviceType) {
             const colors = {
-                '1': '#8B5CF6',
-                '2': '#3B82F6',
-                '3': '#10B981',
-                '4': '#F59E0B'
+                '1': '#f59e0b', // Electrical - yellow
+                '2': '#3b82f6', // Plumbing - blue
+                '3': '#8b5cf6', // Painting - purple
+                '4': '#10b981'  // AC Service - green
             };
-            return colors[serviceType] || '#8B5CF6';
+            return colors[serviceType] || '#5629be';
+        }
+
+        function getServiceName(serviceType) {
+            const names = {
+                '1': 'Electrical Issues',
+                '2': 'Plumbing Problems',
+                '3': 'Painting Work',
+                '4': 'AC Service'
+            };
+            return names[serviceType] || 'Custom Service';
         }
 
         function getStatusClass(status) {
             const classes = {
                 'pending': 'status-pending',
-                'active': 'status-active',
+                'active': 'status-pending',
+                'in-progress': 'status-pending',
                 'completed': 'status-completed',
                 'cancelled': 'status-cancelled'
             };
@@ -950,113 +1259,74 @@
 
         function getStatusText(status) {
             const texts = {
-                'pending': 'অপেক্ষমান',
-                'active': 'চলমান',
-                'completed': 'সম্পন্ন',
-                'cancelled': 'বাতিল'
+                'pending': 'Pending',
+                'active': 'Active',
+                'in-progress': 'In Progress',
+                'completed': 'Completed',
+                'cancelled': 'Cancelled'
             };
-            return texts[status] || 'অপেক্ষমান';
+            return texts[status] || status;
         }
 
-        // Modal functions
-        function openModal(modalId) {
-            document.getElementById(modalId).style.display = 'flex';
+        // Initialize dummy data if none exists
+        function initializeDummyData() {
+            if (!localStorage.getItem('user_services') || JSON.parse(localStorage.getItem('user_services')).length === 0) {
+                const dummyServices = [
+                    {
+                        id: 'SVC-1',
+                        type: '1',
+                        typeName: 'Electrical Issues',
+                        description: 'Bedroom lights not working properly',
+                        date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                        time: 'Morning 9-12',
+                        address: 'Dhanmondi, Dhaka',
+                        status: 'completed',
+                        amount: 1500,
+                        createdAt: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
+                        customerName: currentUser?.fullName || 'John Doe'
+                    },
+                    {
+                        id: 'SVC-2',
+                        type: '2',
+                        typeName: 'Plumbing Problems',
+                        description: 'Bathroom tap is leaking',
+                        date: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                        time: 'Afternoon 12-4',
+                        address: 'Dhanmondi, Dhaka',
+                        status: 'pending',
+                        amount: null,
+                        createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+                        customerName: currentUser?.fullName || 'John Doe'
+                    }
+                ];
+                localStorage.setItem('user_services', JSON.stringify(dummyServices));
+            }
+            
+            if (!localStorage.getItem('user_payments') || JSON.parse(localStorage.getItem('user_payments')).length === 0) {
+                const dummyPayments = [
+                    {
+                        id: 'PAY-1',
+                        serviceId: 'SVC-1',
+                        description: 'Payment for Electrical Issues',
+                        amount: 1500,
+                        status: 'completed',
+                        date: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString()
+                    },
+                    {
+                        id: 'PAY-2',
+                        serviceId: 'SVC-2',
+                        description: 'Payment for Plumbing Problems',
+                        amount: 1200,
+                        status: 'pending',
+                        date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
+                    }
+                ];
+                localStorage.setItem('user_payments', JSON.stringify(dummyPayments));
+            }
         }
 
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-
-        // Notification function
-        function showNotification(message) {
-            alert(message); // In production, use a proper notification system
-        }
-
-        function logout() {
-            localStorage.removeItem('nibash_user');
-            window.location.href = 'index.html';
-        }
-
-        // Close modal when clicking outside
-        window.addEventListener('click', function(e) {
-            const modals = document.querySelectorAll('.modal');
-            modals.forEach(modal => {
-                if (e.target === modal) {
-                    modal.style.display = 'none';
-                }
-            });
-        });
-        // customer-signup.html script-এ যোগ করুন
-function toggleAdminForm() {
-    const form = document.getElementById('adminRegistrationForm');
-    form.style.display = form.style.display === 'none' ? 'block' : 'none';
-}
-
-function hideAdminForm() {
-    document.getElementById('adminRegistrationForm').style.display = 'none';
-}
-
-// Admin signup form submission
-document.getElementById('adminSignupForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const adminCode = document.getElementById('adminCode').value;
-    const fullName = document.getElementById('adminFullName').value;
-    const email = document.getElementById('adminEmail').value;
-    const password = document.getElementById('adminPassword').value;
-    const confirmPassword = document.getElementById('adminConfirmPassword').value;
-    
-    // Validate admin code (for demo, use a simple code)
-    if (adminCode !== 'NIBASH_ADMIN_2024') {
-        alert('ভুল এডমিন কোড');
-        return;
-    }
-    
-    if (password !== confirmPassword) {
-        alert('পাসওয়ার্ড মিলছে না');
-        return;
-    }
-    
-    if (password.length < 8) {
-        alert('পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে');
-        return;
-    }
-    
-    // Create admin user
-    const users = JSON.parse(localStorage.getItem('nibash_users') || '[]');
-    const credentials = JSON.parse(localStorage.getItem('user_credentials') || '[]');
-    
-    // Check if email already exists
-    if (users.some(user => user.email === email)) {
-        alert('এই ইমেইল ইতিমধ্যে ব্যবহৃত হচ্ছে');
-        return;
-    }
-    
-    const adminUser = {
-        email: email,
-        fullName: fullName,
-        phone: '',
-        role: 'admin',
-        accountType: 'admin',
-        status: 'active',
-        createdAt: new Date().toISOString()
-    };
-    
-    users.push(adminUser);
-    localStorage.setItem('nibash_users', JSON.stringify(users));
-    
-    credentials.push({
-        email: email,
-        password: password,
-        role: 'admin'
-    });
-    localStorage.setItem('user_credentials', JSON.stringify(credentials));
-    
-    alert('এডমিন অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে! এখন লগইন করুন।');
-    window.location.href = 'login.html';
-});
+        // Call this function to initialize dummy data
+        initializeDummyData();
     </script>
 </body>
 </html>
-
-

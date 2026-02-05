@@ -741,61 +741,50 @@
 
         // Single admin access check function
         function checkAdminAccess() {
-            console.log('🔐 Checking admin access...');
+    console.log('🔐 Checking admin access...');
+    
+    const userData = localStorage.getItem('nibash_user');
+    const userToken = localStorage.getItem('nibash_token');
+    
+    if (!userData || !userToken) {
+        console.log('❌ No session found');
+        alert('Please login first');
+        window.location.href = '/login.html';
+        return;
+    }
+    
+    try {
+        currentAdmin = JSON.parse(userData);
+        console.log('👤 Current user:', currentAdmin);
+        
+        const isAdmin = currentAdmin.role === 'admin' || 
+                       currentAdmin.account_type === 'admin' || 
+                       currentAdmin.email === 'admin@nibash.com';
+        
+        if (!isAdmin) {
+            console.log('❌ User is not admin:', currentAdmin.role);
+            alert('Admin access only');
             
-            const userData = localStorage.getItem('nibash_user');
-            const userRole = localStorage.getItem('user_role');
-            
-            console.log('📋 Session data:', { 
-                hasUserData: !!userData, 
-                userRole: userRole 
-            });
-            
-            // 1. Check if user is logged in
-            if (!userData) {
-                console.log('❌ No user data found');
-                alert('অনুগ্রহ করে প্রথমে লগইন করুন');
-                window.location.href = 'login.html';
-                return;
+            if (currentAdmin.role === 'customer') {
+                window.location.href = '/customer.html';
+            } else if (currentAdmin.role === 'professional') {
+                window.location.href = '/professional.html';
+            } else {
+                window.location.href = '/index.html';
             }
-            
-            try {
-                currentAdmin = JSON.parse(userData);
-                console.log('👤 Current user:', currentAdmin);
-                
-                // 2. Check if user is admin
-                const isAdmin = currentAdmin.role === 'admin' || 
-                               currentAdmin.accountType === 'admin' || 
-                               currentAdmin.email === 'admin@nibash.com';
-                
-                if (!isAdmin) {
-                    console.log('❌ User is not admin:', currentAdmin.role);
-                    alert('এই পেজে শুধুমাত্র এডমিন অ্যাক্সেস করতে পারে');
-                    
-                    // Redirect based on user role
-                    if (currentAdmin.role === 'customer') {
-                        window.location.href = 'customer.html';
-                    } else if (currentAdmin.role === 'professional') {
-                        window.location.href = 'professional.html';
-                    } else {
-                        window.location.href = 'index.html';
-                    }
-                    return;
-                }
-                
-                console.log('✅ Admin access granted for:', currentAdmin.email);
-                
-                // 3. Initialize admin panel
-                initAdminPanel();
-                
-            } catch (error) {
-                console.error('❌ Error parsing user data:', error);
-                alert('সেশন ডেটা সমস্যা হয়েছে। পুনরায় লগইন করুন।');
-                localStorage.clear();
-                window.location.href = 'login.html';
-            }
+            return;
         }
-
+        
+        console.log('✅ Admin access granted for:', currentAdmin.email);
+        initAdminPanel();
+        
+    } catch (error) {
+        console.error('❌ Error parsing user data:', error);
+        alert('Session error. Please login again.');
+        localStorage.clear();
+        window.location.href = '/login.html';
+    }
+}
         // Initialize admin panel
         function initAdminPanel() {
             console.log('🎯 Initializing admin panel...');

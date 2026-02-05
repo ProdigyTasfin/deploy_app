@@ -3,57 +3,1205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>সেবাদাতা ড্যাশবোর্ড</title>
+    <title>নিবাস - গ্রাহক ড্যাশবোর্ড</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Kalpurush&display=swap" rel="stylesheet">
+    
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f7fb;
+        /* Your existing CSS remains the same */
+        :root {
+            --primary: #5629be;
+            --primary-light: #a78bfa;
+            --secondary: #0eaa69c5;
+            --dark-bg: #0f172a;
+            --dark-card: #1e293b;
+            --dark-text: #f1f5f9;
+            --dark-border: #334155;
+            --light-bg: #f8fafc;
+            --light-card: #ffffff;
+            --light-text: #1e293b;
+            --light-border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+        }
+
+        * {
             margin: 0;
-            padding: 40px 16px;
-            color: #1f2a44;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Hind Siliguri', 'Kalpurush', system-ui, sans-serif;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
         }
-        .card {
-            max-width: 720px;
-            margin: 0 auto;
-            background: #fff;
-            border-radius: 12px;
-            padding: 32px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            transition: all 0.3s ease;
         }
-        h1 {
-            margin-top: 0;
+
+        body.dark-mode {
+            --bg-color: var(--dark-bg);
+            --card-bg: var(--dark-card);
+            --text-color: var(--dark-text);
+            --border-color: var(--dark-border);
+            --hover-bg: rgba(255, 255, 255, 0.05);
         }
-        a {
-            color: #2563eb;
+
+        body.light-mode {
+            --bg-color: var(--light-bg);
+            --card-bg: var(--light-card);
+            --text-color: var(--light-text);
+            --border-color: var(--light-border);
+            --hover-bg: rgba(0, 0, 0, 0.02);
+        }
+
+        /* Header */
+        .header {
+            padding: 1rem 2rem;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
             text-decoration: none;
         }
-        .actions {
-            margin-top: 24px;
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .user-info {
             display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem;
         }
-        .button {
-            display: inline-block;
-            padding: 10px 16px;
-            background: #2563eb;
-            color: #fff;
-            border-radius: 6px;
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
         }
-        .button.secondary {
-            background: #e5e7eb;
-            color: #111827;
+
+        .theme-toggle {
+            background: var(--primary);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+        }
+
+        /* Dashboard Layout */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            padding: 1.5rem 0;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.25rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--hover-bg);
+            color: var(--primary);
+            border-right: 3px solid var(--primary);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Dashboard Section */
+        .welcome-banner {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Services Section */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .service-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            border-color: var(--primary);
+        }
+
+        .service-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .service-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        /* Payment Section */
+        .payment-history {
+            margin-top: 1.5rem;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .table th {
+            padding: 1rem;
+            text-align: left;
+            background: var(--hover-bg);
+            color: var(--text-color);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .status-completed {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+
+        .status-pending {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(86, 41, 190, 0.3);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 16px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--hover-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-color);
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
-<body>
-    <div class="card">
-        <h1>সেবাদাতা ড্যাশবোর্ড</h1>
-        <p>এই পেজটি লগইন রিডাইরেক্ট ঠিক রাখতে যোগ করা হয়েছে। আপনি এখন সেবাদাতা হিসেবে লগইন করেছেন।</p>
-        <div class="actions">
-            <a class="button" href="index.html">হোম পেজে যান</a>
-            <a class="button secondary" href="profile.html">প্রোফাইল</a>
+<body class="dark-mode">
+    <!-- Header -->
+    <header class="header">
+        <a href="index.html" class="logo">
+            <i class="fas fa-home"></i>
+            <span>নিবাস গ্রাহক</span>
+        </a>
+        
+        <div class="user-info">
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+            <div id="userDisplay">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Dashboard -->
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a class="nav-link active" data-section="dashboard">
+                        <i class="fas fa-tachometer-alt"></i>
+                        ড্যাশবোর্ড
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-section="services">
+                        <i class="fas fa-concierge-bell"></i>
+                        আমার সেবাসমূহ
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-section="payments">
+                        <i class="fas fa-credit-card"></i>
+                        পেমেন্ট
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-section="profile">
+                        <i class="fas fa-user-cog"></i>
+                        প্রোফাইল
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        লগআউট
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <div class="section active" id="dashboardSection">
+                <div class="welcome-banner">
+                    <h1 id="welcomeMessage">স্বাগতম!</h1>
+                    <p>আপনার সর্বশেষ সেবার স্ট্যাটাস দেখতে "আমার সেবাসমূহ" সেকশন দেখুন</p>
+                </div>
+
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalServices">০</div>
+                        <div>মোট সেবা গ্রহণ</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="activeServices">০</div>
+                        <div>চলমান সেবা</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalSpent">৳ ০</div>
+                        <div>মোট ব্যয়</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <h2 style="margin-bottom: 1rem;">দ্রুত সেবা অনুরোধ</h2>
+                    <div class="services-grid" id="quickServices">
+                        <!-- Quick service options will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Services Section -->
+            <div class="section" id="servicesSection">
+                <h2 style="margin-bottom: 1rem;">আমার সেবাসমূহ</h2>
+                <button class="btn btn-primary" onclick="requestNewService()">
+                    <i class="fas fa-plus"></i> নতুন সেবা চাই
+                </button>
+                
+                <div class="services-grid" id="myServices">
+                    <!-- Services will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Payments Section -->
+            <div class="section" id="paymentsSection">
+                <h2 style="margin-bottom: 1rem;">পেমেন্ট ইতিহাস</h2>
+                
+                <div class="payment-history">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>আইডি</th>
+                                <th>তারিখ</th>
+                                <th>বিবরণ</th>
+                                <th>পরিমাণ</th>
+                                <th>স্ট্যাটাস</th>
+                                <th>অ্যাকশন</th>
+                            </tr>
+                        </thead>
+                        <tbody id="paymentsTable">
+                            <!-- Payments will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Profile Section -->
+            <div class="section" id="profileSection">
+                <h2 style="margin-bottom: 1rem;">প্রোফাইল</h2>
+                
+                <div class="form-container" style="max-width: 600px;">
+                    <form id="profileForm">
+                        <div class="form-group">
+                            <label class="form-label">পুরো নাম</label>
+                            <input type="text" class="form-control" id="fullName">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">ইমেইল</label>
+                            <input type="email" class="form-control" id="email" disabled>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">ফোন নম্বর</label>
+                            <input type="tel" class="form-control" id="phone">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">ঠিকানা</label>
+                            <textarea class="form-control" id="address" rows="3"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> আপডেট করুন
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Service Request Modal -->
+    <div class="modal" id="serviceModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>নতুন সেবা অনুরোধ</h3>
+                <button onclick="closeModal('serviceModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="newServiceForm">
+                    <div class="form-group">
+                        <label class="form-label">সেবার ধরন</label>
+                        <select class="form-control" id="serviceType" required>
+                            <option value="">সেবা নির্বাচন করুন</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">সমস্যার বর্ণনা</label>
+                        <textarea class="form-control" id="problemDescription" rows="3" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">পছন্দের তারিখ</label>
+                        <input type="date" class="form-control" id="preferredDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">পছন্দের সময়</label>
+                        <select class="form-control" id="preferredTime" required>
+                            <option value="">সময় নির্বাচন করুন</option>
+                            <option value="সকাল ৯-১২">সকাল ৯-১২</option>
+                            <option value="বিকাল ১২-৪">বিকাল ১২-৪</option>
+                            <option value="সন্ধ্যা ৪-৮">সন্ধ্যা ৪-৮</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">ঠিকানা</label>
+                        <textarea class="form-control" id="serviceAddress" rows="2" required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-header" style="border-top: 1px solid var(--border-color);">
+                <button class="btn" onclick="closeModal('serviceModal')">বাতিল</button>
+                <button class="btn btn-primary" onclick="submitNewService()">অনুরোধ পাঠান</button>
+            </div>
         </div>
     </div>
+
+    <script>
+        // ================= NOTIFICATION HELPER =================
+        function showNotification(message, type = 'error') {
+            const existingNotification = document.getElementById('custom-notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+            
+            const notification = document.createElement('div');
+            notification.id = 'custom-notification';
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                background: ${type === 'success' ? '#10b981' : '#ef4444'};
+                color: white;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 9999;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                animation: slideIn 0.3s ease;
+            `;
+            
+            notification.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.style.animation = 'slideOut 0.3s ease';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.remove();
+                        }
+                    }, 300);
+                }
+            }, 3000);
+        }
+
+        if (!document.getElementById('notification-styles')) {
+            const style = document.createElement('style');
+            style.id = 'notification-styles';
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        // ================= END NOTIFICATION =================
+
+        let currentUser = null;
+        let servicesData = [];
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            // ================= CHECK LOGIN =================
+            const userData = localStorage.getItem('nibash_user');
+            const userToken = localStorage.getItem('nibash_token');
+            
+            if (!userData || !userToken) {
+                window.location.href = '/login.html';
+                return;
+            }
+            
+            try {
+                currentUser = JSON.parse(userData);
+                
+                // Verify user is a customer
+                if (currentUser.role !== 'customer' && currentUser.account_type !== 'customer') {
+                    alert('Customer access only. Redirecting to login...');
+                    localStorage.clear();
+                    window.location.href = '/login.html';
+                    return;
+                }
+                
+                updateUserDisplay();
+                await loadDashboardData();
+                await loadMyServices();
+                await loadPayments();
+                setupProfileForm();
+                
+            } catch (error) {
+                console.error('Session error:', error);
+                localStorage.clear();
+                window.location.href = '/login.html';
+            }
+            
+            // Your existing setup functions...
+            setupTheme();
+            setupNavigation();
+            loadQuickServices();
+        });
+
+        function setupTheme() {
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = themeToggle.querySelector('i');
+            
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+            if (currentTheme === 'light') {
+                document.body.classList.add('light-mode');
+                themeIcon.className = 'fas fa-sun';
+            }
+            
+            themeToggle.addEventListener('click', function() {
+                if (document.body.classList.contains('light-mode')) {
+                    document.body.classList.remove('light-mode');
+                    localStorage.setItem('theme', 'dark');
+                    themeIcon.className = 'fas fa-moon';
+                } else {
+                    document.body.classList.add('light-mode');
+                    localStorage.setItem('theme', 'light');
+                    themeIcon.className = 'fas fa-sun';
+                }
+            });
+        }
+
+        function updateUserDisplay() {
+            const userDisplay = document.getElementById('userDisplay');
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            
+            const userInitial = currentUser.fullName ? currentUser.fullName.charAt(0).toUpperCase() : 
+                              currentUser.full_name ? currentUser.full_name.charAt(0).toUpperCase() : 'U';
+            
+            userDisplay.innerHTML = `
+                <div class="user-avatar">${userInitial}</div>
+                <div>
+                    <div style="font-weight: 600;">${currentUser.fullName || currentUser.full_name || 'User'}</div>
+                    <div style="font-size: 0.85rem; color: #94a3b8;">গ্রাহক</div>
+                </div>
+            `;
+            
+            if (welcomeMessage) {
+                welcomeMessage.textContent = `স্বাগতম, ${currentUser.fullName || currentUser.full_name || 'User'}!`;
+            }
+        }
+
+        function setupNavigation() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('.section');
+            
+            navLinks.forEach(link => {
+                if (link.getAttribute('data-section')) {
+                    link.addEventListener('click', function() {
+                        const sectionId = this.getAttribute('data-section');
+                        
+                        // Update active states
+                        navLinks.forEach(l => l.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        sections.forEach(section => {
+                            section.classList.remove('active');
+                            if (section.id === sectionId + 'Section') {
+                                section.classList.add('active');
+                            }
+                        });
+                    });
+                }
+            });
+        }
+
+        async function loadDashboardData() {
+            // Load user statistics
+            const services = JSON.parse(localStorage.getItem('user_services') || '[]');
+            const payments = JSON.parse(localStorage.getItem('user_payments') || '[]');
+            
+            const totalServices = services.length;
+            const activeServices = services.filter(s => s.status === 'active' || s.status === 'pending').length;
+            const totalSpent = payments.reduce((sum, payment) => sum + (parseFloat(payment.amount) || 0), 0);
+            
+            document.getElementById('totalServices').textContent = totalServices;
+            document.getElementById('activeServices').textContent = activeServices;
+            document.getElementById('totalSpent').textContent = `৳ ${totalSpent.toLocaleString()}`;
+        }
+
+        function loadQuickServices() {
+            const quickServices = [
+                { id: 1, name: 'বৈদ্যুতিক সমস্যা', icon: 'fa-bolt' },
+                { id: 2, name: 'প্লাম্বিং সমস্যা', icon: 'fa-faucet' },
+                { id: 3, name: 'রং করার কাজ', icon: 'fa-paint-roller' },
+                { id: 4, name: 'এসি সার্ভিস', icon: 'fa-temperature-high' }
+            ];
+            
+            const quickServicesDiv = document.getElementById('quickServices');
+            const serviceTypeSelect = document.getElementById('serviceType');
+            
+            quickServicesDiv.innerHTML = quickServices.map(service => `
+                <div class="service-card" onclick="requestQuickService(${service.id})">
+                    <div class="service-header">
+                        <div class="service-icon">
+                            <i class="fas ${service.icon}"></i>
+                        </div>
+                        <h3>${service.name}</h3>
+                    </div>
+                    <p style="color: #94a3b8; font-size: 0.9rem;">দ্রুত সেবা পেতে ক্লিক করুন</p>
+                </div>
+            `).join('');
+            
+            serviceTypeSelect.innerHTML = '<option value="">সেবা নির্বাচন করুন</option>' + 
+                quickServices.map(service => `<option value="${service.id}">${service.name}</option>`).join('');
+        }
+
+        async function loadMyServices() {
+            const services = JSON.parse(localStorage.getItem('user_services') || '[]');
+            servicesData = services;
+            
+            const myServicesDiv = document.getElementById('myServices');
+            
+            if (services.length === 0) {
+                myServicesDiv.innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: #94a3b8;">
+                        <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <h3>কোন সেবা নেই</h3>
+                        <p>আপনি এখনো কোন সেবা অনুরোধ করেননি</p>
+                        <button class="btn btn-primary" onclick="requestNewService()">
+                            প্রথম সেবা চাই
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            myServicesDiv.innerHTML = services.map(service => `
+                <div class="service-card">
+                    <div class="service-header">
+                        <div class="service-icon" style="background: ${getServiceColor(service.type)};">
+                            <i class="fas ${getServiceIcon(service.type)}"></i>
+                        </div>
+                        <div>
+                            <h3>${service.type}</h3>
+                            <div style="font-size: 0.9rem; color: #94a3b8;">
+                                ${new Date(service.date).toLocaleDateString('bn-BD')}
+                            </div>
+                        </div>
+                    </div>
+                    <p style="margin-bottom: 1rem;">${service.description.substring(0, 100)}...</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span class="status-badge ${getStatusClass(service.status)}">
+                            ${getStatusText(service.status)}
+                        </span>
+                        ${service.status === 'completed' && service.amount ? `
+                            <span style="font-weight: bold; color: var(--primary);">৳ ${service.amount}</span>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function loadPayments() {
+            const payments = JSON.parse(localStorage.getItem('user_payments') || '[]');
+            const paymentsTable = document.getElementById('paymentsTable');
+            
+            if (payments.length === 0) {
+                paymentsTable.innerHTML = `
+                                            <tr>
+                        <td colspan="6" style="text-align: center; padding: 2rem; color: #94a3b8;">
+                            <i class="fas fa-receipt" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
+                            <h3>কোন পেমেন্ট রেকর্ড নেই</h3>
+                            <p>আপনার এখনো কোন পেমেন্ট নেই</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            paymentsTable.innerHTML = payments.map(payment => `
+                <tr>
+                    <td>#${payment.id}</td>
+                    <td>${new Date(payment.date).toLocaleDateString('bn-BD')}</td>
+                    <td>${payment.description}</td>
+                    <td><strong>৳ ${payment.amount}</strong></td>
+                    <td>
+                        <span class="status-badge ${payment.status === 'completed' ? 'status-completed' : 'status-pending'}">
+                            ${payment.status === 'completed' ? 'সম্পূর্ণ' : 'মুলতুবি'}
+                        </span>
+                    </td>
+                    <td>
+                        ${payment.status === 'pending' ? `
+                            <button class="btn btn-primary" onclick="payNow('${payment.id}')" style="padding: 0.25rem 0.5rem; font-size: 0.9rem;">
+                                পেমেন্ট করুন
+                            </button>
+                        ` : `
+                            <button class="btn" onclick="viewReceipt('${payment.id}')" style="padding: 0.25rem 0.5rem; font-size: 0.9rem;">
+                                রসিদ দেখুন
+                            </button>
+                        `}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function setupProfileForm() {
+            const profileForm = document.getElementById('profileForm');
+            
+            document.getElementById('fullName').value = currentUser.fullName || currentUser.full_name || '';
+            document.getElementById('email').value = currentUser.email || '';
+            document.getElementById('phone').value = currentUser.phone || currentUser.phoneNumber || '';
+            document.getElementById('address').value = currentUser.address || '';
+            
+            profileForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const updatedUser = {
+                    ...currentUser,
+                    fullName: document.getElementById('fullName').value,
+                    phone: document.getElementById('phone').value,
+                    address: document.getElementById('address').value
+                };
+                
+                try {
+                    // Update in localStorage
+                    localStorage.setItem('nibash_user', JSON.stringify(updatedUser));
+                    currentUser = updatedUser;
+                    updateUserDisplay();
+                    
+                    showNotification('প্রোফাইল সফলভাবে আপডেট হয়েছে!', 'success');
+                } catch (error) {
+                    console.error('Error updating profile:', error);
+                    showNotification('প্রোফাইল আপডেট ব্যর্থ হয়েছে', 'error');
+                }
+            });
+        }
+
+        function requestNewService() {
+            document.getElementById('serviceAddress').value = currentUser.address || '';
+            document.getElementById('serviceModal').style.display = 'flex';
+        }
+
+        function requestQuickService(serviceId) {
+            const quickServices = [
+                { id: 1, name: 'বৈদ্যুতিক সমস্যা', icon: 'fa-bolt' },
+                { id: 2, name: 'প্লাম্বিং সমস্যা', icon: 'fa-faucet' },
+                { id: 3, name: 'রং করার কাজ', icon: 'fa-paint-roller' },
+                { id: 4, name: 'এসি সার্ভিস', icon: 'fa-temperature-high' }
+            ];
+            
+            const service = quickServices.find(s => s.id === serviceId);
+            if (service) {
+                document.getElementById('serviceType').value = serviceId;
+                document.getElementById('serviceAddress').value = currentUser.address || '';
+                document.getElementById('serviceModal').style.display = 'flex';
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function submitNewService() {
+            const serviceType = document.getElementById('serviceType');
+            const problemDescription = document.getElementById('problemDescription');
+            const preferredDate = document.getElementById('preferredDate');
+            const preferredTime = document.getElementById('preferredTime');
+            const serviceAddress = document.getElementById('serviceAddress');
+            
+            // Validation
+            if (!serviceType.value || !problemDescription.value || !preferredDate.value || !preferredTime.value || !serviceAddress.value) {
+                showNotification('দয়া করে সব প্রয়োজনীয় তথ্য দিন', 'error');
+                return;
+            }
+            
+            const quickServices = [
+                { id: 1, name: 'বৈদ্যুতিক সমস্যা', icon: 'fa-bolt' },
+                { id: 2, name: 'প্লাম্বিং সমস্যা', icon: 'fa-faucet' },
+                { id: 3, name: 'রং করার কাজ', icon: 'fa-paint-roller' },
+                { id: 4, name: 'এসি সার্ভিস', icon: 'fa-temperature-high' }
+            ];
+            
+            const selectedService = quickServices.find(s => s.id === parseInt(serviceType.value));
+            
+            const newService = {
+                id: Date.now().toString(),
+                type: selectedService.name,
+                description: problemDescription.value,
+                date: preferredDate.value,
+                time: preferredTime.value,
+                address: serviceAddress.value,
+                status: 'pending',
+                createdAt: new Date().toISOString(),
+                customerName: currentUser.fullName || currentUser.full_name || 'Unknown'
+            };
+            
+            // Save to localStorage
+            const existingServices = JSON.parse(localStorage.getItem('user_services') || '[]');
+            existingServices.push(newService);
+            localStorage.setItem('user_services', JSON.stringify(existingServices));
+            
+            // Reset form
+            document.getElementById('newServiceForm').reset();
+            closeModal('serviceModal');
+            
+            // Update UI
+            loadDashboardData();
+            loadMyServices();
+            
+            showNotification('সেবা অনুরোধ সফলভাবে জমা হয়েছে!', 'success');
+        }
+
+        function payNow(paymentId) {
+            // In a real app, this would integrate with a payment gateway
+            showNotification('পেমেন্ট গেটওয়ে লোড হচ্ছে...', 'success');
+            
+            // Simulate payment processing
+            setTimeout(() => {
+                const payments = JSON.parse(localStorage.getItem('user_payments') || '[]');
+                const paymentIndex = payments.findIndex(p => p.id === paymentId);
+                
+                if (paymentIndex !== -1) {
+                    payments[paymentIndex].status = 'completed';
+                    localStorage.setItem('user_payments', JSON.stringify(payments));
+                    
+                    // Update dashboard
+                    loadDashboardData();
+                    loadPayments();
+                    
+                    showNotification('পেমেন্ট সফল হয়েছে!', 'success');
+                }
+            }, 1500);
+        }
+
+        function viewReceipt(paymentId) {
+            const payments = JSON.parse(localStorage.getItem('user_payments') || '[]');
+            const payment = payments.find(p => p.id === paymentId);
+            
+            if (payment) {
+                const receiptWindow = window.open('', '_blank');
+                receiptWindow.document.write(`
+                    <html>
+                    <head>
+                        <title>রসিদ - পেমেন্ট #${payment.id}</title>
+                        <style>
+                            body { font-family: 'Hind Siliguri', sans-serif; padding: 20px; }
+                            .header { text-align: center; margin-bottom: 30px; }
+                            .receipt { max-width: 600px; margin: 0 auto; border: 2px solid #333; padding: 20px; }
+                            .details { margin: 20px 0; }
+                            .detail-row { display: flex; margin: 10px 0; }
+                            .detail-label { font-weight: bold; width: 150px; }
+                            .footer { margin-top: 30px; text-align: center; color: #666; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="header">
+                            <h1>নিবাস - রসিদ</h1>
+                            <p>সেবা পেমেন্ট রসিদ</p>
+                        </div>
+                        <div class="receipt">
+                            <div class="details">
+                                <div class="detail-row">
+                                    <div class="detail-label">রসিদ নং:</div>
+                                    <div>#${payment.id}</div>
+                                </div>
+                                <div class="detail-row">
+                                    <div class="detail-label">তারিখ:</div>
+                                    <div>${new Date(payment.date).toLocaleDateString('bn-BD')}</div>
+                                </div>
+                                <div class="detail-row">
+                                    <div class="detail-label">বিবরণ:</div>
+                                    <div>${payment.description}</div>
+                                </div>
+                                <div class="detail-row">
+                                    <div class="detail-label">পরিমাণ:</div>
+                                    <div><strong>৳ ${payment.amount}</strong></div>
+                                </div>
+                                <div class="detail-row">
+                                    <div class="detail-label">স্ট্যাটাস:</div>
+                                    <div>সম্পূর্ণ</div>
+                                </div>
+                                <div class="detail-row">
+                                    <div class="detail-label">গ্রাহকের নাম:</div>
+                                    <div>${currentUser.fullName || currentUser.full_name || 'Unknown'}</div>
+                                </div>
+                            </div>
+                            <div class="footer">
+                                <p>ধন্যবাদ, নিবাসের সাথে থাকার জন্য</p>
+                                <p>এই রসিদটি আপনার রেকর্ডের জন্য সংরক্ষণ করুন</p>
+                            </div>
+                        </div>
+                    </body>
+                    </html>
+                `);
+                receiptWindow.document.close();
+            }
+        }
+
+        function logout() {
+            if (confirm('আপনি কি নিশ্চিত যে লগআউট করতে চান?')) {
+                localStorage.removeItem('nibash_token');
+                window.location.href = '/login.html';
+            }
+        }
+
+        // Helper functions
+        function getServiceIcon(serviceType) {
+            const icons = {
+                'বৈদ্যুতিক সমস্যা': 'fa-bolt',
+                'প্লাম্বিং সমস্যা': 'fa-faucet',
+                'রং করার কাজ': 'fa-paint-roller',
+                'এসি সার্ভিস': 'fa-temperature-high',
+                'ক্লিনিং সার্ভিস': 'fa-broom',
+                'কার্পেন্টারি': 'fa-hammer'
+            };
+            return icons[serviceType] || 'fa-tools';
+        }
+
+        function getServiceColor(serviceType) {
+            const colors = {
+                'বৈদ্যুতিক সমস্যা': '#f59e0b',
+                'প্লাম্বিং সমস্যা': '#3b82f6',
+                'রং করার কাজ': '#8b5cf6',
+                'এসি সার্ভিস': '#10b981',
+                'ক্লিনিং সার্ভিস': '#06b6d4',
+                'কার্পেন্টারি': '#f97316'
+            };
+            return colors[serviceType] || '#5629be';
+        }
+
+        function getStatusClass(status) {
+            const classes = {
+                'pending': 'status-pending',
+                'active': 'status-pending',
+                'in-progress': 'status-pending',
+                'completed': 'status-completed',
+                'cancelled': 'status-cancelled'
+            };
+            return classes[status] || '';
+        }
+
+        function getStatusText(status) {
+            const texts = {
+                'pending': 'মুলতুবি',
+                'active': 'সক্রিয়',
+                'in-progress': 'চলছে',
+                'completed': 'সম্পূর্ণ',
+                'cancelled': 'বাতিল'
+            };
+            return texts[status] || status;
+        }
+
+        // Initialize dummy data if none exists
+        function initializeDummyData() {
+            if (!localStorage.getItem('user_services')) {
+                const dummyServices = [
+                    {
+                        id: '1',
+                        type: 'বৈদ্যুতিক সমস্যা',
+                        description: 'বেডরুমের লাইট কাজ করছে না',
+                        date: '2024-01-15',
+                        time: 'সকাল ৯-১২',
+                        address: 'ধানমন্ডি, ঢাকা',
+                        status: 'completed',
+                        amount: 1200,
+                        createdAt: '2024-01-10T10:30:00Z'
+                    },
+                    {
+                        id: '2',
+                        type: 'প্লাম্বিং সমস্যা',
+                        description: 'বাথরুমের ট্যাপ লিক করছে',
+                        date: '2024-01-20',
+                        time: 'বিকাল ১২-৪',
+                        address: 'ধানমন্ডি, ঢাকা',
+                        status: 'active',
+                        createdAt: '2024-01-18T14:20:00Z'
+                    }
+                ];
+                localStorage.setItem('user_services', JSON.stringify(dummyServices));
+            }
+            
+            if (!localStorage.getItem('user_payments')) {
+                const dummyPayments = [
+                    {
+                        id: 'PAY001',
+                        date: '2024-01-16',
+                        description: 'বৈদ্যুতিক সমস্যা সেবা',
+                        amount: 1200,
+                        status: 'completed'
+                    },
+                    {
+                        id: 'PAY002',
+                        date: '2024-01-25',
+                        description: 'প্লাম্বিং সেবা',
+                        amount: 1800,
+                        status: 'pending'
+                    }
+                ];
+                localStorage.setItem('user_payments', JSON.stringify(dummyPayments));
+            }
+        }
+
+        // Call this function to initialize dummy data
+        initializeDummyData();
+    </script>
 </body>
 </html>
