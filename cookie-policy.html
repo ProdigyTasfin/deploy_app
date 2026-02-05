@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>কুকি নীতি | নিবাস - কুকি ব্যবহার ও পরিচালনা</title>
+    <meta name="description" content="নিবাস প্ল্যাটফর্ম কীভাবে কুকি ব্যবহার করে এবং আপনি কীভাবে আপনার কুকি পছন্দ পরিচালনা করতে পারেন তা জানুন।">
+    <meta name="keywords" content="কুকি নীতি, কুকি ব্যবস্থাপনা, ট্র্যাকিং টেকনোলজি, গোপনীয়তা, নিবাস">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Kalpurush&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #5629be;
+            --primary-light: #a78bfa;
+            --secondary: #0eaa69c5;
+            --cookie-color: #f97316;
+            --cookie-bg: rgba(249, 115, 22, 0.1);
+            --dark-bg: #0f172a;
+            --dark-card: #1e293b;
+            --dark-text: #f1f5f9;
+            --dark-border: #1b2430;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            padding: 24px;
+            background: var(--dark-bg);
+            color: var(--dark-text);
+            font-family: 'Hind Siliguri', 'Kalpurush', system-ui, sans-serif;
+            min-height: 100vh;
+            cursor: none;
+        }
+        
+        .wrap {
+            max-width: 960px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, .06);
+            border: 1px solid rgba(255, 255, 255, .18);
+            border-radius: 16px;
+            padding: 28px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
+        }
+        
+        h1 {
+            margin-top: 0;
+            color: var(--cookie-color);
+            font-size: 2.5rem;
+            border-bottom: 3px solid var(--cookie-color);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        h1:after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--cookie-color), var(--primary));
+        }
+        
+        h2 {
+            margin-top: 35px;
+            color: #fdba74;
+            font-size: 1.8rem;
+            padding-left: 15px;
+            border-left: 4px solid var(--cookie-color);
+        }
+        
+        h3 {
+            margin-top: 25px;
+            color: #93c5fd;
+            font-size: 1.4rem;
+        }
+        
+        p, li {
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+        }
+        
+        ul, ol {
+            padding-left: 25px;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            margin-bottom: 10px;
+            position: relative;
+        }
+        
+        li:before {
+            content: '🍪';
+            position: absolute;
+            left: -25px;
+        }
+        
+        a {
+            color: #93c5fd;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        a:hover {
+            color: var(--primary-light);
+            text-decoration: underline;
+        }
+        
+        .cookie-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--cookie-bg);
+            border-top: 2px solid var(--cookie-color);
+            padding: 20px;
+            z-index: 1000;
+            display: none;
+            backdrop-filter: blur(10px);
+        }
+        
+        .cookie-notice {
+            background: var(--cookie-bg);
+            border: 2px solid var(--cookie-color);
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 8px;
+        }
+        
+        .cookie-notice h3 {
+            color: var(--cookie-color);
+            margin-top: 0;
+        }
+        
+        .cookie-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .cookie-type {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .cookie-type:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .cookie-icon {
+            font-size: 2rem;
+            color: var(--cookie-color);
+            margin-bottom: 15px;
+        }
+        
+        .cookie-controls {
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .browser-instructions {
+            margin: 30px 0;
+        }
+        
+        .browser-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .cookie-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+        }
+        
+        .cookie-table th, .cookie-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .cookie-table th {
+            background: rgba(249, 115, 22, 0.2);
+            color: var(--cookie-color);
+            font-weight: 600;
+        }
+        
+        .cookie-table tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+        
+        .cookie-status {
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(86, 41, 190, 0.1);
+            border-radius: 10px;
+            border: 1px solid var(--primary);
+        }
+        
+        .cookie-consent-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .cookie-btn {
+            padding: 10px 25px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Hind Siliguri', 'Kalpurush', sans-serif;
+        }
+        
+        .accept-all {
+            background: var(--cookie-color);
+            color: white;
+        }
+        
+        .essential-only {
+            background: transparent;
+            color: var(--cookie-color);
+            border: 2px solid var(--cookie-color);
+        }
+        
+        .customize {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .footer-nav {
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, .2);
+        }
+        
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .footer-links li {
+            margin: 0;
+        }
+        
+        .footer-links li:before {
+            display: none;
+        }
+        
+        .back-home {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 25px;
+            background: var(--primary);
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .back-home:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            text-decoration: none;
+        }
+        
+        /* Cookie Themed Cursor Effects */
+        .cursor-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        
+        .cookie-cursor {
+            position: fixed;
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--cookie-color);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%);
+            backdrop-filter: blur(4px);
+            background: rgba(249, 115, 22, 0.1);
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px var(--cookie-color);
+        }
+        
+        .cursor-dot {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: var(--cookie-color);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10001;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s;
+            box-shadow: 0 0 10px var(--cookie-color);
+        }
+        
+        .cookie-crumb {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            background: var(--cookie-color);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0;
+        }
+        
+        .cookie-hover {
+            width: 45px;
+            height: 45px;
+            background: rgba(249, 115, 22, 0.2);
+            border-color: #fbbf24;
+            box-shadow: 0 0 20px #fbbf24;
+        }
+        
+        .cookie-click {
+            transform: translate(-50%, -50%) scale(0.9);
+            box-shadow: 0 0 25px #84cc16;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            .wrap {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .cookie-types {
+                grid-template-columns: 1fr;
+            }
+            
+            .cookie-consent-buttons {
+                flex-direction: column;
+            }
+            
+            .cookie-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            /* Hide cursor on mobile */
+            .cookie-cursor, .cursor-dot, .cookie-crumb {
+                display: none;
+            }
+            
+            body {
+                cursor: auto;
+            }
+        }
+        
+        /* Cookie banner responsive */
+        @media (max-width: 480px) {
+            .cookie-banner {
+                padding: 15px;
+            }
+            
+            .cookie-banner p {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Cookie Banner -->
+    <div class="cookie-banner" id="cookieBanner">
+        <div style="max-width: 960px; margin: 0 auto;">
+            <h3 style="color: var(--cookie-color); margin-top: 0;">
+                <i class="fas fa-cookie-bite"></i> কুকি সম্মতি
+            </h3>
+            <p>আমরা আপনার অভিজ্ঞতা উন্নত করতে কুকি ব্যবহার করি। কিছু কুকি আমাদের ওয়েবসাইটের জন্য অপরিহার্য। আপনি সমস্ত কুকি গ্রহণ করতে পারেন বা আপনার পছন্দ অনুযায়ী নির্বাচন করতে পারেন। আমাদের <a href="cookie-policy.html">কুকি নীতি</a> পড়ুন।</p>
+            
+            <div class="cookie-consent-buttons">
+                <button class="cookie-btn accept-all" onclick="acceptAllCookies()">
+                    <i class="fas fa-check"></i> সমস্ত কুকি গ্রহণ করুন
+                </button>
+                <button class="cookie-btn essential-only" onclick="acceptEssentialCookies()">
+                    <i class="fas fa-cookie"></i> শুধু প্রয়োজনীয় কুকি
+                </button>
+                <button class="cookie-btn customize" onclick="showCookieSettings()">
+                    <i class="fas fa-sliders-h"></i> কুকি সেটিংস কাস্টমাইজ করুন
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cookie Settings Modal -->
+    <div class="modal" id="cookieSettings" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center;">
+        <div style="background: var(--dark-card); padding: 30px; border-radius: 12px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;">
+            <h3 style="color: var(--cookie-color); margin-top: 0;">
+                <i class="fas fa-cog"></i> কুকি সেটিংস
+            </h3>
+            
+            <div class="cookie-control">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <div>
+                        <strong>অপরিহার্য কুকি</strong>
+                        <p style="font-size: 0.9rem; color: #94a3b8;">ওয়েবসাইটের কার্যকারিতার জন্য প্রয়োজনীয়। সর্বদা সক্রিয় থাকে।</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked disabled>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="cookie-control">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <div>
+                        <strong>পছন্দের কুকি</strong>
+                        <p style="font-size: 0.9rem; color: #94a3b8;">আপনার সেটিংস এবং পছন্দ মনে রাখতে সাহায্য করে।</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="prefCookies" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="cookie-control">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <div>
+                        <strong>পরিসংখ্যানগত কুকি</strong>
+                        <p style="font-size: 0.9rem; color: #94a3b8;">ওয়েবসাইট ব্যবহার বিশ্লেষণ এবং উন্নয়নে সাহায্য করে।</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="statsCookies" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="cookie-control">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <div>
+                        <strong>মার্কেটিং কুকি</strong>
+                        <p style="font-size: 0.9rem; color: #94a3b8;">প্রাসঙ্গিক বিজ্ঞাপন প্রদর্শনে সাহায্য করে।</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="marketingCookies">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 15px; margin-top: 25px;">
+                <button class="cookie-btn accept-all" onclick="saveCookieSettings()" style="flex: 1;">
+                    <i class="fas fa-save"></i> সেটিংস সংরক্ষণ করুন
+                </button>
+                <button class="cookie-btn essential-only" onclick="closeCookieSettings()" style="flex: 1;">
+                    <i class="fas fa-times"></i> বাতিল করুন
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="cursor-container">
+        <div class="cookie-cursor" id="cookieCursor"></div>
+        <div class="cursor-dot" id="cursorDot"></div>
+    </div>
+    
+    <main class="wrap">
+        <h1><i class="fas fa-cookie-bite"></i> কুকি নীতি</h1>
+        
+        <div class="cookie-notice">
+            <h3><i class="fas fa-info-circle"></i> কুকি সম্মতি প্রয়োজন</h3>
+            <p>এই ওয়েবসাইট আপনার অভিজ্ঞতা উন্নত করতে কুকি ব্যবহার করে। কুকি সম্পর্কে আরও জানতে এবং আপনার সম্মতি পরিচালনা করতে এই নীতিটি পড়ুন।</p>
+        </div>
+        
+        <h2>কুকি কী?</h2>
+        <p>কুকি হল ছোট টেক্সট ফাইল যা আপনার ডিভাইসে সংরক্ষিত হয় যখন আপনি কোনো ওয়েবসাইট ভিজিট করেন। এগুলো ওয়েবসাইটকে আপনার ব্রাউজিং অভিজ্ঞতা উন্নত করতে, আপনার পছন্দ মনে রাখতে এবং বিভিন্ন পরিসংখ্যান সংগ্রহ করতে সাহায্য করে।</p>
+        
+        <h2>আমরা কী ধরনের কুকি ব্যবহার করি?</h2>
+        
+        <div class="cookie-types">
+            <div class="cookie-type">
+                <div class="cookie-icon"><i class="fas fa-exclamation-circle"></i></div>
+                <h3>অপরিহার্য কুকি</h3>
+                <p>ওয়েবসাইটের মূল কার্যকারিতার জন্য প্রয়োজনীয়। এই কুকি ছাড়া ওয়েবসাইট সঠিকভাবে কাজ করবে না।</p>
+            </div>
+            
+            <div class="cookie-type">
+                <div class="cookie-icon"><i class="fas fa-cogs"></i></div>
+                <h3>পছন্দের কুকি</h3>
+                <p>আপনার সেটিংস এবং পছন্দ মনে রাখতে সাহায্য করে (যেমন ভাষা পছন্দ, থিম সেটিংস)।</p>
+            </div>
+            
+            <div class="cookie-type">
+                <div class="cookie-icon"><i class="fas fa-chart-bar"></i></div>
+                <h3>পরিসংখ্যানগত কুকি</h3>
+                <p>ওয়েবসাইট ট্রাফিক বিশ্লেষণ এবং ব্যবহারকারীর আচরণ বুঝতে সাহায্য করে।</p>
+            </div>
+            
+            <div class="cookie-type">
+                <div class="cookie-icon"><i class="fas fa-bullhorn"></i></div>
+                <h3>মার্কেটিং কুকি</h3>
+                <p>আপনার আগ্রহ অনুযায়ী প্রাসঙ্গিক বিজ্ঞাপন প্রদর্শনে সাহায্য করে।</p>
+            </div>
+        </div>
+        
+        <h2>আমরা যে কুকি ব্যবহার করি তার বিস্তারিত তালিকা</h2>
+        
+        <table class="cookie-table">
+            <thead>
+                <tr>
+                    <th>কুকির নাম</th>
+                    <th>ধরন</th>
+                    <th>উদ্দেশ্য</th>
+                    <th>মেয়াদ</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>session_id</td>
+                    <td>অপরিহার্য</td>
+                    <td>ব্যবহারকারী সেশন পরিচালনা</td>
+                    <td>সেশন শেষ হওয়া পর্যন্ত</td>
+                </tr>
+                <tr>
+                    <td>user_preferences</td>
+                    <td>পছন্দ</td>
+                    <td>থিম এবং ভাষা পছন্দ সংরক্ষণ</td>
+                    <td>১ বছর</td>
+                </tr>
+                <tr>
+                    <td>_ga</td>
+                    <td>পরিসংখ্যান</td>
+                    <td>গুগল অ্যানালিটিক্স ট্র্যাকিং</td>
+                    <td>২ বছর</td>
+                </tr>
+                <tr>
+                    <td>_gid</td>
+                    <td>পরিসংখ্যান</td>
+                    <td>গুগল অ্যানালিটিক্স সেশন ট্র্যাকিং</td>
+                    <td>২৪ ঘন্টা</td>
+                </tr>
+                <tr>
+                    <td>_fbp</td>
+                    <td>মার্কেটিং</td>
+                    <td>ফেসবুক পিক্সেল ট্র্যাকিং</td>
+                    <td>৩ মাস</td>
+                </tr>
+                <tr>
+                    <td>cookie_consent</td>
+                    <td>পছন্দ</td>
+                    <td>কুকি সম্মতি অবস্থা সংরক্ষণ</td>
+                    <td>১ বছর</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h2>তৃতীয় পক্ষের কুকি</h2>
+        <p>নিবাস নিম্নলিখিত তৃতীয় পক্ষের সেবা ব্যবহার করে যারা তাদের নিজস্ব কুকি রাখতে পারে:</p>
+        <ul>
+            <li><strong>গুগল অ্যানালিটিক্স:</strong> ওয়েবসাইট ট্রাফিক বিশ্লেষণ</li>
+            <li><strong>ফেসবুক পিক্সেল:</strong> বিজ্ঞাপন কার্যকারিতা ট্র্যাকিং</li>
+            <li><strong>SSLCommerz:</strong> নিরাপদ পেমেন্ট প্রসেসিং</li>
+            <li><strong>Google Fonts:</strong> ফন্ট প্রদর্শন</li>
+        </ul>
+        
+        <div class="cookie-controls">
+            <h3><i class="fas fa-user-cog"></i> আপনার কুকি পছন্দ নিয়ন্ত্রণ করুন</h3>
+            <p>আপনি আপনার ব্রাউজার সেটিংসের মাধ্যমে কুকি পরিচালনা করতে পারেন। তবে মনে রাখবেন, কিছু কুকি নিষ্ক্রিয় করলে ওয়েবসাইটের কিছু বৈশিষ্ট্য সঠিকভাবে কাজ নাও করতে পারে।</p>
+            
+            <div class="cookie-consent-buttons">
+                <button class="cookie-btn accept-all" onclick="acceptAllCookies()">
+                    <i class="fas fa-check"></i> সমস্ত কুকি গ্রহণ করুন
+                </button>
+                <button class="cookie-btn essential-only" onclick="acceptEssentialCookies()">
+                    <i class="fas fa-cookie"></i> শুধু প্রয়োজনীয় কুকি
+                </button>
+                <button class="cookie-btn customize" onclick="showCookieSettings()">
+                    <i class="fas fa-sliders-h"></i> কুকি সেটিংস কাস্টমাইজ করুন
+                </button>
+            </div>
+        </div>
+        
+        <h2>বিভিন্ন ব্রাউজারে কুকি নিয়ন্ত্রণ</h2>
+        
+        <div class="browser-instructions">
+            <div class="browser-card">
+                <h3><i class="fab fa-chrome"></i> Google Chrome</h3>
+                <ol>
+                    <li>Chrome মেনুতে যান (⋮)</li>
+                    <li>"সেটিংস" নির্বাচন করুন</li>
+                    <li>"গোপনীয়তা ও নিরাপত্তা" ক্লিক করুন</li>
+                    <li>"কুকি এবং অন্যান্য সাইট ডেটা" নির্বাচন করুন</li>
+                    <li>আপনার পছন্দ অনুযায়ী সেটিংস করুন</li>
+                </ol>
+            </div>
+            
+            <div class="browser-card">
+                <h3><i class="fab fa-firefox"></i> Mozilla Firefox</h3>
+                <ol>
+                    <li>Firefox মেনুতে যান (☰)</li>
+                    <li>"অপশন" নির্বাচন করুন</li>
+                    <li>"গোপনীয়তা ও নিরাপত্তা" ট্যাবে যান</li>
+                    <li>"কুকি এবং সাইট ডেটা" সেকশনে পছন্দ করুন</li>
+                    <li>আপনার প্রয়োজনীয় সেটিংস করুন</li>
+                </ol>
+            </div>
+            
+            <div class="browser-card">
+                <h3><i class="fab fa-safari"></i> Apple Safari</h3>
+                <ol>
+                    <li>Safari মেনু থেকে "পছন্দসমূহ" নির্বাচন করুন</li>
+                    <li>"গোপনীয়তা" ট্যাবে যান</li>
+                    <li>"ওয়েবসাইট ডেটা" অপশনে ক্লিক করুন</li>
+                    <li>"কুকি এবং অন্যান্য ওয়েবসাইট ডেটা পরিচালনা করুন"</li>
+                    <li>আপনার পছন্দ অনুযায়ী সেটিংস করুন</li>
+                </ol>
+            </div>
+        </div>
+        
+        <h2>কুকি সংরক্ষণ এবং গোপনীয়তা</h2>
+        <p>কুকিতে সংরক্ষিত তথ্য ব্যক্তিগতভাবে শনাক্তকারী তথ্য নয়। তবে, কুকির মাধ্যমে সংগ্রহ করা তথ্য গোপনীয়তা নীতির অধীনে সুরক্ষিত। আমাদের <a href="privacy-policy.html">গোপনীয়তা নীতি</a> পড়ুন।</p>
+        
+        <div class="cookie-status">
+            <h3><i class="fas fa-clipboard-check"></i> আপনার বর্তমান কুকি সম্মতি অবস্থা</h3>
+            <p id="cookieStatusText">লোড হচ্ছে...</p>
+            <div class="cookie-consent-buttons" style="margin-top: 15px;">
+                <button class="cookie-btn customize" onclick="showCookieSettings()">
+                    <i class="fas fa-edit"></i> সম্মতি পরিবর্তন করুন
+                </button>
+                <button class="cookie-btn essential-only" onclick="clearAllCookies()">
+                    <i class="fas fa-trash-alt"></i> সমস্ত কুকি মুছুন
+                </button>
+            </div>
+        </div>
+        
+        <h2>শিশুদের কুকি ব্যবহার</h2>
+        <p>নিবাস ১৩ বছর বয়সের নিচের শিশুদের থেকে জ্ঞাতসারে কুকি সম্মতি সংগ্রহ করে না। যদি আপনি একজন অভিভাবক হিসেবে মনে করেন যে আপনার শিশু আমাদের ওয়েবসাইটে কুকি সম্মতি প্রদান করেছে, দয়া করে আমাদের সাথে যোগাযোগ করুন।</p>
+        
+        <h2>আপডেট ও পরিবর্তন</h2>
+        <p>আমরা সময়ে সময়ে এই কুকি নীতি আপডেট করতে পারি। নতুন সংস্করণ এই পৃষ্ঠায় পোস্ট করা হবে। উল্লেখযোগ্য পরিবর্তনের ক্ষেত্রে আমরা আপনাকে ওয়েবসাইট নোটিফিকেশনের মাধ্যমে জানাব।</p>
+        
+        <div class="footer-nav">
+            <ul class="footer-links">
+                <li><a href="about-us.html"><i class="fas fa-info-circle"></i> আমাদের সম্পর্কে</a></li>
+                <li><a href="privacy-policy.html"><i class="fas fa-user-shield"></i> গোপনীয়তা নীতি</a></li>
+                <li><a href="terms-of-service.html"><i class="fas fa-file-contract"></i> সেবার শর্তাবলী</a></li>
+                <li><a href="cookie-policy.html"><i class="fas fa-cookie"></i> কুকি নীতি</a></li>
+                <li><a href="data-request.html"><i class="fas fa-database"></i> ডাটা রিকোয়েস্ট</a></li>
+            </ul>
+            
+            <div style="text-align: center; margin-top: 25px;">
+                <a href="index.html" class="back-home">
+                    <i class="fas fa-home"></i> হোমে ফিরে যান
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Cookie-themed Cursor Effect
+        document.addEventListener('DOMContentLoaded', function() {
+            const cookieCursor = document.getElementById('cookieCursor');
+            const cursorDot = document.getElementById('cursorDot');
+            const cookieBanner = document.getElementById('cookieBanner');
+            const cookieStatusText = document.getElementById('cookieStatusText');
+            
+            let mouseX = 0, mouseY = 0;
+            let cursorX = 0, cursorY = 0;
+            const cookieCrumbs = [];
+            const maxCrumbs = 15;
+            
+            // Create cookie crumbs
+            for (let i = 0; i < maxCrumbs; i++) {
+                const crumb = document.createElement('div');
+                crumb.className = 'cookie-crumb';
+                crumb.style.left = '0px';
+                crumb.style.top = '0px';
+                document.querySelector('.cursor-container').appendChild(crumb);
+                cookieCrumbs.push({
+                    element: crumb,
+                    x: 0,
+                    y: 0,
+                    life: 0,
+                    maxLife: Math.random() * 30 + 20
+                });
+            }
+            
+            // Mouse movement tracking
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                
+                // Update dot immediately
+                cursorDot.style.left = mouseX + 'px';
+                cursorDot.style.top = mouseY + 'px';
+                
+                // Create cookie crumb trail
+                createCookieCrumbTrail();
+            });
+            
+            function createCookieCrumbTrail() {
+                for (let i = 0; i < cookieCrumbs.length; i++) {
+                    const crumb = cookieCrumbs[i];
+                    if (crumb.life <= 0) {
+                        crumb.x = mouseX + (Math.random() - 0.5) * 20;
+                        crumb.y = mouseY + (Math.random() - 0.5) * 20;
+                        crumb.life = crumb.maxLife;
+                        crumb.element.style.opacity = '0.8';
+                        crumb.element.style.left = crumb.x + 'px';
+                        crumb.element.style.top = crumb.y + 'px';
+                        break;
+                    }
+                }
+            }
+            
+            // Hover effects for cookie elements
+            const cookieElements = document.querySelectorAll('.cookie-type, .cookie-btn, .browser-card');
+            
+            cookieElements.forEach(element => {
+                element.addEventListener('mouseenter', () => {
+                    cookieCursor.classList.add('cookie-hover');
+                    cookieCursor.style.borderColor = '#fbbf24';
+                    cookieCursor.style.boxShadow = '0 0 20px #fbbf24';
+                });
+                
+                element.addEventListener('mouseleave', () => {
+                    cookieCursor.classList.remove('cookie-hover');
+                    cookieCursor.style.borderColor = '#f97316';
+                    cookieCursor.style.boxShadow = '0 0 15px #f97316';
+                });
+            });
+            
+            // Click effect with cookie bite animation
+            document.addEventListener('mousedown', () => {
+                cookieCursor.classList.add('cookie-click');
+                cookieCursor.style.borderColor = '#84cc16';
+                cookieCursor.style.boxShadow = '0 0 25px #84cc16';
+                
+                // Create cookie bite animation
+                createCookieBiteAnimation(mouseX, mouseY);
+            });
+            
+            document.addEventListener('mouseup', () => {
+                cookieCursor.classList.remove('cookie-click');
+                cookieCursor.style.borderColor = '#f97316';
+                cookieCursor.style.boxShadow = '0 0 15px #f97316';
+            });
+            
+            function createCookieBiteAnimation(x, y) {
+                const bite = document.createElement('div');
+                bite.style.position = 'fixed';
+                bite.style.left = (x - 15) + 'px';
+                bite.style.top = (y - 15) + 'px';
+                bite.style.width = '30px';
+                bite.style.height = '30px';
+                bite.style.borderRadius = '50%';
+                bite.style.backgroundColor = '#f97316';
+                bite.style.boxShadow = '0 0 15px #f97316';
+                bite.style.opacity = '0';
+                bite.style.zIndex = '9996';
+                bite.style.pointerEvents = 'none';
+                bite.style.clipPath = 'polygon(50% 50%, 0% 0%, 100% 0%)';
+                bite.style.transform = 'rotate(45deg) scale(0)';
+                bite.style.transition = 'all 0.3s ease';
+                
+                document.body.appendChild(bite);
+                
+                // Animate bite
+                setTimeout(() => {
+                    bite.style.opacity = '1';
+                    bite.style.transform = 'rotate(45deg) scale(1)';
+                    
+                    setTimeout(() => {
+                        bite.style.opacity = '0';
+                        bite.style.transform = 'rotate(45deg) scale(0)';
+                        setTimeout(() => {
+                            bite.remove();
+                        }, 300);
+                    }, 300);
+                }, 10);
+            }
+            
+            // Animation loop
+            function animateCursor() {
+                // Smooth cursor movement
+                cursorX += (mouseX - cursorX) * 0.15;
+                cursorY += (mouseY - cursorY) * 0.15;
+                
+                cookieCursor.style.left = cursorX + 'px';
+                cookieCursor.style.top = cursorY + 'px';
+                
+                // Update cookie crumbs
+                for (let i = 0; i < cookieCrumbs.length; i++) {
+                    const crumb = cookieCrumbs[i];
+                    if (crumb.life > 0) {
+                        crumb.life--;
+                        crumb.element.style.opacity = (crumb.life / crumb.maxLife) * 0.8;
+                    }
+                }
+                
+                requestAnimationFrame(animateCursor);
+            }
+            
+            // Start animation
+            animateCursor();
+            
+            // Cookie consent management
+            function getCookieConsent() {
+                return localStorage.getItem('cookie_consent') || 'not_set';
+            }
+            
+            function updateCookieStatus() {
+                const consent = getCookieConsent();
+                let statusText = '';
+                let statusColor = '';
+                
+                switch(consent) {
+                    case 'all':
+                        statusText = '✅ আপনি সমস্ত কুকি গ্রহণ করেছেন';
+                        statusColor = '#10b981';
+                        break;
+                    case 'essential':
+                        statusText = '⚠️ আপনি শুধু প্রয়োজনীয় কুকি গ্রহণ করেছেন';
+                        statusColor = '#f59e0b';
+                        break;
+                    case 'custom':
+                        statusText = '⚙️ আপনি কাস্টম কুকি সেটিংস ব্যবহার করছেন';
+                        statusColor = '#3b82f6';
+                        break;
+                    default:
+                        statusText = '❓ আপনার কুকি সম্মতি সেট করা হয়নি';
+                        statusColor = '#64748b';
+                }
+                
+                if (cookieStatusText) {
+                    cookieStatusText.textContent = statusText;
+                    cookieStatusText.style.color = statusColor;
+                }
+            }
+            
+            function acceptAllCookies() {
+                localStorage.setItem('cookie_consent', 'all');
+                localStorage.setItem('cookie_preferences', JSON.stringify({
+                    essential: true,
+                    preferences: true,
+                    statistics: true,
+                    marketing: true
+                }));
+                updateCookieStatus();
+                hideCookieBanner();
+                showNotification('সমস্ত কুকি সফলভাবে গ্রহণ করা হয়েছে!');
+            }
+            
+            function acceptEssentialCookies() {
+                localStorage.setItem('cookie_consent', 'essential');
+                localStorage.setItem('cookie_preferences', JSON.stringify({
+                    essential: true,
+                    preferences: false,
+                    statistics: false,
+                    marketing: false
+                }));
+                updateCookieStatus();
+                hideCookieBanner();
+                showNotification('শুধু প্রয়োজনীয় কুকি গ্রহণ করা হয়েছে।');
+            }
+            
+            function showCookieSettings() {
+                document.getElementById('cookieSettings').style.display = 'flex';
+                const prefs = JSON.parse(localStorage.getItem('cookie_preferences') || '{"essential":true,"preferences":true,"statistics":true,"marketing":false}');
+                
+                document.getElementById('prefCookies').checked = prefs.preferences;
+                document.getElementById('statsCookies').checked = prefs.statistics;
+                document.getElementById('marketingCookies').checked = prefs.marketing;
+            }
+            
+            function closeCookieSettings() {
+                document.getElementById('cookieSettings').style.display = 'none';
+            }
+            
+            function saveCookieSettings() {
+                const prefs = {
+                    essential: true, // Always true
+                    preferences: document.getElementById('prefCookies').checked,
+                    statistics: document.getElementById('statsCookies').checked,
+                    marketing: document.getElementById('marketingCookies').checked
+                };
+                
+                localStorage.setItem('cookie_consent', 'custom');
+                localStorage.setItem('cookie_preferences', JSON.stringify(prefs));
+                updateCookieStatus();
+                closeCookieSettings();
+                hideCookieBanner();
+                showNotification('কুকি সেটিংস সফলভাবে সংরক্ষণ করা হয়েছে!');
+            }
+            
+            function clearAllCookies() {
+                // Clear only our consent cookies, not actual browser cookies
+                localStorage.removeItem('cookie_consent');
+                localStorage.removeItem('cookie_preferences');
+                updateCookieStatus();
+                showNotification('কুকি সম্মতি সেটিংস রিসেট করা হয়েছে।');
+                
+                // Show banner again
+                setTimeout(() => {
+                    showCookieBanner();
+                }, 1000);
+            }
+            
+            function showCookieBanner() {
+                if (getCookieConsent() === 'not_set') {
+                    cookieBanner.style.display = 'block';
+                }
+            }
+            
+            function hideCookieBanner() {
+                cookieBanner.style.display = 'none';
+            }
+            
+            function showNotification(message) {
+                // Create notification element
+                const notification = document.createElement('div');
+                notification.style.position = 'fixed';
+                notification.style.bottom = '20px';
+                notification.style.right = '20px';
+                notification.style.backgroundColor = '#10b981';
+                notification.style.color = 'white';
+                notification.style.padding = '15px 20px';
+                notification.style.borderRadius = '8px';
+                notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+                notification.style.zIndex = '2001';
+                notification.textContent = message;
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(20px)';
+                notification.style.transition = 'all 0.3s ease';
+                
+                document.body.appendChild(notification);
+                
+                // Animate in
+                setTimeout(() => {
+                    notification.style.opacity = '1';
+                    notification.style.transform = 'translateY(0)';
+                }, 10);
+                
+                // Remove after delay
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    notification.style.transform = 'translateY(20px)';
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 3000);
+            }
+            
+            // Initialize cookie status
+            updateCookieStatus();
+            
+            // Show cookie banner if consent not set
+            setTimeout(() => {
+                showCookieBanner();
+            }, 1000);
+            
+            // Add switch toggle styling
+            const style = document.createElement('style');
+            style.textContent = `
+                .switch {
+                    position: relative;
+                    display: inline-block;
+                    width: 60px;
+                    height: 34px;
+                }
+                
+                .switch input {
+                    opacity: 0;
+                    width: 0;
+                    height: 0;
+                }
+                
+                .slider {
+                    position: absolute;
+                    cursor: pointer;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background-color: #475569;
+                    transition: .4s;
+                    border-radius: 34px;
+                }
+                
+                .slider:before {
+                    position: absolute;
+                    content: "";
+                    height: 26px;
+                    width: 26px;
+                    left: 4px;
+                    bottom: 4px;
+                    background-color: white;
+                    transition: .4s;
+                    border-radius: 50%;
+                }
+                
+                input:checked + .slider {
+                    background-color: #f97316;
+                }
+                
+                input:checked + .slider:before {
+                    transform: translateX(26px);
+                }
+                
+                input:disabled + .slider {
+                    background-color: #334155;
+                    cursor: not-allowed;
+                }
+                
+                .modal {
+                    animation: fadeIn 0.3s ease;
+                }
+                
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Close modal when clicking outside
+            document.getElementById('cookieSettings').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeCookieSettings();
+                }
+            });
+            
+            // Add keyboard support for modal
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && document.getElementById('cookieSettings').style.display === 'flex') {
+                    closeCookieSettings();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
