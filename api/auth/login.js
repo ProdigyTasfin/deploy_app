@@ -1,105 +1,248 @@
-// api/login.js
+// api/auth/login.js - ENHANCED VERSION
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { createClient } = require('@supabase/supabase-js');
+
+// Supabase configuration
+const supabase = createClient(
+  'https://kohswrhxjvfygzrldyyk.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtvaHN3cmh4anZmeWd6cmxkeXlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwMzUzODgsImV4cCI6MjA4NTYxMTM4OH0.rK-SYCs-uC63581jLtuTDdYklsiL7vKtdCO7TuIdKII'
+);
+
+// Rate limiting store (simple in-memory)
+const loginAttempts = new Map();
+const MAX_ATTEMPTS = 5;
+const LOCK_TIME = 15 * 60 * 1000; // 15 minutes
 
 module.exports = async function handler(req, res) {
-  // Set CORS headers
+  // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   
-  // Handle preflight
   if (req.method === 'OPTIONS') {
-    console.log('🔧 Handling OPTIONS preflight request');
     return res.status(200).end();
   }
   
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ success: false, error: 'Method not allowed' });
   }
   
   try {
-    console.log('📥 Login API called');
+    const { email, password, role } = req.body;
     
-    // Get request body
-    const { email, password, role = 'customer' } = req.body;
+    console.log('📥 Login attempt:', email);
     
-    console.log('📧 Login attempt for:', email, 'Role:', role);
-    
-    if (!email || !password) {
+    if (!email || !password || !role) {
       return res.status(400).json({ 
         success: false, 
-        error: 'Email and password are required' 
+        error: 'Email, password, and role are required' 
       });
     }
     
-    // Default users (for demo)
-    const defaultUsers = [
+    // ================= RATE LIMITING =================
+    const clientIp = req.ip || req.connection.remoteAddress;
+    const now = Date.now();
+    
+    if (loginAttempts.has(clientIp)) {
+      const attempts = loginAttempts.get(clientIp);
+      if (attempts.count >= MAX_ATTEMPTS && (now - attempts.firstAttempt) < LOCK_TIME) {
+        return res.status(429).json({
+          success: false,
+          error: 'Too many login attempts. Try again in 15 minutes.'
+        });
+      }
+    }
+    
+    // ================= CHECK HARDCODED USERS FIRST =================
+    const hardcodedUsers = [
       {
-        id: 'ADMIN_001',
         email: 'admin@nibash.com',
         password: 'admin123',
-        fullName: 'System Admin',
-        role: 'admin',
-        accountType: 'admin',
-        status: 'active'
+        userData: {
+          id: 'ADMIN_001',
+          email: 'admin@nibash.com',
+          full_name: 'System Admin',
+          role: 'admin',
+          account_type: 'admin',
+          status: 'active'
+        }
       },
       {
-        id: 'CUSTOMER_001',
         email: 'customer@example.com',
         password: 'customer123',
-        fullName: 'Demo Customer',
-        role: 'customer',
-        accountType: 'customer',
-        status: 'active'
+        userData: {
+          id: 'CUSTOMER_001',
+          email: 'customer@example.com',
+          full_name: 'Demo Customer',
+          role: 'customer',
+          account_type: 'customer',
+          status: 'active'
+        }
       },
       {
-        id: 'PROFESSIONAL_001',
         email: 'professional@example.com',
         password: 'professional123',
-        fullName: 'Demo Professional',
-        role: 'professional',
-        accountType: 'professional',
-        status: 'approved'
+        userData: {
+          id: 'PROFESSIONAL_001',
+          email: 'professional@example.com',
+          full_name: 'Demo Professional',
+          role: 'professional',
+          account_type: 'professional',
+          status: 'approved'
+        }
+      },
+      {
+        email: 'tasfinhasansakib165@gmail.com',
+        password: 'test123',
+        userData: {
+          id: 'USER_001',
+          email: 'tasfinhasansakib165@gmail.com',
+          full_name: 'Tasfin Hasan Sakib',
+          role: 'customer',
+          account_type: 'customer',
+          status: 'active'
+        }
       }
     ];
     
-    // Find user
-    const user = defaultUsers.find(u => 
-      u.email.toLowerCase() === email.toLowerCase() && 
+    // Check hardcoded users
+    const hardcodedUser = hardcodedUsers.find(u => 
+      u.email === email && 
       u.password === password
     );
     
-    if (user) {
-      // Check role if specified
-      if (role && user.role !== role) {
+    if (hardcodedUser) {
+      // Check role match
+      if (role && hardcodedUser.userData.role !== role) {
+        if (!loginAttempts.has(clientIp)) {
+          loginAttempts.set(clientIp, { count: 1, firstAttempt: now });
+        } else {
+          loginAttempts.get(clientIp).count += 1;
+        }
         return res.status(401).json({ 
           success: false, 
-          error: `Invalid login for ${role} account` 
+          error: 'Invalid credentials for this role' 
         });
       }
       
-      // Generate token
-      const token = 'jwt_' + Date.now() + '_' + Math.random().toString(36).substr(2);
+      // Generate JWT token
+      const token = jwt.sign(
+        {
+          id: hardcodedUser.userData.id,
+          email: hardcodedUser.userData.email,
+          role: hardcodedUser.userData.role,
+          name: hardcodedUser.userData.full_name
+        },
+        process.env.JWT_SECRET || 'nibash-secret-key-2024',
+        { expiresIn: '24h' }
+      );
       
-      console.log('✅ Login successful for:', user.email);
+      // Reset attempts on success
+      loginAttempts.delete(clientIp);
       
       return res.json({
         success: true,
-        user: {
+        user: hardcodedUser.userData,
+        token: token,
+        redirectTo: getDashboardUrl(hardcodedUser.userData.role)
+      });
+    }
+    
+    // ================= CHECK SUPABASE =================
+    try {
+      const { data: users, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('email', email)
+        .eq('role', role)
+        .limit(1);
+      
+      if (error) throw error;
+      
+      if (!users || users.length === 0) {
+        // Track failed attempt
+        if (!loginAttempts.has(clientIp)) {
+          loginAttempts.set(clientIp, { count: 1, firstAttempt: now });
+        } else {
+          loginAttempts.get(clientIp).count += 1;
+        }
+        
+        // Delay response to prevent timing attacks
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        return res.status(401).json({ 
+          success: false, 
+          error: 'Invalid email or password' 
+        });
+      }
+      
+      const user = users[0];
+      
+      // Check password
+      let isValidPassword = false;
+      if (user.password && user.password.length > 30) {
+        // Likely hashed password
+        isValidPassword = await bcrypt.compare(password, user.password);
+      } else {
+        // Plain text password
+        isValidPassword = password === user.password;
+      }
+      
+      if (!isValidPassword) {
+        // Track failed attempt
+        if (!loginAttempts.has(clientIp)) {
+          loginAttempts.set(clientIp, { count: 1, firstAttempt: now });
+        } else {
+          loginAttempts.get(clientIp).count += 1;
+        }
+        return res.status(401).json({ 
+          success: false, 
+          error: 'Invalid email or password' 
+        });
+      }
+      
+      // Check account status
+      if (user.status !== 'active' && user.status !== 'approved') {
+        return res.status(403).json({
+          success: false,
+          error: `Account is ${user.status}. Please contact support.`
+        });
+      }
+      
+      // Generate JWT token
+      const token = jwt.sign(
+        {
           id: user.id,
           email: user.email,
-          fullName: user.fullName,
-          phone: user.phone || '',
-          address: user.address || '',
-          accountType: user.accountType,
           role: user.role,
-          status: user.status
+          name: user.full_name
         },
+        process.env.JWT_SECRET || 'nibash-secret-key-2024',
+        { expiresIn: '24h' }
+      );
+      
+      // Update last login
+      await supabase
+        .from('users')
+        .update({ last_login_at: new Date().toISOString() })
+        .eq('id', user.id);
+      
+      // Reset attempts on success
+      loginAttempts.delete(clientIp);
+      
+      // Remove password from response
+      const { password: _, ...userWithoutPassword } = user;
+      
+      return res.json({
+        success: true,
+        user: userWithoutPassword,
         token: token,
-        message: 'Login successful'
+        redirectTo: getDashboardUrl(user.role)
       });
-    } else {
-      console.log('❌ No user found');
+      
+    } catch (supabaseError) {
+      console.error('Supabase error:', supabaseError);
+      // Fallback to hardcoded users
       return res.status(401).json({ 
         success: false, 
         error: 'Invalid email or password' 
@@ -107,10 +250,22 @@ module.exports = async function handler(req, res) {
     }
     
   } catch (error) {
-    console.error('❌ Login error:', error);
+    console.error('Login error:', error);
     return res.status(500).json({ 
       success: false, 
       error: 'Internal server error' 
     });
   }
 };
+
+function getDashboardUrl(role) {
+  switch(role) {
+    case 'admin':
+      return '/admin.html';
+    case 'professional':
+      return '/professional.html';
+    case 'customer':
+    default:
+      return '/customer.html';
+  }
+}
