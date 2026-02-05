@@ -1268,65 +1268,17 @@
             return texts[status] || status;
         }
 
-        // Initialize dummy data if none exists
-        function initializeDummyData() {
-            if (!localStorage.getItem('user_services') || JSON.parse(localStorage.getItem('user_services')).length === 0) {
-                const dummyServices = [
-                    {
-                        id: 'SVC-1',
-                        type: '1',
-                        typeName: 'Electrical Issues',
-                        description: 'Bedroom lights not working properly',
-                        date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                        time: 'Morning 9-12',
-                        address: 'Dhanmondi, Dhaka',
-                        status: 'completed',
-                        amount: 1500,
-                        createdAt: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
-                        customerName: currentUser?.fullName || 'John Doe'
-                    },
-                    {
-                        id: 'SVC-2',
-                        type: '2',
-                        typeName: 'Plumbing Problems',
-                        description: 'Bathroom tap is leaking',
-                        date: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                        time: 'Afternoon 12-4',
-                        address: 'Dhanmondi, Dhaka',
-                        status: 'pending',
-                        amount: null,
-                        createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-                        customerName: currentUser?.fullName || 'John Doe'
-                    }
-                ];
-                localStorage.setItem('user_services', JSON.stringify(dummyServices));
+        function initializeStorage() {
+            if (!localStorage.getItem('user_services')) {
+                localStorage.setItem('user_services', JSON.stringify([]));
             }
-            
-            if (!localStorage.getItem('user_payments') || JSON.parse(localStorage.getItem('user_payments')).length === 0) {
-                const dummyPayments = [
-                    {
-                        id: 'PAY-1',
-                        serviceId: 'SVC-1',
-                        description: 'Payment for Electrical Issues',
-                        amount: 1500,
-                        status: 'completed',
-                        date: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString()
-                    },
-                    {
-                        id: 'PAY-2',
-                        serviceId: 'SVC-2',
-                        description: 'Payment for Plumbing Problems',
-                        amount: 1200,
-                        status: 'pending',
-                        date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
-                    }
-                ];
-                localStorage.setItem('user_payments', JSON.stringify(dummyPayments));
+
+            if (!localStorage.getItem('user_payments')) {
+                localStorage.setItem('user_payments', JSON.stringify([]));
             }
         }
 
-        // Call this function to initialize dummy data
-        initializeDummyData();
+        initializeStorage();
     </script>
 </body>
 </html>
