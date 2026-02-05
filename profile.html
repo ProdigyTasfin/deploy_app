@@ -58,7 +58,9 @@
         .button.secondary { border:1px solid var(--border); background: rgba(255,255,255,.08); }
         .button:hover { transform: translateY(-2px); }
         @keyframes in { from { opacity: 0; transform: translateY(14px);} to { opacity:1; transform: translateY(0);} }
-    </style>
+    
+        .glass-cursor-mini{position:fixed;width:26px;height:26px;border:1px solid rgba(167,139,250,.55);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);backdrop-filter:blur(3px);transition:transform .15s ease;}
+        .glass-cursor-dot-mini{position:fixed;width:6px;height:6px;background:#a78bfa;border-radius:50%;pointer-events:none;z-index:10000;transform:translate(-50%,-50%);}
 </head>
 <body>
     <section class="card">

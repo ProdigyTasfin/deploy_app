@@ -103,6 +103,7 @@
 
         /* Loading Overlay */
         .loading-overlay {
+            animation: loaderAutoHide 0.6s ease 1.6s forwards;
             position: fixed;
             top: 0;
             left: 0;
@@ -120,6 +121,15 @@
         .loading-overlay.hidden {
             opacity: 0;
             visibility: hidden;
+            pointer-events: none;
+        }
+
+        @keyframes loaderAutoHide {
+            to {
+                opacity: 0;
+                visibility: hidden;
+                pointer-events: none;
+            }
         }
 
         .loader {
@@ -851,6 +861,24 @@
         </div>
     </div>
 
+    <script>
+        // Emergency loader fallback (prevents permanent block)
+        (function forceHideLoader(){
+            const hide = () => {
+                const overlay = document.getElementById('loadingOverlay');
+                if (!overlay) return;
+                overlay.classList.add('hidden');
+                overlay.style.opacity = '0';
+                overlay.style.visibility = 'hidden';
+                overlay.style.pointerEvents = 'none';
+                overlay.style.display = 'none';
+            };
+            setTimeout(hide, 2500);
+            window.addEventListener('error', hide);
+            window.addEventListener('load', hide);
+        })();
+    </script>
+
     <!-- Theme Toggle -->
     <button class="theme-toggle" id="themeToggle">
         <i class="fas fa-moon"></i>
@@ -870,7 +898,6 @@
                     <li><a href="#services" class="nav-link">সেবাসমূহ</a></li>
                     <li><a href="#how-it-works" class="nav-link">কিভাবে কাজ করে</a></li>
                     <li><a href="about-us.html" class="nav-link">আমাদের সম্পর্কে</a></li>
-                    <li><a href="#about" class="nav-link">আমাদের সম্পর্কে</a></li>
                     <li><a href="#contact" class="nav-link">যোগাযোগ</a></li>
                 </ul>
             </nav>
@@ -964,7 +991,6 @@
         <!-- Testimonials -->
         <section class="testimonials">
             <h2 class="section-title" style="color: var(--text-color);">সেবা নিশ্চয়তা ও অঙ্গীকার</h2>
-            <h2 class="section-title" style="color: var(--text-color);">গ্রাহকদের মতামত</h2>
             <div class="testimonial-grid" id="testimonialsGrid">
                 <!-- Testimonials will be loaded dynamically -->
             </div>
@@ -1013,8 +1039,6 @@
                     <li><a href="about-us.html">আমাদের সম্পর্কে</a></li>
                     <li><a href="privacy-policy.html">গোপনীয়তা নীতি</a></li>
                     <li><a href="terms-of-service.html">সেবার শর্তাবলী</a></li>
-                    <li><a href="#">গোপনীয়তা নীতি</a></li>
-                    <li><a href="#">সেবার শর্তাবলী</a></li>
                     <li><a href="#contact">যোগাযোগ</a></li>
                 </ul>
             </div>
@@ -1082,23 +1106,31 @@
         <script>
         // Initialize application - FIXED VERSION
         document.addEventListener('DOMContentLoaded', function() {
-            // Show loading overlay for 1.5 seconds only
             setTimeout(() => {
-                document.getElementById('loadingOverlay').classList.add('hidden');
-                
-                // Initialize everything else immediately
-                setupTheme();
-                setupGlassCursor();
-                checkLoginStatus();
-                loadServices();
-                loadTestimonials();
-                setupNavigation();
-                setupScrollAnimations();
-                
-                // Remove cursor none to prevent issues
-                document.body.style.cursor = 'auto';
-                
-            }, 1500); // Reduced from 2000ms to 1500ms
+                const overlay = document.getElementById('loadingOverlay');
+                if (overlay) {
+                    overlay.classList.add('hidden');
+                    overlay.style.display = 'none';
+                }
+
+                try {
+                    setupTheme();
+                    setupGlassCursor();
+                    checkLoginStatus();
+                    loadServices();
+                    loadTestimonials();
+                    setupNavigation();
+                    setupScrollAnimations();
+                    document.body.style.cursor = 'auto';
+                } catch (err) {
+                    console.error('Init error:', err);
+                }
+            }, 600);
+        });
+
+        window.addEventListener('load', function() {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) overlay.classList.add('hidden');
         });
 
         // Glass Cursor Setup - OPTIMIZED
@@ -1444,16 +1476,6 @@
                     </div>
                     <h3 style="margin-bottom:.6rem;">${item.title}</h3>
                     <p style="line-height:1.6;">${item.text}</p>
-            testimonialsGrid.innerHTML = testimonials.map(testimonial => `
-                <div class="testimonial-card">
-                    <div style="margin-bottom: 1rem;">
-                        ${'★'.repeat(testimonial.rating)}${'☆'.repeat(5 - testimonial.rating)}
-                    </div>
-                    <p style="font-style: italic; margin-bottom: 1rem;">"${testimonial.text}"</p>
-                    <div>
-                        <strong>${testimonial.name}</strong>
-                        <div style="color: var(--gray); font-size: 0.9rem;">${testimonial.location}</div>
-                    </div>
                 </div>
             `).join('');
         }
@@ -1471,9 +1493,6 @@
 
                     e.preventDefault();
                     const targetId = href.substring(1);
-                    e.preventDefault();
-                    
-                    const targetId = this.getAttribute('href').substring(1);
                     const targetSection = document.getElementById(targetId);
                     
                     if (targetSection) {
