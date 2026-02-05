@@ -870,6 +870,7 @@
                     <li><a href="#services" class="nav-link">সেবাসমূহ</a></li>
                     <li><a href="#how-it-works" class="nav-link">কিভাবে কাজ করে</a></li>
                     <li><a href="about-us.html" class="nav-link">আমাদের সম্পর্কে</a></li>
+                    <li><a href="#about" class="nav-link">আমাদের সম্পর্কে</a></li>
                     <li><a href="#contact" class="nav-link">যোগাযোগ</a></li>
                 </ul>
             </nav>
@@ -963,6 +964,7 @@
         <!-- Testimonials -->
         <section class="testimonials">
             <h2 class="section-title" style="color: var(--text-color);">সেবা নিশ্চয়তা ও অঙ্গীকার</h2>
+            <h2 class="section-title" style="color: var(--text-color);">গ্রাহকদের মতামত</h2>
             <div class="testimonial-grid" id="testimonialsGrid">
                 <!-- Testimonials will be loaded dynamically -->
             </div>
@@ -1011,6 +1013,8 @@
                     <li><a href="about-us.html">আমাদের সম্পর্কে</a></li>
                     <li><a href="privacy-policy.html">গোপনীয়তা নীতি</a></li>
                     <li><a href="terms-of-service.html">সেবার শর্তাবলী</a></li>
+                    <li><a href="#">গোপনীয়তা নীতি</a></li>
+                    <li><a href="#">সেবার শর্তাবলী</a></li>
                     <li><a href="#contact">যোগাযোগ</a></li>
                 </ul>
             </div>
@@ -1440,6 +1444,16 @@
                     </div>
                     <h3 style="margin-bottom:.6rem;">${item.title}</h3>
                     <p style="line-height:1.6;">${item.text}</p>
+            testimonialsGrid.innerHTML = testimonials.map(testimonial => `
+                <div class="testimonial-card">
+                    <div style="margin-bottom: 1rem;">
+                        ${'★'.repeat(testimonial.rating)}${'☆'.repeat(5 - testimonial.rating)}
+                    </div>
+                    <p style="font-style: italic; margin-bottom: 1rem;">"${testimonial.text}"</p>
+                    <div>
+                        <strong>${testimonial.name}</strong>
+                        <div style="color: var(--gray); font-size: 0.9rem;">${testimonial.location}</div>
+                    </div>
                 </div>
             `).join('');
         }
@@ -1457,6 +1471,9 @@
 
                     e.preventDefault();
                     const targetId = href.substring(1);
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href').substring(1);
                     const targetSection = document.getElementById(targetId);
                     
                     if (targetSection) {
