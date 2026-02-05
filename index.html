@@ -838,7 +838,6 @@
             box-shadow: 0 16px 35px rgba(86, 41, 190, 0.18);
             border-color: rgba(167, 139, 250, 0.5);
         }
-
     </style>
 </head>
 <body class="dark-mode">
@@ -973,20 +972,20 @@
             </div>
         </section>
 
-       <!-- Services -->
-<section id="services" style="padding: 0 5% 4rem;">
-    <div class="section-header">
-        <h2 class="section-title">আমাদের সেবাসমূহ</h2>
-        <p class="section-subtitle">গৃহস্থালির সকল সমস্যার একমাত্র সমাধান</p>
-        <p class="section-description">
-            বৈদ্যুতিক, প্লাম্বিং, রং করার কাজ থেকে শুরু করে সকল গৃহস্থালি মেরামতের জন্য দক্ষ পেশাদারদের সাথে সংযুক্ত হোন। 
-            নির্ভরযোগ্য সেবা, সাশ্রয়ী মূল্য, সময়মতো সমাধান।
-        </p>
-    </div>
-    <div class="services-grid" id="servicesGrid">
-        <!-- Services will be loaded dynamically -->
-    </div>
-</section>
+        <!-- Services -->
+        <section id="services" style="padding: 0 5% 4rem;">
+            <div class="section-header">
+                <h2 class="section-title">আমাদের সেবাসমূহ</h2>
+                <p class="section-subtitle">গৃহস্থালির সকল সমস্যার একমাত্র সমাধান</p>
+                <p class="section-description">
+                    বৈদ্যুতিক, প্লাম্বিং, রং করার কাজ থেকে শুরু করে সকল গৃহস্থালি মেরামতের জন্য দক্ষ পেশাদারদের সাথে সংযুক্ত হোন। 
+                    নির্ভরযোগ্য সেবা, সাশ্রয়ী মূল্য, সময়মতো সমাধান।
+                </p>
+            </div>
+            <div class="services-grid" id="servicesGrid">
+                <!-- Services will be loaded dynamically -->
+            </div>
+        </section>
 
         <!-- Testimonials -->
         <section class="testimonials">
@@ -1103,7 +1102,7 @@
         <span id="notificationText"></span>
     </div>
 
-        <script>
+    <script>
         // Initialize application - FIXED VERSION
         document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => {
@@ -1259,60 +1258,60 @@
 
         // Update authentication UI with ADMIN PANEL LINK
         function updateAuthUI(user) {
-    const authSection = document.getElementById('authSection');
-    const userInitial = user.fullName ? user.fullName.charAt(0).toUpperCase() : 'U';
-    
-    // Check if user is admin
-    const isAdmin = user.email === 'admin@nibash.com' || user.role === 'admin';
-    
-    authSection.innerHTML = `
-        <div class="user-menu">
-            <div class="user-avatar" onclick="toggleDropdown()">
-                ${userInitial}
-            </div>
-            <div class="dropdown" id="userDropdown">
-                <div style="padding: 0.5rem 1rem; border-bottom: 1px solid var(--border-color);">
-                    <strong>${user.fullName || 'User'}</strong>
-                    <div style="font-size: 0.8rem; color: var(--gray);">${user.email || ''}</div>
-                    ${isAdmin ? '<div style="font-size: 0.8rem; color: var(--primary);"><i class="fas fa-user-shield"></i> সিস্টেম এডমিন</div>' : ''}
+            const authSection = document.getElementById('authSection');
+            const userInitial = user.fullName ? user.fullName.charAt(0).toUpperCase() : 'U';
+            
+            // Check if user is admin
+            const isAdmin = user.email === 'admin@nibash.com' || user.role === 'admin';
+            
+            authSection.innerHTML = `
+                <div class="user-menu">
+                    <div class="user-avatar" onclick="toggleDropdown()">
+                        ${userInitial}
+                    </div>
+                    <div class="dropdown" id="userDropdown">
+                        <div style="padding: 0.5rem 1rem; border-bottom: 1px solid var(--border-color);">
+                            <strong>${user.fullName || 'User'}</strong>
+                            <div style="font-size: 0.8rem; color: var(--gray);">${user.email || ''}</div>
+                            ${isAdmin ? '<div style="font-size: 0.8rem; color: var(--primary);"><i class="fas fa-user-shield"></i> সিস্টেম এডমিন</div>' : ''}
+                        </div>
+                        
+                        <!-- Dashboard based on role -->
+                        ${user.role === 'professional' ? 
+                            `<a href="professional.html" class="dropdown-item">
+                                <i class="fas fa-tachometer-alt"></i> ড্যাশবোর্ড
+                            </a>` : 
+                            `<a href="customer.html" class="dropdown-item">
+                                <i class="fas fa-tachometer-alt"></i> ড্যাশবোর্ড
+                            </a>`
+                        }
+                        
+                        <!-- Only show admin panel link for admins -->
+                        ${isAdmin ? 
+                            `<a href="admin.html" class="dropdown-item" style="color: var(--primary); font-weight: 600; background: rgba(86, 41, 190, 0.1);">
+                                <i class="fas fa-user-shield"></i> এডমিন ড্যাশবোর্ড
+                            </a>` : ''
+                        }
+                        
+                        <a href="payment.html" class="dropdown-item">
+                            <i class="fas fa-history"></i> পেমেন্ট ইতিহাস
+                        </a>
+                        <a href="profile.html" class="dropdown-item">
+                            <i class="fas fa-user-cog"></i> প্রোফাইল
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> লগআউট
+                        </a>
+                    </div>
                 </div>
-                
-                <!-- Dashboard based on role -->
-                ${user.role === 'professional' ? 
-                    `<a href="professional.html" class="dropdown-item">
-                        <i class="fas fa-tachometer-alt"></i> ড্যাশবোর্ড
-                    </a>` : 
-                    `<a href="customer.html" class="dropdown-item">
-                        <i class="fas fa-tachometer-alt"></i> ড্যাশবোর্ড
-                    </a>`
-                }
-                
-                <!-- Only show admin panel link for admins -->
-                ${isAdmin ? 
-                    `<a href="admin.html" class="dropdown-item" style="color: var(--primary); font-weight: 600; background: rgba(86, 41, 190, 0.1);">
-                        <i class="fas fa-user-shield"></i> এডমিন ড্যাশবোর্ড
-                    </a>` : ''
-                }
-                
-                <a href="payment.html" class="dropdown-item">
-                    <i class="fas fa-history"></i> পেমেন্ট ইতিহাস
-                </a>
-                <a href="profile.html" class="dropdown-item">
-                    <i class="fas fa-user-cog"></i> প্রোফাইল
-                </a>
-                <a href="#" class="dropdown-item" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i> লগআউট
-                </a>
-            </div>
-        </div>
-    `;
-}
+            `;
+        }
 
         function showAuthButtons() {
             const authSection = document.getElementById('authSection');
             authSection.innerHTML = `
                 <div class="btn" style="display: flex; gap: 0.5rem;">
-                     <a onclick="window.location.href='login.html'">
+                    <a href="login.html" style="text-decoration: none; color: var(--text-color); padding: 0.5rem 1rem; border-radius: 8px; background: var(--hover-bg);">
                         লগইন করুন
                     </a>
                     <button class="btn btn-primary" onclick="window.location.href='customer-signup.html'">
@@ -1655,14 +1654,5 @@
             }
         }
     </script>
-    
-</script>
 </body>
 </html>
-
-
-
-
-
-
-
