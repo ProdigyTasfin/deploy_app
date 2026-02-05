@@ -393,6 +393,20 @@
                 grid-template-columns: 1fr;
             }
         }
+    
+        /* Global glass hover enhancement */
+        body, button, input, select, textarea {
+            font-family: 'Hind Siliguri', 'Kalpurush', system-ui, sans-serif;
+        }
+        .card, .stat-card, .service-card, .signup-card, .login-card, .feature-card, .section {
+            transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+        }
+        .card:hover, .stat-card:hover, .service-card:hover, .signup-card:hover, .login-card:hover, .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 35px rgba(86, 41, 190, 0.18);
+            border-color: rgba(167, 139, 250, 0.5);
+        }
+
     </style>
 </head>
 <body class="dark-mode">

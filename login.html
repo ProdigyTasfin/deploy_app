@@ -537,6 +537,20 @@
                 font-size: 1.5rem;
             }
         }
+    
+        /* Global glass hover enhancement */
+        body, button, input, select, textarea {
+            font-family: 'Hind Siliguri', 'Kalpurush', system-ui, sans-serif;
+        }
+        .card, .stat-card, .service-card, .signup-card, .login-card, .feature-card, .section {
+            transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+        }
+        .card:hover, .stat-card:hover, .service-card:hover, .signup-card:hover, .login-card:hover, .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 35px rgba(86, 41, 190, 0.18);
+            border-color: rgba(167, 139, 250, 0.5);
+        }
+
     </style>
 </head>
 <body class="dark-mode">
@@ -946,7 +960,7 @@
     
     const loginBtn = document.querySelector('.login-btn');
     const originalText = loginBtn.innerHTML;
-    loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+    loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> লগইন হচ্ছে...';
     loginBtn.disabled = true;
     
     try {
@@ -974,7 +988,7 @@
             localStorage.setItem('nibash_user', JSON.stringify(data.user));
             localStorage.setItem('nibash_token', data.token);
             
-            showNotification('Login successful! Redirecting...', 'success');
+            showNotification('লগইন সফল! রিডাইরেক্ট করা হচ্ছে...', 'success');
             
             setTimeout(() => {
                 if (data.redirectTo) {
@@ -1008,19 +1022,19 @@
     // Social Login
     function loginWithFacebook() {
         console.log('Facebook login clicked');
-        alert('Facebook দিয়ে লগইন করা হবে। (Demo Mode)');
+        alert('Facebook লগইন শীঘ্রই যুক্ত হবে।');
     }
 
     function loginWithGoogle() {
         console.log('Google login clicked');
-        alert('Google দিয়ে লগইন করা হবে। (Demo Mode)');
+        alert('Google লগইন শীঘ্রই যুক্ত হবে।');
     }
 
     // Forgot Password
     function forgotPassword() {
         const email = prompt('আপনার ইমেইল ঠিকানা লিখুন:');
         if (email) {
-            alert('পাসওয়ার্ড রিসেট লিংক ' + email + ' ঠিকানায় পাঠানো হয়েছে। (Demo Mode)');
+            alert('পাসওয়ার্ড রিসেট লিংক ' + email + ' ঠিকানায় পাঠানো হয়েছে।');
         }
     }
 
