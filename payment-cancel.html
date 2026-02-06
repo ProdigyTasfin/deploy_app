@@ -222,6 +222,30 @@
             margin-bottom: 25px;
         }
         
+        .amount-display {
+            background: var(--warning-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
+            text-align: center;
+            border: 2px solid var(--warning-border);
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--warning-text);
+            animation: amountPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes amountPulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 5px 15px rgba(245, 158, 11, 0.1);
+            }
+            50% {
+                transform: scale(1.02);
+                box-shadow: 0 8px 25px rgba(245, 158, 11, 0.2);
+            }
+        }
+        
         .info-box {
             background: var(--warning-bg);
             border-radius: 12px;
@@ -247,6 +271,7 @@
             margin-right: 10px;
             flex-shrink: 0;
             margin-top: 2px;
+            font-size: 16px;
         }
         
         .info-text {
@@ -298,7 +323,7 @@
         
         /* Pulse Animation */
         .cancelled-card {
-            animation: pulse 2s infinite 4.5s;
+            animation: pulse 2s infinite 4.5s, cardPopIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.3s forwards;
         }
         
         @keyframes pulse {
@@ -314,6 +339,20 @@
             }
         }
         
+        .professional-info {
+            background: var(--warning-bg);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid var(--warning-primary);
+            text-align: left;
+        }
+        
+        .professional-info h3 {
+            margin-bottom: 8px;
+            color: var(--warning-text);
+        }
+        
         @media (max-width: 480px) {
             .cancelled-card {
                 padding: 30px 20px;
@@ -326,6 +365,16 @@
             h1 {
                 font-size: 1.8rem;
             }
+            
+            .amount-display {
+                font-size: 1.2rem;
+                padding: 15px;
+            }
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -347,6 +396,17 @@
             <div class="content">
                 <h1>পেমেন্ট বাতিল হয়েছে</h1>
                 <div class="subtitle">আপনি পেমেন্ট প্রক্রিয়া বন্ধ করেছেন</div>
+                
+                <!-- Amount Display -->
+                <div id="amountDisplay" class="amount-display">
+                    লোড হচ্ছে...
+                </div>
+                
+                <!-- Professional Info -->
+                <div id="professionalInfo" class="professional-info" style="display: none;">
+                    <h3 id="professionalName">পেশাদার: লোড হচ্ছে...</h3>
+                    <p id="serviceDetails">সেবা বিবরণ: লোড হচ্ছে...</p>
+                </div>
                 
                 <div class="info-box">
                     <div class="info-item">
@@ -371,61 +431,144 @@
         </div>
     </div>
 
-    <audio id="cancelSound" preload="auto">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3" type="audio/mpeg">
-    </audio>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Play cancel sound with perfect timing
+            // Force animations to restart
+            const card = document.querySelector('.cancelled-card');
+            card.style.animation = 'none';
             setTimeout(() => {
-                const cancelSound = document.getElementById('cancelSound');
+                card.style.animation = '';
+            }, 10);
+            
+            // Get payment data from multiple sources
+            const urlParams = new URLSearchParams(window.location.search);
+            let amount = urlParams.get('amount');
+            let professionalId = urlParams.get('professional');
+            let professionalName = urlParams.get('name');
+            let serviceDetails = urlParams.get('service');
+            
+            // Try localStorage if URL params not available
+            if (!amount) {
+                amount = localStorage.getItem('paymentAmount');
+            }
+            if (!professionalId) {
+                professionalId = localStorage.getItem('selectedProfessional');
+            }
+            if (!professionalName) {
+                professionalName = localStorage.getItem('selectedProfessionalName');
+            }
+            if (!serviceDetails) {
+                serviceDetails = localStorage.getItem('selectedServiceDetails');
+            }
+            
+            // Display amount
+            if (amount) {
+                const amountDisplay = document.getElementById('amountDisplay');
+                amountDisplay.innerHTML = `
+                    <div style="margin-bottom: 5px; font-size: 0.9rem; color: #666;">বাতিলকৃত পেমেন্ট</div>
+                    <div style="font-size: 2rem;">৳${parseInt(amount).toLocaleString('bn-BD')}</div>
+                `;
+                
+                // Store for retry
+                localStorage.setItem('paymentAmount', amount);
+            }
+            
+            // Display professional info if available
+            if (professionalName || professionalId) {
+                const professionalInfo = document.getElementById('professionalInfo');
+                professionalInfo.style.display = 'block';
+                
+                if (professionalName) {
+                    document.getElementById('professionalName').textContent = `পেশাদার: ${professionalName}`;
+                }
+                
+                if (serviceDetails) {
+                    document.getElementById('serviceDetails').textContent = `সেবা: ${serviceDetails}`;
+                } else if (professionalId) {
+                    document.getElementById('serviceDetails').textContent = `সেবা আইডি: ${professionalId}`;
+                }
+                
+                // Store for retry
+                localStorage.setItem('selectedProfessional', professionalId);
+                localStorage.setItem('selectedProfessionalName', professionalName);
+                if (serviceDetails) {
+                    localStorage.setItem('selectedServiceDetails', serviceDetails);
+                }
+            }
+            
+            // Play cancel sound with improved timing
+            setTimeout(() => {
+                const cancelSound = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3');
                 cancelSound.volume = 0.3;
-                cancelSound.play().catch(e => console.log("Audio play failed:", e));
+                
+                // Try to play immediately
+                cancelSound.play().catch(error => {
+                    console.log("Audio autoplay blocked, will play on interaction");
+                    
+                    // Play on user interaction
+                    document.addEventListener('click', function playOnInteraction() {
+                        cancelSound.play().then(() => {
+                            document.removeEventListener('click', playOnInteraction);
+                        }).catch(e => console.log("Still can't play audio"));
+                    }, { once: true });
+                });
             }, 1800);
             
-            // Get amount from localStorage if exists
-            const amount = localStorage.getItem('paymentAmount');
-            if (amount) {
-                const subtitle = document.querySelector('.subtitle');
-                subtitle.innerHTML += `<br><strong>পরিমাণ: ৳${parseInt(amount).toLocaleString('bn-BD')}</strong>`;
-            }
+            // Add visual feedback for amount
+            setTimeout(() => {
+                const amountDisplay = document.getElementById('amountDisplay');
+                amountDisplay.style.animation = 'amountPulse 2s ease-in-out infinite';
+            }, 4000);
         });
         
         function retryPayment() {
             const btn = document.getElementById('retryBtn');
             const originalText = btn.textContent;
             
+            // Show loading state
             btn.innerHTML = `
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle;">
-                    <path d="M1 4v6h6M23 20v-6h-6" style="animation: rotate 1s linear infinite;"></path>
-                    <path d="M20.49 9a9 9 0 01-14.85-3.36L1 10M23 14l-4.64 4.36A9 9 0 013.51 15" style="animation: rotate 1s linear infinite reverse;"></path>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; animation: rotate 1s linear infinite;">
+                    <path d="M1 4v6h6M23 20v-6h-6"></path>
+                    <path d="M20.49 9a9 9 0 01-14.85-3.36L1 10M23 14l-4.64 4.36A9 9 0 013.51 15"></path>
                 </svg>
                 প্রক্রিয়াকরণ হচ্ছে...
             `;
             btn.disabled = true;
             
+            // Get saved data
+            const amount = localStorage.getItem('paymentAmount');
+            const professionalId = localStorage.getItem('selectedProfessional');
+            const professionalName = localStorage.getItem('selectedProfessionalName');
+            
             // Simulate processing delay
             setTimeout(() => {
-                // Get the original payment URL with amount
-                const amount = localStorage.getItem('paymentAmount');
-                const serviceId = localStorage.getItem('selectedService');
-                
-                if (amount && serviceId) {
-                    // Redirect back to payment with same amount
-                    window.location.href = `payment.html?amount=${amount}&service=${serviceId}`;
+                if (amount && professionalId) {
+                    // Redirect back to payment with all parameters
+                    let paymentUrl = `payment.html?amount=${amount}&professional=${professionalId}`;
+                    if (professionalName) {
+                        paymentUrl += `&name=${encodeURIComponent(professionalName)}`;
+                    }
+                    window.location.href = paymentUrl;
                 } else {
-                    window.location.href = 'payment.html';
+                    // Fallback to professional selection
+                    window.location.href = 'professional.html';
                 }
             }, 1500);
         }
+        
+        // Handle browser back button
+        window.onpopstate = function(event) {
+            // Prevent going back to SSLCommerz
+            if (window.location.pathname.includes('payment-cancel')) {
+                // Redirect to dashboard if they try to go back again
+                setTimeout(() => {
+                    window.location.href = 'customer.html';
+                }, 100);
+            }
+        };
+        
+        // Push state to prevent back button issues
+        history.pushState(null, null, window.location.href);
     </script>
-    
-    <style>
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-    </style>
 </body>
 </html>
