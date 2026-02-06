@@ -21,6 +21,10 @@
             --dark-card: #1e293b;
             --dark-text: #f1f5f9;
             --dark-border: #1b2430;
+            --light-bg: #f8fafc;
+            --light-card: #ffffff;
+            --light-text: #1e293b;
+            --light-border: #e2e8f0;
             --success: #10b981;
             --warning: #f59e0b;
             --danger: #ef4444;
@@ -39,7 +43,12 @@
             color: var(--dark-text);
             font-family: 'Hind Siliguri', 'Kalpurush', system-ui, sans-serif;
             min-height: 100vh;
-            cursor: none;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        body.light-mode {
+            background: var(--light-bg);
+            color: var(--light-text);
         }
         
         .wrap {
@@ -52,6 +61,42 @@
             backdrop-filter: blur(10px);
             position: relative;
             z-index: 1;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        
+        body.light-mode .wrap {
+            background: var(--light-card);
+            border: 1px solid var(--light-border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(86, 41, 190, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .theme-toggle:hover {
+            transform: rotate(30deg);
+            box-shadow: 0 6px 16px rgba(86, 41, 190, 0.4);
+        }
+        
+        body.light-mode .theme-toggle {
+            background: var(--secondary);
         }
         
         h1 {
@@ -62,6 +107,7 @@
             padding-bottom: 15px;
             margin-bottom: 30px;
             position: relative;
+            transition: color 0.3s ease;
         }
         
         h1:after {
@@ -80,12 +126,22 @@
             font-size: 1.8rem;
             padding-left: 15px;
             border-left: 4px solid var(--data-color);
+            transition: color 0.3s ease;
+        }
+        
+        body.light-mode h2 {
+            color: #0e7490;
         }
         
         h3 {
             margin-top: 25px;
             color: #93c5fd;
             font-size: 1.4rem;
+            transition: color 0.3s ease;
+        }
+        
+        body.light-mode h3 {
+            color: #1d4ed8;
         }
         
         p, li {
@@ -116,6 +172,10 @@
             transition: all 0.3s ease;
         }
         
+        body.light-mode a {
+            color: #2563eb;
+        }
+        
         a:hover {
             color: var(--primary-light);
             text-decoration: underline;
@@ -138,10 +198,20 @@
             overflow: hidden;
         }
         
+        body.light-mode .right-card {
+            background: rgba(6, 182, 212, 0.05);
+            border: 1px solid rgba(6, 182, 212, 0.1);
+        }
+        
         .right-card:hover {
             transform: translateY(-5px);
             background: rgba(255, 255, 255, 0.08);
             box-shadow: 0 10px 25px rgba(6, 182, 212, 0.2);
+        }
+        
+        body.light-mode .right-card:hover {
+            background: rgba(6, 182, 212, 0.1);
+            box-shadow: 0 10px 25px rgba(6, 182, 212, 0.15);
         }
         
         .right-icon {
@@ -160,6 +230,11 @@
             border-radius: 20px;
             font-size: 0.8rem;
             color: var(--data-color);
+            transition: background 0.3s ease;
+        }
+        
+        body.light-mode .right-badge {
+            background: rgba(6, 182, 212, 0.15);
         }
         
         .request-form {
@@ -168,6 +243,11 @@
             background: rgba(255, 255, 255, 0.03);
             border-radius: 12px;
             border: 2px solid var(--data-color);
+            transition: background 0.3s ease;
+        }
+        
+        body.light-mode .request-form {
+            background: rgba(6, 182, 212, 0.05);
         }
         
         .form-group {
@@ -179,6 +259,11 @@
             margin-bottom: 10px;
             font-weight: 600;
             color: #e2e8f0;
+            transition: color 0.3s ease;
+        }
+        
+        body.light-mode .form-label {
+            color: #1e293b;
         }
         
         .form-control {
@@ -193,11 +278,22 @@
             transition: all 0.3s ease;
         }
         
+        body.light-mode .form-control {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--light-border);
+            color: var(--light-text);
+        }
+        
         .form-control:focus {
             outline: none;
             border-color: var(--data-color);
             box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
             background: rgba(255, 255, 255, 0.08);
+        }
+        
+        body.light-mode .form-control:focus {
+            background: white;
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.2);
         }
         
         .radio-group {
@@ -219,9 +315,17 @@
             transition: all 0.3s ease;
         }
         
+        body.light-mode .radio-label {
+            background: rgba(6, 182, 212, 0.05);
+        }
+        
         .radio-label:hover {
             background: rgba(255, 255, 255, 0.08);
             border-color: var(--data-color);
+        }
+        
+        body.light-mode .radio-label:hover {
+            background: rgba(6, 182, 212, 0.1);
         }
         
         .radio-label input[type="radio"] {
@@ -283,6 +387,11 @@
             background: rgba(86, 41, 190, 0.1);
             border-radius: 12px;
             border: 1px solid var(--primary);
+            transition: background 0.3s ease;
+        }
+        
+        body.light-mode .process-timeline {
+            background: rgba(86, 41, 190, 0.05);
         }
         
         .timeline {
@@ -315,6 +424,11 @@
             background: var(--data-color);
             border-radius: 50%;
             border: 4px solid var(--dark-bg);
+            transition: border-color 0.3s ease;
+        }
+        
+        body.light-mode .timeline-marker {
+            border-color: var(--light-bg);
         }
         
         .timeline-content {
@@ -322,6 +436,11 @@
             padding: 20px;
             border-radius: 8px;
             border-left: 4px solid var(--data-color);
+            transition: background 0.3s ease;
+        }
+        
+        body.light-mode .timeline-content {
+            background: rgba(6, 182, 212, 0.05);
         }
         
         .status-indicator {
@@ -332,6 +451,12 @@
             font-weight: 600;
             margin-right: 10px;
             margin-bottom: 10px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .status-indicator:hover {
+            transform: translateY(-2px);
         }
         
         .status-pending {
@@ -364,6 +489,11 @@
             background: rgba(255, 255, 255, 0.03);
             border-radius: 12px;
             border: 2px dashed var(--data-color);
+            transition: background 0.3s ease;
+        }
+        
+        body.light-mode .data-preview {
+            background: rgba(6, 182, 212, 0.05);
         }
         
         .preview-data {
@@ -375,6 +505,11 @@
             white-space: pre-wrap;
             max-height: 300px;
             overflow-y: auto;
+            transition: background 0.3s ease;
+        }
+        
+        body.light-mode .preview-data {
+            background: rgba(0, 0, 0, 0.05);
         }
         
         .verification-process {
@@ -383,12 +518,22 @@
             background: rgba(249, 115, 22, 0.1);
             border-radius: 12px;
             border: 1px solid #f97316;
+            transition: background 0.3s ease;
+        }
+        
+        body.light-mode .verification-process {
+            background: rgba(249, 115, 22, 0.05);
         }
         
         .footer-nav {
             margin-top: 40px;
             padding-top: 25px;
             border-top: 1px solid rgba(255, 255, 255, .2);
+            transition: border-color 0.3s ease;
+        }
+        
+        body.light-mode .footer-nav {
+            border-top: 1px solid var(--light-border);
         }
         
         .footer-links {
@@ -427,74 +572,42 @@
             text-decoration: none;
         }
         
-        /* Data Flow Cursor Effects */
-        .cursor-container {
+        body.light-mode .back-home:hover {
+            background: var(--secondary);
+        }
+        
+        /* Modal Styles */
+        .modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
-            z-index: 9999;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
         }
         
-        .data-cursor {
-            position: fixed;
-            width: 24px;
-            height: 24px;
+        .modal-content {
+            background: var(--dark-card);
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
             border: 2px solid var(--data-color);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 10000;
-            transform: translate(-50%, -50%);
-            backdrop-filter: blur(4px);
-            background: rgba(6, 182, 212, 0.1);
-            transition: all 0.3s ease;
-            box-shadow: 0 0 15px var(--data-color);
-            mix-blend-mode: difference;
+            transition: background 0.3s ease;
         }
         
-        .cursor-dot {
-            position: fixed;
-            width: 6px;
-            height: 6px;
-            background: var(--data-color);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 10001;
-            transform: translate(-50%, -50%);
-            transition: transform 0.1s;
-            box-shadow: 0 0 10px var(--data-color);
+        body.light-mode .modal-content {
+            background: var(--light-card);
         }
         
-        .data-flow {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 9998;
-        }
-        
-        .data-stream {
-            position: absolute;
-            width: 2px;
-            height: 100px;
-            background: linear-gradient(to bottom, transparent, var(--data-color), transparent);
-            opacity: 0;
-            transform: translateY(-100px);
-        }
-        
-        .cursor-hover {
-            width: 40px;
-            height: 40px;
-            background: rgba(6, 182, 212, 0.2);
-            border-color: #8b5cf6;
-            box-shadow: 0 0 20px #8b5cf6;
-        }
-        
-        .cursor-process {
-            transform: translate(-50%, -50%) scale(1.2);
-            box-shadow: 0 0 30px var(--success);
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         
         @media (max-width: 768px) {
@@ -539,29 +652,19 @@
                 align-items: center;
                 gap: 10px;
             }
-            
-            /* Hide cursor on mobile */
-            .data-cursor, .cursor-dot, .data-flow {
-                display: none;
-            }
-            
-            body {
-                cursor: auto;
-            }
         }
     </style>
 </head>
 <body>
-    <div class="cursor-container">
-        <div class="data-cursor" id="dataCursor"></div>
-        <div class="cursor-dot" id="cursorDot"></div>
-        <div class="data-flow" id="dataFlow"></div>
-    </div>
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+    </button>
     
     <main class="wrap">
         <h1><i class="fas fa-database"></i> ডাটা রিকোয়েস্ট ও ব্যবহারকারী অধিকার</h1>
         
-        <div style="background: var(--data-bg); border: 2px solid var(--data-color); padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+        <div style="background: var(--data-bg); border: 2px solid var(--data-color); padding: 20px; border-radius: 8px; margin-bottom: 30px; transition: background 0.3s ease;">
             <h3 style="color: var(--data-color); margin-top: 0;">
                 <i class="fas fa-user-shield"></i> আপনার ডাটা অধিকার
             </h3>
@@ -591,7 +694,7 @@
                 <span class="right-badge">মৌলিক অধিকার</span>
                 <div class="right-icon"><i class="fas fa-trash-alt"></i></div>
                 <h3>ভুলে যাওয়ার অধিকার</h3>
-                <p>নির্দিষ্ট শর্তে আপনার ব্যক্তিগত তথ্য মুছে ফেলার অনুরোধ করার অধিকার।</p>
+                <p>নির্দিষ্ট শর্তে আপনার ব্যক্তিগত তথ্য মুছে ফেলার অনুরোধ করার অধিকার ("Right to be Forgotten")।</p>
                 <p><strong>ব্যতিক্রম:</strong> আইনি প্রয়োজনীয়তা</p>
             </div>
             
@@ -796,16 +899,16 @@
             <p>নিচে আপনার সংরক্ষিত তথ্যের একটি নিরাপদ প্রিভিউ দেখানো হয়েছে। সম্পূর্ণ তথ্য পেতে উপরের ফর্মটি ব্যবহার করুন।</p>
             
             <div style="display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;">
-                <button class="status-indicator status-pending" onclick="loadDataPreview('basic')" style="cursor: pointer;">
+                <button class="status-indicator status-pending" onclick="loadDataPreview('basic')">
                     <i class="fas fa-user"></i> মৌলিক তথ্য
                 </button>
-                <button class="status-indicator status-processing" onclick="loadDataPreview('services')" style="cursor: pointer;">
+                <button class="status-indicator status-processing" onclick="loadDataPreview('services')">
                     <i class="fas fa-wrench"></i> সেবা ইতিহাস
                 </button>
-                <button class="status-indicator status-processing" onclick="loadDataPreview('payment')" style="cursor: pointer;">
+                <button class="status-indicator status-processing" onclick="loadDataPreview('payment')">
                     <i class="fas fa-credit-card"></i> পেমেন্ট তথ্য
                 </button>
-                <button class="status-indicator status-completed" onclick="loadDataPreview('all')" style="cursor: pointer;">
+                <button class="status-indicator status-completed" onclick="loadDataPreview('all')">
                     <i class="fas fa-database"></i> সকল তথ্য
                 </button>
             </div>
@@ -832,17 +935,17 @@
         <h2>প্রায়শই জিজ্ঞাসিত প্রশ্ন</h2>
         
         <div class="faq-section" style="margin: 30px 0;">
-            <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--data-color);">
+            <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--data-color); transition: background 0.3s ease;">
                 <h4 style="margin-top: 0;">রিকোয়েস্ট করতে কত সময় লাগে?</h4>
                 <p>সাধারণ রিকোয়েস্ট ৩০ দিনের মধ্যে প্রক্রিয়াকৃত হয়। জটিল রিকোয়েস্টের ক্ষেত্রে আরও ৩০ দিনের এক্সটেনশন প্রয়োজন হতে পারে, যা আপনাকে জানানো হবে।</p>
             </div>
             
-            <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--data-color);">
+            <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--data-color); transition: background 0.3s ease;">
                 <h4 style="margin-top: 0;">ডাটা ডিলিট করার পর কী হবে?</h4>
                 <p>আপনার তথ্য আমাদের এক্টিভ সিস্টেম থেকে মুছে ফেলা হবে, কিন্তু ব্যাকআপ সিস্টেমে সীমিত সময়ের জন্য রাখা হতে পারে। কিছু তথ্য আইনি প্রয়োজনীয়তার জন্য রাখা হতে পারে।</p>
             </div>
             
-            <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--data-color);">
+            <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--data-color); transition: background 0.3s ease;">
                 <h4 style="margin-top: 0;">রিকোয়েস্ট করতে কি ফি লাগে?</h4>
                 <p>প্রথম রিকোয়েস্ট সম্পূর্ণ বিনামূল্যে। অতিরিক্ত বা অস্বাভাবিক রিকোয়েস্টের জন্য যুক্তিসংগত ফি প্রযোজ্য হতে পারে।</p>
             </div>
@@ -851,7 +954,7 @@
         <h2>জরুরি যোগাযোগ</h2>
         <p>যদি আপনি মনে করেন যে আপনার ব্যক্তিগত তথ্য ভুলভাবে ব্যবহার করা হচ্ছে, অথবা আপনার রিকোয়েস্টের যথাযথ প্রতিক্রিয়া না পাচ্ছেন, দয়া করে সরাসরি যোগাযোগ করুন:</p>
         
-        <div style="background: rgba(239,68,68,0.1); padding: 20px; border-radius: 8px; margin-top: 20px; border: 1px solid #ef4444;">
+        <div style="background: rgba(239,68,68,0.1); padding: 20px; border-radius: 8px; margin-top: 20px; border: 1px solid #ef4444; transition: background 0.3s ease;">
             <h4 style="color: #ef4444; margin-top: 0;">
                 <i class="fas fa-exclamation-circle"></i> ডাটা প্রটেকশন অফিসার
             </h4>
@@ -878,167 +981,30 @@
     </main>
 
     <script>
-        // Data Flow Cursor Effect
+        // Theme Toggle Functionality
         document.addEventListener('DOMContentLoaded', function() {
-            const dataCursor = document.getElementById('dataCursor');
-            const cursorDot = document.getElementById('cursorDot');
-            const dataFlowContainer = document.getElementById('dataFlow');
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = themeToggle.querySelector('i');
             
-            let mouseX = 0, mouseY = 0;
-            let cursorX = 0, cursorY = 0;
-            const dataStreams = [];
-            const maxStreams = 10;
-            
-            // Create data streams
-            for (let i = 0; i < maxStreams; i++) {
-                const stream = document.createElement('div');
-                stream.className = 'data-stream';
-                stream.style.left = '0px';
-                stream.style.top = '0px';
-                dataFlowContainer.appendChild(stream);
-                dataStreams.push({
-                    element: stream,
-                    active: false,
-                    startTime: 0,
-                    duration: 2000 + Math.random() * 2000
-                });
+            // Check for saved theme preference or default to dark
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+                themeIcon.className = 'fas fa-sun';
             }
             
-            // Mouse movement tracking
-            document.addEventListener('mousemove', (e) => {
-                mouseX = e.clientX;
-                mouseY = e.clientY;
+            // Toggle theme
+            themeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('light-mode');
                 
-                // Update dot immediately
-                cursorDot.style.left = mouseX + 'px';
-                cursorDot.style.top = mouseY + 'px';
-                
-                // Create data streams
-                activateDataStream();
-            });
-            
-            function activateDataStream() {
-                for (let i = 0; i < dataStreams.length; i++) {
-                    const stream = dataStreams[i];
-                    if (!stream.active) {
-                        stream.active = true;
-                        stream.startTime = Date.now();
-                        stream.element.style.left = mouseX + 'px';
-                        stream.element.style.top = mouseY + 'px';
-                        stream.element.style.opacity = '0.7';
-                        stream.element.style.transform = 'translateY(-100px)';
-                        
-                        // Randomize stream properties
-                        const speed = 1 + Math.random() * 2;
-                        const length = 50 + Math.random() * 100;
-                        stream.element.style.height = length + 'px';
-                        stream.element.style.transition = `transform ${speed}s linear`;
-                        
-                        // Animate stream
-                        setTimeout(() => {
-                            stream.element.style.transform = 'translateY(window.innerHeight)';
-                        }, 10);
-                        
-                        // Reset after animation
-                        setTimeout(() => {
-                            stream.active = false;
-                            stream.element.style.opacity = '0';
-                            stream.element.style.transform = 'translateY(-100px)';
-                        }, stream.duration);
-                        
-                        break;
-                    }
+                if (document.body.classList.contains('light-mode')) {
+                    themeIcon.className = 'fas fa-sun';
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    themeIcon.className = 'fas fa-moon';
+                    localStorage.setItem('theme', 'dark');
                 }
-            }
-            
-            // Hover effects for data elements
-            const dataElements = document.querySelectorAll('.right-card, .form-control, .radio-label, .checkbox-label');
-            
-            dataElements.forEach(element => {
-                element.addEventListener('mouseenter', () => {
-                    dataCursor.classList.add('cursor-hover');
-                    dataCursor.style.borderColor = '#8b5cf6';
-                    dataCursor.style.boxShadow = '0 0 20px #8b5cf6';
-                });
-                
-                element.addEventListener('mouseleave', () => {
-                    dataCursor.classList.remove('cursor-hover');
-                    dataCursor.style.borderColor = '#06b6d4';
-                    dataCursor.style.boxShadow = '0 0 15px #06b6d4';
-                });
             });
-            
-            // Click effect with data processing animation
-            document.addEventListener('mousedown', () => {
-                dataCursor.classList.add('cursor-process');
-                dataCursor.style.borderColor = '#10b981';
-                dataCursor.style.boxShadow = '0 0 30px #10b981';
-                
-                // Create data processing animation
-                createDataProcessingAnimation(mouseX, mouseY);
-            });
-            
-            document.addEventListener('mouseup', () => {
-                dataCursor.classList.remove('cursor-process');
-                dataCursor.style.borderColor = '#06b6d4';
-                dataCursor.style.boxShadow = '0 0 15px #06b6d4';
-            });
-            
-            function createDataProcessingAnimation(x, y) {
-                // Create data particles
-                for (let i = 0; i < 8; i++) {
-                    const particle = document.createElement('div');
-                    particle.style.position = 'fixed';
-                    particle.style.width = '6px';
-                    particle.style.height = '6px';
-                    particle.style.backgroundColor = '#06b6d4';
-                    particle.style.borderRadius = '50%';
-                    particle.style.left = x + 'px';
-                    particle.style.top = y + 'px';
-                    particle.style.opacity = '0';
-                    particle.style.zIndex = '9996';
-                    particle.style.pointerEvents = 'none';
-                    particle.style.boxShadow = '0 0 8px #06b6d4';
-                    
-                    document.body.appendChild(particle);
-                    
-                    // Animate particle
-                    const angle = (i / 8) * Math.PI * 2;
-                    const distance = 50 + Math.random() * 50;
-                    const targetX = x + Math.cos(angle) * distance;
-                    const targetY = y + Math.sin(angle) * distance;
-                    
-                    particle.style.transition = 'all 0.5s ease';
-                    
-                    setTimeout(() => {
-                        particle.style.opacity = '1';
-                        particle.style.left = targetX + 'px';
-                        particle.style.top = targetY + 'px';
-                        
-                        setTimeout(() => {
-                            particle.style.opacity = '0';
-                            setTimeout(() => {
-                                particle.remove();
-                            }, 500);
-                        }, 300);
-                    }, 10);
-                }
-            }
-            
-            // Animation loop
-            function animateCursor() {
-                // Smooth cursor movement
-                cursorX += (mouseX - cursorX) * 0.15;
-                cursorY += (mouseY - cursorY) * 0.15;
-                
-                dataCursor.style.left = cursorX + 'px';
-                dataCursor.style.top = cursorY + 'px';
-                
-                requestAnimationFrame(animateCursor);
-            }
-            
-            // Start animation
-            animateCursor();
             
             // Form submission handling
             const form = document.getElementById('dataRequestForm');
@@ -1174,27 +1140,19 @@
             function showTrackingInfo(request) {
                 // Create tracking modal
                 const modal = document.createElement('div');
-                modal.style.position = 'fixed';
-                modal.style.top = '0';
-                modal.style.left = '0';
-                modal.style.width = '100%';
-                modal.style.height = '100%';
-                modal.style.backgroundColor = 'rgba(0,0,0,0.8)';
-                modal.style.zIndex = '2000';
+                modal.className = 'modal';
                 modal.style.display = 'flex';
-                modal.style.alignItems = 'center';
-                modal.style.justifyContent = 'center';
                 modal.style.opacity = '0';
                 modal.style.transition = 'opacity 0.3s ease';
                 
                 modal.innerHTML = `
-                    <div style="background: var(--dark-card); padding: 30px; border-radius: 12px; max-width: 500px; width: 90%; border: 2px solid var(--data-color);">
+                    <div class="modal-content">
                         <h3 style="color: var(--data-color); margin-top: 0;">
                             <i class="fas fa-clipboard-check"></i> রিকোয়েস্ট নিশ্চিতকরণ
                         </h3>
                         <p>আপনার ডাটা রিকোয়েস্ট সফলভাবে গ্রহণ করা হয়েছে। দয়া করে নিচের তথ্য সংরক্ষণ করুন:</p>
                         
-                        <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 8px; margin: 20px 0;">
+                        <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 8px; margin: 20px 0; transition: background 0.3s ease;">
                             <div style="margin-bottom: 10px;">
                                 <strong>ট্র্যাকিং আইডি:</strong>
                                 <div style="background: rgba(6,182,212,0.2); padding: 10px; border-radius: 4px; margin-top: 5px; font-family: monospace;">
@@ -1316,11 +1274,23 @@
             // Add keyboard support
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
-                    const modal = document.querySelector('div[style*="position: fixed"][style*="z-index: 2000"]');
-                    if (modal) {
+                    const modal = document.querySelector('.modal');
+                    if (modal && modal.style.display === 'flex') {
                         modal.remove();
                     }
                 }
+            });
+            
+            // Add hover effects to cards
+            const rightCards = document.querySelectorAll('.right-card');
+            rightCards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-8px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0) scale(1)';
+                });
             });
         });
     </script>
