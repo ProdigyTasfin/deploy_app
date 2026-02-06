@@ -170,61 +170,20 @@
     </div>
 
     <script>
-        // Sample professionals data with fixed prices
-        const professionals = [
-            {
-                id: 'PRO001',
-                name: 'মোঃ রফিকুল ইসলাম',
-                service: 'বৈদ্যুতিক কাজ',
-                rating: 4.8,
-                completedJobs: 125,
-                skills: ['বিদ্যুৎ সংযোগ', 'ফ্যান/লাইট মেরামত', 'নতুন তারকাটা'],
-                price: 2000,
-                hourlyRate: '৳ ৫০০/ঘন্টা',
-                experience: '৫ বছর',
-                location: 'ধানমন্ডি, ঢাকা'
-            },
-            {
-                id: 'PRO002',
-                name: 'মোঃ জামাল উদ্দিন',
-                service: 'প্লাম্বিং',
-                rating: 4.7,
-                completedJobs: 98,
-                skills: ['পাইপ মেরামত', 'নতুন সংযোগ', 'ওয়াটার হিটার'],
-                price: 1500,
-                hourlyRate: '৳ ৪০০/ঘন্টা',
-                experience: '৪ বছর',
-                location: 'গুলশান, ঢাকা'
-            },
-            {
-                id: 'PRO003',
-                name: 'মোঃ সোহেল রানা',
-                service: 'এসি সার্ভিস',
-                rating: 4.9,
-                completedJobs: 75,
-                skills: ['এসি সার্ভিসিং', 'গ্যাস রিফিল', 'মেরামত'],
-                price: 2500,
-                hourlyRate: '৳ ৬০০/ঘন্টা',
-                experience: '৬ বছর',
-                location: 'বনানী, ঢাকা'
-            },
-            {
-                id: 'PRO004',
-                name: 'মোঃ করিম মিয়া',
-                service: 'কাঠের কাজ',
-                rating: 4.6,
-                completedJobs: 110,
-                skills: ['ফার্নিচার মেরামত', 'ক্যাবিনেট তৈরি', 'দরজা-জানালা'],
-                price: 3000,
-                hourlyRate: '৳ ৭০০/ঘন্টা',
-                experience: '৮ বছর',
-                location: 'মিরপুর, ঢাকা'
-            }
-        ];
-
         document.addEventListener('DOMContentLoaded', function() {
             const professionalsList = document.getElementById('professionalsList');
-            
+            const professionals = loadProfessionalsFromStorage();
+
+            if (!professionals.length) {
+                professionalsList.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.08);">
+                        <h3 style="margin-bottom: 0.5rem;">কোনো পেশাদার পাওয়া যায়নি</h3>
+                        <p style="color: #64748b;">প্রথমে পেশাদার/এমপ্লয়ার অ্যাকাউন্ট তৈরি করুন এবং অ্যাডমিন অনুমোদন দিন।</p>
+                    </div>
+                `;
+                return;
+            }
+
             professionalsList.innerHTML = professionals.map(pro => `
                 <div class="professional-card">
                     <div class="professional-header">
@@ -241,10 +200,13 @@
                         <span style="background: rgba(86, 41, 190, 0.1); color: var(--primary); padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: 500;">
                             ${pro.service}
                         </span>
+                        <span style="margin-left: 0.5rem; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.8rem; background: ${pro.status === 'approved' ? 'rgba(16,185,129,0.15)' : 'rgba(245,158,11,0.15)'}; color: ${pro.status === 'approved' ? '#10b981' : '#f59e0b'};">
+                            ${pro.statusLabel}
+                        </span>
                     </div>
                     
                     <div class="professional-rating">
-                        ${'★'.repeat(5)} <span style="color: #64748b;">(${pro.rating})</span>
+                        ${pro.ratingDisplay} <span style="color: #64748b;">${pro.ratingText}</span>
                     </div>
                     
                     <div style="font-size: 0.9rem; color: #64748b; margin: 0.5rem 0;">
@@ -258,26 +220,68 @@
                     </div>
                     
                     <div class="pricing-section">
-                        <div class="price-amount">৳ ${pro.price.toLocaleString('bn-BD')}</div>
-                        <div class="price-note">ফিক্সড মূল্য | ${pro.hourlyRate}</div>
+                        <div class="price-amount">৳ ${pro.displayPrice}</div>
+                        <div class="price-note">আপনার অফার মূল্য লিখুন</div>
+                        <input type="number" min="1" step="1" inputmode="numeric" placeholder="উদাহরণ: 1500" value="${pro.inputPrice}" style="margin-top: 0.75rem; width: 100%; padding: 0.65rem 0.75rem; border-radius: 8px; border: 1px solid #e2e8f0;" id="price-${pro.id}">
                     </div>
                     
-                    <button class="select-btn" onclick="selectProfessional('${pro.id}', '${pro.name}', '${pro.service}', ${pro.price})">
+                    <button class="select-btn" ${pro.status !== 'approved' ? 'disabled style="background:#94a3b8; cursor:not-allowed;"' : ''} onclick="selectProfessional('${pro.id}', '${pro.name}', '${pro.service}', 'price-${pro.id}')">
                         <i class="fas fa-check-circle"></i> এই পেশাদার নির্বাচন করুন
                     </button>
                 </div>
             `).join('');
         });
 
-        function selectProfessional(proId, proName, proService, proPrice) {
+        function loadProfessionalsFromStorage() {
+            const applications = JSON.parse(localStorage.getItem('nibash_applications') || '[]');
+            const professionals = applications
+                .filter(app => (app.accountType || 'professional') !== 'customer')
+                .map((app, index) => {
+                    const service = app.service || app.serviceType || 'সেবা';
+                    const experience = app.experience || 'নতুন';
+                    const location = app.address || 'ঠিকানা নেই';
+                    const status = app.status || 'pending';
+                    const statusLabel = status === 'approved' ? 'অনুমোদিত' : status === 'rejected' ? 'বাতিল' : 'অনুমোদনের অপেক্ষায়';
+                    return {
+                        id: app.email ? app.email.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 12) || `PRO${index + 1}` : `PRO${index + 1}`,
+                        name: app.fullName || app.full_name || 'নাম নেই',
+                        service,
+                        ratingDisplay: status === 'approved' ? '★★★★☆' : '☆☆☆☆☆',
+                        ratingText: status === 'approved' ? '(নতুন)' : '(অপেক্ষমান)',
+                        completedJobs: 0,
+                        skills: [service, app.phone || 'ফোন নম্বর নেই', app.email || 'ইমেইল নেই'],
+                        experience,
+                        location,
+                        status,
+                        statusLabel,
+                        displayPrice: 'নির্ধারিত হয়নি',
+                        inputPrice: ''
+                    };
+                });
+
+            return professionals;
+        }
+
+        function selectProfessional(proId, proName, proService, priceInputId) {
+            const priceInput = document.getElementById(priceInputId);
+            const proPrice = priceInput ? parseFloat(priceInput.value) : NaN;
+
+            if (!proPrice || Number.isNaN(proPrice) || proPrice <= 0) {
+                alert('অনুগ্রহ করে একটি সঠিক অফার মূল্য লিখুন।');
+                if (priceInput) {
+                    priceInput.focus();
+                }
+                return;
+            }
+
             // Store professional data in localStorage
             localStorage.setItem('selectedProfessionalId', proId);
             localStorage.setItem('selectedProfessionalName', proName);
             localStorage.setItem('selectedProfessionalService', proService);
-            localStorage.setItem('selectedProfessionalPrice', proPrice);
+            localStorage.setItem('selectedProfessionalPrice', proPrice.toString());
             
             // Also store for payment
-            localStorage.setItem('paymentAmount', proPrice);
+            localStorage.setItem('paymentAmount', proPrice.toString());
             
             console.log('Selected Professional:', {
                 id: proId,
