@@ -26,69 +26,43 @@
             background: var(--error-bg);
             color: var(--error-text);
             min-height: 100vh;
-            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            animation: bgPulse 2s infinite alternate;
+        }
+        
+        @keyframes bgPulse {
+            0% { background-color: #fef2f2; }
+            100% { background-color: #fee2e2; }
         }
         
         .container {
-            position: relative;
-            z-index: 10;
             width: 100%;
-            max-width: 480px;
+            max-width: 500px;
         }
         
-        /* Error Background */
-        .error-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-        
-        .error-wave {
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at 50% 50%, 
-                rgba(239, 68, 68, 0.1) 0%, 
-                transparent 50%);
-            animation: waveDisturb 4s infinite linear;
-        }
-        
-        @keyframes waveDisturb {
-            0% {
-                transform: translate(-50%, -50%) scale(1);
-                opacity: 0.3;
-            }
-            50% {
-                transform: translate(-50%, -50%) scale(1.1);
-                opacity: 0.5;
-            }
-            100% {
-                transform: translate(-50%, -50%) scale(1);
-                opacity: 0.3;
-            }
-        }
-        
-        /* Error Card */
         .error-card {
             background: var(--error-card);
             border-radius: 24px;
             padding: 40px;
             box-shadow: 
-                0 20px 60px rgba(239, 68, 68, 0.1),
-                0 1px 3px rgba(0, 0, 0, 0.05),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
+                0 20px 60px rgba(239, 68, 68, 0.2),
+                0 1px 3px rgba(0, 0, 0, 0.1);
             border: 1px solid var(--error-border);
             position: relative;
             overflow: hidden;
+            transform: translateY(30px);
+            opacity: 0;
+            animation: cardSlideUp 0.6s ease-out 0.3s forwards;
+        }
+        
+        @keyframes cardSlideUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
         
         .error-card::before {
@@ -99,19 +73,18 @@
             right: 0;
             height: 4px;
             background: linear-gradient(90deg, var(--error-primary), var(--error-secondary));
-            border-radius: 24px 24px 0 0;
         }
         
-        /* Error Animation */
+        /* Error Animation Container */
         .error-animation {
             position: relative;
-            width: 120px;
-            height: 120px;
+            width: 140px;
+            height: 140px;
             margin: 0 auto 30px;
         }
         
-        /* Progress Circle - Shows attempt */
-        .progress-circle {
+        /* Circular Progress Bar */
+        .progress-container {
             position: absolute;
             top: 0;
             left: 0;
@@ -119,81 +92,87 @@
             height: 100%;
         }
         
-        .circle-bg {
+        .progress-circle {
             fill: none;
-            stroke: var(--error-accent);
             stroke-width: 4;
+            stroke-linecap: round;
+            transform-origin: center;
+            transform: rotate(-90deg);
+        }
+        
+        .circle-bg {
+            stroke: var(--error-accent);
         }
         
         .circle-progress {
-            fill: none;
             stroke: var(--error-primary);
-            stroke-width: 4;
-            stroke-linecap: round;
-            stroke-dasharray: 314;
-            stroke-dashoffset: 314;
-            transform-origin: center;
-            transform: rotate(-90deg);
-            animation: errorProgress 1s ease-out forwards;
+            stroke-dasharray: 377;
+            stroke-dashoffset: 377;
+            animation: progressFill 1.5s ease-out forwards;
         }
         
-        @keyframes errorProgress {
+        @keyframes progressFill {
             0% {
-                stroke-dashoffset: 314;
+                stroke-dashoffset: 377;
             }
-            80% {
-                stroke-dashoffset: 63;
+            70% {
+                stroke-dashoffset: 113; /* 70% complete */
             }
             100% {
-                stroke-dashoffset: 63;
+                stroke-dashoffset: 113;
             }
         }
         
-        /* Error Morph - Progress to Error State */
+        /* Error Morph Animation */
         .error-morph {
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) scale(0);
+            transform: translate(-50%, -50%);
             width: 80px;
             height: 80px;
         }
         
-        .morph-error {
+        .morph-shape {
             position: absolute;
             width: 100%;
             height: 100%;
             background: var(--error-primary);
             border-radius: 50%;
-            animation: errorMorph 1.5s ease-out forwards 1s;
+            opacity: 0;
+            animation: morphError 1.5s ease-out 1.5s forwards;
         }
         
-        @keyframes errorMorph {
+        @keyframes morphError {
             0% {
                 opacity: 0;
-                transform: scale(0) rotate(0deg);
+                transform: scale(0);
                 border-radius: 50%;
             }
-            30% {
+            20% {
                 opacity: 1;
-                transform: scale(1) rotate(180deg);
+                transform: scale(1);
                 border-radius: 50%;
             }
-            50% {
-                transform: scale(1.2) rotate(270deg);
-                border-radius: 40% 60% 60% 40% / 40% 40% 60% 60%;
+            40% {
+                transform: scale(1.1) rotate(45deg);
+                border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
             }
-            70% {
-                transform: scale(0.9) rotate(360deg);
+            60% {
+                transform: scale(0.9) rotate(90deg);
                 border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            }
+            80% {
+                transform: scale(1.05) rotate(135deg);
+                border-radius: 40% 60% 70% 30% / 40% 70% 30% 60%;
             }
             100% {
                 opacity: 1;
-                transform: scale(1) rotate(360deg);
+                transform: scale(1) rotate(180deg);
                 border-radius: 50%;
                 box-shadow: 
-                    0 0 0 4px rgba(239, 68, 68, 0.1),
-                    0 0 0 8px rgba(239, 68, 68, 0.05);
+                    0 0 0 10px rgba(239, 68, 68, 0.1),
+                    0 0 0 20px rgba(239, 68, 68, 0.05);
             }
         }
         
@@ -206,7 +185,14 @@
             width: 40px;
             height: 40px;
             opacity: 0;
-            animation: errorXReveal 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards 2s;
+            animation: xReveal 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) 3s forwards;
+        }
+        
+        @keyframes xReveal {
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
         }
         
         .x-path {
@@ -215,61 +201,24 @@
             stroke-linecap: round;
             stroke-dasharray: 48;
             stroke-dashoffset: 48;
-            animation: errorXDraw 0.5s ease-out forwards 2.2s;
+            animation: xDraw 0.5s ease-out 3.2s forwards;
         }
         
-        @keyframes errorXReveal {
-            to {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1);
-            }
-        }
-        
-        @keyframes errorXDraw {
+        @keyframes xDraw {
             to {
                 stroke-dashoffset: 0;
             }
         }
         
-        /* Error Shake */
-        .error-shake {
-            animation: errorShake 0.5s ease-in-out 2.7s;
-        }
-        
-        @keyframes errorShake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-        
-        /* Error Particles */
-        .error-particles {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-        
-        .error-particle {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background: var(--error-secondary);
-            border-radius: 50%;
-            opacity: 0;
-        }
-        
         /* Content */
-        .error-content {
+        .content {
             text-align: center;
-            animation: errorContentFade 0.5s ease-out forwards 2.5s;
             opacity: 0;
             transform: translateY(20px);
+            animation: contentFadeIn 0.5s ease-out 3.5s forwards;
         }
         
-        @keyframes errorContentFade {
+        @keyframes contentFadeIn {
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -277,37 +226,26 @@
         }
         
         h1 {
-            font-size: 28px;
+            font-size: 2rem;
             font-weight: 700;
             margin-bottom: 12px;
-            background: linear-gradient(135deg, var(--error-text), #991b1b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--error-text);
+            animation: shake 0.5s ease-in-out 3.7s;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
         
         .subtitle {
-            font-size: 16px;
+            font-size: 1.1rem;
             color: #6b7280;
-            margin-bottom: 8px;
-            font-weight: 500;
+            margin-bottom: 25px;
         }
         
-        .error-code {
-            font-size: 14px;
-            color: var(--error-primary);
-            background: var(--error-bg);
-            padding: 8px 16px;
-            border-radius: 20px;
-            display: inline-block;
-            margin: 15px 0;
-            font-family: 'Monaco', 'Courier New', monospace;
-            letter-spacing: 1px;
-            border: 1px solid var(--error-border);
-        }
-        
-        /* Troubleshooting */
-        .troubleshooting {
+        .error-details {
             background: var(--error-bg);
             border-radius: 12px;
             padding: 20px;
@@ -316,95 +254,93 @@
             border: 1px solid var(--error-border);
         }
         
-        .troubleshooting h3 {
-            font-size: 15px;
-            color: var(--error-text);
-            margin-bottom: 12px;
+        .error-details h3 {
+            color: var(--error-primary);
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
         
-        .troubleshooting ul {
+        .error-details ul {
             list-style: none;
             padding: 0;
         }
         
-        .troubleshooting li {
-            font-size: 14px;
+        .error-details li {
+            padding: 8px 0;
             color: #6b7280;
-            margin-bottom: 8px;
-            padding-left: 20px;
             position: relative;
+            padding-left: 20px;
         }
         
-        .troubleshooting li:before {
+        .error-details li:before {
             content: '•';
             color: var(--error-primary);
             position: absolute;
             left: 0;
+            font-weight: bold;
         }
         
-        /* Actions */
-        .error-actions {
+        .actions {
             display: flex;
             gap: 12px;
             margin-top: 30px;
         }
         
-        .error-btn {
+        .btn {
             flex: 1;
             padding: 16px 24px;
             border-radius: 12px;
             font-weight: 600;
-            font-size: 15px;
+            font-size: 1rem;
             text-decoration: none;
             text-align: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .error-btn-primary {
-            background: var(--error-primary);
-            color: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
             border: none;
         }
         
-        .error-btn-primary:hover {
+        .btn-primary {
+            background: var(--error-primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
             background: #dc2626;
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(239, 68, 68, 0.3);
         }
         
-        .error-btn-secondary {
+        .btn-secondary {
             background: white;
             color: var(--error-text);
-            border: 1.5px solid var(--error-border);
+            border: 2px solid var(--error-border);
         }
         
-        .error-btn-secondary:hover {
+        .btn-secondary:hover {
             background: var(--error-bg);
             transform: translateY(-2px);
             border-color: var(--error-secondary);
         }
         
-        /* Card Micro-interaction */
-        .error-card {
-            animation: errorCardPulse 8s ease-in-out infinite;
+        /* Particles */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
         }
         
-        @keyframes errorCardPulse {
-            0%, 100% {
-                box-shadow: 
-                    0 20px 60px rgba(239, 68, 68, 0.1),
-                    0 1px 3px rgba(0, 0, 0, 0.05);
-            }
-            50% {
-                box-shadow: 
-                    0 20px 60px rgba(239, 68, 68, 0.15),
-                    0 1px 3px rgba(0, 0, 0, 0.05);
-            }
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--error-primary);
+            border-radius: 50%;
+            opacity: 0;
         }
         
         @media (max-width: 480px) {
@@ -412,45 +348,43 @@
                 padding: 30px 20px;
             }
             
-            .error-actions {
+            .actions {
                 flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="error-bg">
-        <div class="error-wave"></div>
-    </div>
-    
     <div class="container">
         <div class="error-card">
             <div class="error-animation">
-                <svg class="progress-circle" viewBox="0 0 100 100">
-                    <circle class="circle-bg" cx="50" cy="50" r="45"></circle>
-                    <circle class="circle-progress" cx="50" cy="50" r="45"></circle>
+                <svg class="progress-container" viewBox="0 0 120 120">
+                    <circle class="progress-circle circle-bg" cx="60" cy="60" r="54"></circle>
+                    <circle class="progress-circle circle-progress" cx="60" cy="60" r="54"></circle>
                 </svg>
                 
                 <div class="error-morph">
-                    <div class="morph-error"></div>
+                    <div class="morph-shape"></div>
                 </div>
                 
                 <svg class="error-x" viewBox="0 0 24 24">
                     <path class="x-path" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
                 </svg>
                 
-                <div class="error-particles" id="errorParticles"></div>
+                <div class="particles" id="particles"></div>
             </div>
             
-            <div class="error-content">
-                <h1 class="error-shake">পেমেন্ট ব্যর্থ</h1>
-                <div class="subtitle">লেনদেন সম্পন্ন করা যায়নি</div>
+            <div class="content">
+                <h1>পেমেন্ট ব্যর্থ হয়েছে</h1>
+                <div class="subtitle">আপনার লেনদেন সম্পন্ন করা যায়নি</div>
                 
-                <div class="error-code" id="errorCode">ERR-4A7B</div>
-                
-                <div class="troubleshooting">
+                <div class="error-details">
                     <h3>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="12" cy="12" r="10"></circle>
                             <line x1="12" y1="8" x2="12" y2="12"></line>
                             <line x1="12" y1="16" x2="12.01" y2="16"></line>
@@ -458,16 +392,16 @@
                         সম্ভাব্য কারণসমূহ
                     </h3>
                     <ul>
-                        <li>অপর্যাপ্ত ব্যালেন্স</li>
-                        <li>কার্ডের তথ্য ভুল</li>
-                        <li>নেটওয়ার্ক সংযোগ সমস্যা</li>
-                        <li>ব্যাংক সীমাবদ্ধতা</li>
+                        <li>কার্ডের তথ্য ভুল হতে পারে</li>
+                        <li>পর্যাপ্ত ব্যালেন্স নেই</li>
+                        <li>ইন্টারনেট সংযোগ সমস্যা</li>
+                        <li>ব্যাংক সার্ভার সমস্যা</li>
                     </ul>
                 </div>
                 
-                <div class="error-actions">
-                    <a href="payment.html" class="error-btn error-btn-primary" id="retryBtn">আবার চেষ্টা করুন</a>
-                    <a href="support.html" class="error-btn error-btn-secondary">সাপোর্টে যোগাযোগ</a>
+                <div class="actions">
+                    <button onclick="retryPayment()" class="btn btn-primary" id="retryBtn">আবার চেষ্টা করুন</button>
+                    <a href="customer.html" class="btn btn-secondary">ড্যাশবোর্ডে ফিরে যান</a>
                 </div>
             </div>
         </div>
@@ -479,136 +413,101 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Generate error code
-            const chars = '0123456789ABCDEF';
-            let errorCode = 'ERR-';
-            for (let i = 0; i < 4; i++) {
-                errorCode += chars[Math.floor(Math.random() * chars.length)];
-            }
-            document.getElementById('errorCode').textContent = errorCode;
-            
-            // Play error sound with precise timing
-            const errorSound = document.getElementById('errorSound');
+            // Play error sound with perfect timing
             setTimeout(() => {
-                errorSound.volume = 0.15;
-                errorSound.play().catch(e => console.log("Audio autoplay blocked"));
-            }, 2000);
+                const errorSound = document.getElementById('errorSound');
+                errorSound.volume = 0.3;
+                errorSound.play().catch(e => console.log("Audio play failed:", e));
+            }, 1500);
             
-            // Create error particle burst
-            createErrorParticleBurst();
+            // Create particle burst
+            createParticleBurst();
             
-            // Add interaction to retry button
-            const retryBtn = document.getElementById('retryBtn');
-            retryBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                // Create loading effect
-                this.innerHTML = `
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 8px;">
-                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" style="animation: rotate 1s linear infinite;"></path>
-                    </svg>
-                    পুনরায় চেষ্টা করা হচ্ছে...
-                `;
-                
-                // Simulate retry attempt
-                setTimeout(() => {
-                    window.location.href = 'payment.html';
-                }, 1500);
-            });
-            
-            // Create random error waves
-            createErrorWaves();
+            // Get amount from localStorage if exists
+            const amount = localStorage.getItem('paymentAmount');
+            if (amount) {
+                const subtitle = document.querySelector('.subtitle');
+                subtitle.innerHTML += `<br><strong>পরিমাণ: ৳${parseInt(amount).toLocaleString('bn-BD')}</strong>`;
+            }
         });
         
-        function createErrorParticleBurst() {
-            const container = document.getElementById('errorParticles');
-            const centerX = 60;
-            const centerY = 60;
+        function createParticleBurst() {
+            const particlesContainer = document.getElementById('particles');
+            const centerX = 70;
+            const centerY = 70;
             
-            for (let i = 0; i < 16; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'error-particle';
-                
-                const angle = (i / 16) * Math.PI * 2;
-                const distance = 40 + Math.random() * 30;
-                const size = 2 + Math.random() * 3;
-                
-                particle.style.width = size + 'px';
-                particle.style.height = size + 'px';
-                particle.style.left = centerX + 'px';
-                particle.style.top = centerY + 'px';
-                
-                container.appendChild(particle);
-                
-                // Animate particle burst
-                const duration = 1000 + Math.random() * 500;
-                const delay = 2100;
-                
-                particle.animate([
-                    {
-                        opacity: 0,
-                        transform: 'translate(0, 0) scale(0)'
-                    },
-                    {
-                        opacity: 0.8,
-                        transform: 'translate(0, 0) scale(1)'
-                    },
-                    {
-                        opacity: 0,
-                        transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) scale(0)`
-                    }
-                ], {
-                    duration: duration,
-                    delay: delay,
-                    easing: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)'
-                });
-                
+            for (let i = 0; i < 20; i++) {
                 setTimeout(() => {
-                    particle.remove();
-                }, duration + delay);
+                    for (let j = 0; j < 3; j++) {
+                        const particle = document.createElement('div');
+                        particle.className = 'particle';
+                        
+                        const angle = (Math.PI * 2 * i / 20) + (Math.random() * 0.5 - 0.25);
+                        const distance = 40 + Math.random() * 30;
+                        const size = 2 + Math.random() * 4;
+                        
+                        particle.style.width = size + 'px';
+                        particle.style.height = size + 'px';
+                        particle.style.left = centerX + 'px';
+                        particle.style.top = centerY + 'px';
+                        particle.style.backgroundColor = `hsl(${Math.random() * 20}, 100%, 65%)`;
+                        
+                        particlesContainer.appendChild(particle);
+                        
+                        // Animate particle
+                        const duration = 800 + Math.random() * 400;
+                        
+                        particle.animate([
+                            {
+                                opacity: 0,
+                                transform: 'translate(0, 0) scale(0)'
+                            },
+                            {
+                                opacity: 1,
+                                transform: 'translate(0, 0) scale(1)'
+                            },
+                            {
+                                opacity: 0,
+                                transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) scale(0)`
+                            }
+                        ], {
+                            duration: duration,
+                            easing: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+                        });
+                        
+                        // Remove particle
+                        setTimeout(() => particle.remove(), duration);
+                    }
+                }, i * 50);
             }
         }
         
-        function createErrorWaves() {
-            const bg = document.querySelector('.error-bg');
+        function retryPayment() {
+            const btn = document.getElementById('retryBtn');
+            const originalText = btn.textContent;
             
-            setInterval(() => {
-                if (Math.random() > 0.8) {
-                    const wave = document.createElement('div');
-                    wave.style.position = 'absolute';
-                    wave.style.width = '100px';
-                    wave.style.height = '100px';
-                    wave.style.background = 'radial-gradient(circle, rgba(239, 68, 68, 0.1) 0%, transparent 70%)';
-                    wave.style.borderRadius = '50%';
-                    wave.style.left = Math.random() * 100 + 'vw';
-                    wave.style.top = Math.random() * 100 + 'vh';
-                    wave.style.opacity = '0';
-                    
-                    bg.appendChild(wave);
-                    
-                    wave.animate([
-                        {
-                            opacity: 0,
-                            transform: 'scale(0)'
-                        },
-                        {
-                            opacity: 0.3,
-                            transform: 'scale(1)'
-                        },
-                        {
-                            opacity: 0,
-                            transform: 'scale(2)'
-                        }
-                    ], {
-                        duration: 2000,
-                        easing: 'ease-out'
-                    });
-                    
-                    setTimeout(() => {
-                        wave.remove();
-                    }, 2000);
+            btn.innerHTML = `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle;">
+                    <path d="M23 4v6h-6M1 20v-6h6" style="animation: rotate 1s linear infinite;"></path>
+                    <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" style="animation: rotate 1s linear infinite reverse;"></path>
+                </svg>
+                প্রক্রিয়াকরণ হচ্ছে...
+            `;
+            btn.disabled = true;
+            
+            // Simulate processing delay
+            setTimeout(() => {
+                // Get the original payment URL with amount
+                const amount = localStorage.getItem('paymentAmount');
+                const serviceId = localStorage.getItem('selectedService');
+                
+                if (amount && serviceId) {
+                    // Redirect back to payment with same amount
+                    window.location.href = `payment.html?amount=${amount}&service=${serviceId}`;
+                } else {
+                    window.location.href = 'payment.html';
                 }
-            }, 1000);
+            }, 1500);
         }
     </script>
     

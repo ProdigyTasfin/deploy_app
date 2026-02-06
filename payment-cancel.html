@@ -22,11 +22,10 @@
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SegUI UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
             background: var(--warning-bg);
             color: var(--warning-text);
             min-height: 100vh;
-            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -34,52 +33,30 @@
         }
         
         .container {
-            position: relative;
-            z-index: 10;
             width: 100%;
-            max-width: 480px;
+            max-width: 500px;
         }
         
-        /* Background */
-        .warning-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-        
-        .warning-grid {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(rgba(245, 158, 11, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(245, 158, 11, 0.05) 1px, transparent 1px);
-            background-size: 40px 40px;
-            animation: gridMove 20s linear infinite;
-        }
-        
-        @keyframes gridMove {
-            from { transform: translate(0, 0); }
-            to { transform: translate(40px, 40px); }
-        }
-        
-        /* Cancelled Card */
         .cancelled-card {
             background: var(--warning-card);
             border-radius: 24px;
             padding: 40px;
             box-shadow: 
-                0 20px 60px rgba(245, 158, 11, 0.1),
-                0 1px 3px rgba(0, 0, 0, 0.05),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
+                0 20px 60px rgba(245, 158, 11, 0.15),
+                0 1px 3px rgba(0, 0, 0, 0.1);
             border: 1px solid var(--warning-border);
             position: relative;
             overflow: hidden;
+            transform: scale(0.9);
+            opacity: 0;
+            animation: cardPopIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.3s forwards;
+        }
+        
+        @keyframes cardPopIn {
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
         
         .cancelled-card::before {
@@ -90,27 +67,26 @@
             right: 0;
             height: 4px;
             background: linear-gradient(90deg, var(--warning-primary), var(--warning-secondary));
-            border-radius: 24px 24px 0 0;
         }
         
-        /* Cancelled Animation */
+        /* Animation Container */
         .cancelled-animation {
             position: relative;
-            width: 120px;
-            height: 120px;
+            width: 140px;
+            height: 140px;
             margin: 0 auto 30px;
         }
         
-        /* Progress Bar Animation */
+        /* Progress Bar */
         .progress-track {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             width: 100px;
-            height: 4px;
+            height: 6px;
             background: var(--warning-accent);
-            border-radius: 2px;
+            border-radius: 3px;
             overflow: hidden;
         }
         
@@ -122,17 +98,17 @@
             height: 100%;
             background: linear-gradient(90deg, var(--warning-primary), var(--warning-secondary));
             transform: translateX(-100%);
-            animation: progressTrack 1.2s ease-out forwards;
+            animation: progressMove 1.5s ease-out forwards;
         }
         
-        @keyframes progressTrack {
+        @keyframes progressMove {
             0% {
                 transform: translateX(-100%);
             }
-            70% {
+            40% {
                 transform: translateX(0%);
             }
-            85% {
+            60% {
                 transform: translateX(0%);
             }
             100% {
@@ -140,127 +116,93 @@
             }
         }
         
-        /* Morph to Circle */
-        .cancelled-morph {
+        /* Cancel Morph */
+        .cancel-morph {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) scale(0);
             width: 80px;
             height: 80px;
+            animation: morphReveal 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) 1.5s forwards;
         }
         
-        .morph-cancel {
+        @keyframes morphReveal {
+            to {
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+        
+        .morph-circle {
             position: absolute;
             width: 100%;
             height: 100%;
             background: var(--warning-primary);
             border-radius: 50%;
-            opacity: 0;
-            animation: cancelMorph 1.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 1s;
+            animation: circleMorph 1.5s ease-out 2s forwards;
         }
         
-        @keyframes cancelMorph {
+        @keyframes circleMorph {
             0% {
-                opacity: 0;
-                transform: scale(0) rotate(0deg);
                 border-radius: 50%;
+                transform: scale(1) rotate(0deg);
             }
-            25% {
-                opacity: 1;
-                transform: scale(1) rotate(180deg);
-                border-radius: 50%;
-            }
-            40% {
-                transform: scale(1.1) rotate(270deg);
+            33% {
                 border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+                transform: scale(1.1) rotate(120deg);
             }
-            60% {
-                transform: scale(0.9) rotate(360deg);
+            66% {
                 border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-            }
-            80% {
-                transform: scale(1.05) rotate(450deg);
-                border-radius: 40% 60% 70% 30% / 40% 70% 30% 60%;
+                transform: scale(0.9) rotate(240deg);
             }
             100% {
-                opacity: 1;
-                transform: scale(1) rotate(540deg);
                 border-radius: 50%;
+                transform: scale(1) rotate(360deg);
                 box-shadow: 
-                    0 0 0 4px rgba(245, 158, 11, 0.1),
-                    0 0 0 8px rgba(245, 158, 11, 0.05);
+                    0 0 0 10px rgba(245, 158, 11, 0.1),
+                    0 0 0 20px rgba(245, 158, 11, 0.05);
             }
         }
         
-        /* Cancel Symbol */
-        .cancel-symbol {
+        /* Cancel Line */
+        .cancel-line {
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            width: 32px;
-            height: 32px;
-            opacity: 0;
-            animation: cancelSymbolReveal 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards 2.2s;
-        }
-        
-        .cancel-path {
-            stroke: white;
-            stroke-width: 3;
-            stroke-linecap: round;
-            stroke-dasharray: 40;
-            stroke-dashoffset: 40;
-            animation: cancelSymbolDraw 0.4s ease-out forwards 2.4s;
-        }
-        
-        @keyframes cancelSymbolReveal {
-            to {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1);
-            }
-        }
-        
-        @keyframes cancelSymbolDraw {
-            to {
-                stroke-dashoffset: 0;
-            }
-        }
-        
-        /* Slash Animation */
-        .slash-animation {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-45deg);
-            width: 100px;
+            width: 40px;
             height: 4px;
-            background: var(--warning-primary);
+            background: white;
             border-radius: 2px;
-            opacity: 0;
-            animation: slashDraw 0.5s ease-out forwards 2.8s;
+            transform: translate(-50%, -50%) rotate(45deg) scaleX(0);
+            animation: lineDraw 0.3s ease-out 3.5s forwards;
         }
         
-        @keyframes slashDraw {
-            0% {
-                width: 0;
-                opacity: 1;
+        @keyframes lineDraw {
+            to {
+                transform: translate(-50%, -50%) rotate(45deg) scaleX(1);
             }
-            100% {
-                width: 100px;
-                opacity: 0.3;
+        }
+        
+        .cancel-line:nth-child(2) {
+            transform: translate(-50%, -50%) rotate(-45deg) scaleX(0);
+            animation: lineDraw2 0.3s ease-out 3.8s forwards;
+        }
+        
+        @keyframes lineDraw2 {
+            to {
+                transform: translate(-50%, -50%) rotate(-45deg) scaleX(1);
             }
         }
         
         /* Content */
-        .cancelled-content {
+        .content {
             text-align: center;
-            animation: cancelledContentFade 0.5s ease-out forwards 2.5s;
             opacity: 0;
             transform: translateY(20px);
+            animation: contentFadeIn 0.5s ease-out 4s forwards;
         }
         
-        @keyframes cancelledContentFade {
+        @keyframes contentFadeIn {
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -268,24 +210,19 @@
         }
         
         h1 {
-            font-size: 28px;
+            font-size: 2rem;
             font-weight: 700;
             margin-bottom: 12px;
-            background: linear-gradient(135deg, var(--warning-text), #92400e);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--warning-text);
         }
         
         .subtitle {
-            font-size: 16px;
+            font-size: 1.1rem;
             color: #6b7280;
-            margin-bottom: 20px;
-            font-weight: 500;
+            margin-bottom: 25px;
         }
         
-        /* Info Box */
-        .cancelled-info {
+        .info-box {
             background: var(--warning-bg);
             border-radius: 12px;
             padding: 20px;
@@ -317,61 +254,63 @@
             line-height: 1.5;
         }
         
-        /* Actions */
-        .cancelled-actions {
+        .actions {
             display: flex;
             gap: 12px;
             margin-top: 30px;
         }
         
-        .cancelled-btn {
+        .btn {
             flex: 1;
             padding: 16px 24px;
             border-radius: 12px;
             font-weight: 600;
-            font-size: 15px;
+            font-size: 1rem;
             text-decoration: none;
             text-align: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .cancelled-btn-primary {
-            background: var(--warning-primary);
-            color: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
             border: none;
         }
         
-        .cancelled-btn-primary:hover {
+        .btn-primary {
+            background: var(--warning-primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
             background: #d97706;
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(245, 158, 11, 0.3);
         }
         
-        .cancelled-btn-secondary {
+        .btn-secondary {
             background: white;
             color: var(--warning-text);
-            border: 1.5px solid var(--warning-border);
+            border: 2px solid var(--warning-border);
         }
         
-        .cancelled-btn-secondary:hover {
+        .btn-secondary:hover {
             background: var(--warning-bg);
             transform: translateY(-2px);
             border-color: var(--warning-secondary);
         }
         
-        /* Subtle Animation */
+        /* Pulse Animation */
         .cancelled-card {
-            animation: cancelledCardBreath 6s ease-in-out infinite;
+            animation: pulse 2s infinite 4.5s;
         }
         
-        @keyframes cancelledCardBreath {
+        @keyframes pulse {
             0%, 100% {
-                transform: translateY(0);
+                box-shadow: 
+                    0 20px 60px rgba(245, 158, 11, 0.15),
+                    0 1px 3px rgba(0, 0, 0, 0.1);
             }
             50% {
-                transform: translateY(-3px);
+                box-shadow: 
+                    0 20px 60px rgba(245, 158, 11, 0.25),
+                    0 1px 3px rgba(0, 0, 0, 0.1);
             }
         }
         
@@ -380,17 +319,17 @@
                 padding: 30px 20px;
             }
             
-            .cancelled-actions {
+            .actions {
                 flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="warning-bg">
-        <div class="warning-grid"></div>
-    </div>
-    
     <div class="container">
         <div class="cancelled-card">
             <div class="cancelled-animation">
@@ -398,22 +337,18 @@
                     <div class="progress-fill"></div>
                 </div>
                 
-                <div class="cancelled-morph">
-                    <div class="morph-cancel"></div>
+                <div class="cancel-morph">
+                    <div class="morph-circle"></div>
+                    <div class="cancel-line"></div>
+                    <div class="cancel-line"></div>
                 </div>
-                
-                <svg class="cancel-symbol" viewBox="0 0 24 24">
-                    <path class="cancel-path" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-                
-                <div class="slash-animation"></div>
             </div>
             
-            <div class="cancelled-content">
-                <h1>পেমেন্ট বাতিল</h1>
+            <div class="content">
+                <h1>পেমেন্ট বাতিল হয়েছে</h1>
                 <div class="subtitle">আপনি পেমেন্ট প্রক্রিয়া বন্ধ করেছেন</div>
                 
-                <div class="cancelled-info">
+                <div class="info-box">
                     <div class="info-item">
                         <div class="info-icon">↻</div>
                         <div class="info-text">আপনি যে কোন সময় আবার চেষ্টা করতে পারেন</div>
@@ -428,9 +363,9 @@
                     </div>
                 </div>
                 
-                <div class="cancelled-actions">
-                    <a href="payment.html" class="cancelled-btn cancelled-btn-primary" id="retryPaymentBtn">আবার চেষ্টা করুন</a>
-                    <a href="services.html" class="cancelled-btn cancelled-btn-secondary">সেবা ব্রাউজ করুন</a>
+                <div class="actions">
+                    <button onclick="retryPayment()" class="btn btn-primary" id="retryBtn">আবার চেষ্টা করুন</button>
+                    <a href="customer.html" class="btn btn-secondary">ড্যাশবোর্ডে ফিরে যান</a>
                 </div>
             </div>
         </div>
@@ -442,41 +377,55 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Play cancel sound
-            const cancelSound = document.getElementById('cancelSound');
+            // Play cancel sound with perfect timing
             setTimeout(() => {
-                cancelSound.volume = 0.2;
-                cancelSound.play().catch(e => console.log("Audio autoplay blocked"));
-            }, 1200);
+                const cancelSound = document.getElementById('cancelSound');
+                cancelSound.volume = 0.3;
+                cancelSound.play().catch(e => console.log("Audio play failed:", e));
+            }, 1800);
             
-            // Add interaction to retry button
-            const retryBtn = document.getElementById('retryPaymentBtn');
-            
-            retryBtn.addEventListener('click', function(e) {
-                // Prevent immediate navigation
-                e.preventDefault();
-                
-                // Add subtle bounce effect
-                this.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    this.style.transform = '';
-                    window.location.href = 'payment.html';
-                }, 150);
-            });
-            
-            // Add grid animation
-            animateWarningGrid();
+            // Get amount from localStorage if exists
+            const amount = localStorage.getItem('paymentAmount');
+            if (amount) {
+                const subtitle = document.querySelector('.subtitle');
+                subtitle.innerHTML += `<br><strong>পরিমাণ: ৳${parseInt(amount).toLocaleString('bn-BD')}</strong>`;
+            }
         });
         
-        function animateWarningGrid() {
-            const grid = document.querySelector('.warning-grid');
-            let scale = 1;
+        function retryPayment() {
+            const btn = document.getElementById('retryBtn');
+            const originalText = btn.textContent;
             
-            setInterval(() => {
-                scale = scale === 1 ? 1.02 : 1;
-                grid.style.transform = `scale(${scale})`;
-            }, 3000);
+            btn.innerHTML = `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle;">
+                    <path d="M1 4v6h6M23 20v-6h-6" style="animation: rotate 1s linear infinite;"></path>
+                    <path d="M20.49 9a9 9 0 01-14.85-3.36L1 10M23 14l-4.64 4.36A9 9 0 013.51 15" style="animation: rotate 1s linear infinite reverse;"></path>
+                </svg>
+                প্রক্রিয়াকরণ হচ্ছে...
+            `;
+            btn.disabled = true;
+            
+            // Simulate processing delay
+            setTimeout(() => {
+                // Get the original payment URL with amount
+                const amount = localStorage.getItem('paymentAmount');
+                const serviceId = localStorage.getItem('selectedService');
+                
+                if (amount && serviceId) {
+                    // Redirect back to payment with same amount
+                    window.location.href = `payment.html?amount=${amount}&service=${serviceId}`;
+                } else {
+                    window.location.href = 'payment.html';
+                }
+            }, 1500);
         }
     </script>
+    
+    <style>
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
 </body>
 </html>
