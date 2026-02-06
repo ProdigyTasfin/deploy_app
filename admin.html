@@ -486,725 +486,8 @@
     </style>
 </head>
 <body class="dark-mode">
-
-    <!-- Dashboard -->
-    <div class="dashboard">
-        <!-- Sidebar -->
-        <nav class="sidebar">
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a class="nav-link active" data-section="dashboard">
-                        <i class="fas fa-tachometer-alt"></i>
-                        ড্যাশবোর্ড
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-section="professionals">
-                        <i class="fas fa-user-cog"></i>
-                        বিশেষজ্ঞ আবেদন
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-section="service-requests">
-                        <i class="fas fa-tools"></i>
-                        সেবা অনুরোধ
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-section="users">
-                        <i class="fas fa-users"></i>
-                        ব্যবহারকারী
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-section="payments">
-                        <i class="fas fa-credit-card"></i>
-                        পেমেন্ট
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" onclick="logout()">
-                        <i class="fas fa-sign-out-alt"></i>
-                        লগআউট
-                    </a>
-                </li>
-            </ul>
-        </nav>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Dashboard Section -->
-            <div class="section active" id="dashboardSection">
-                <h2 style="margin-bottom: 1.5rem;">এডমিন ড্যাশবোর্ড</h2>
-                
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-user-cog"></i>
-                        </div>
-                        <div class="stat-value" id="pendingProfessionals">০</div>
-                        <div class="stat-label">অপেক্ষমান বিশেষজ্ঞ</div>
-                    </div>
-                    
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-tools"></i>
-                        </div>
-                        <div class="stat-value" id="pendingRequests">০</div>
-                        <div class="stat-label">অপেক্ষমান সেবা</div>
-                    </div>
-                    
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div class="stat-value" id="totalUsers">০</div>
-                        <div class="stat-label">মোট ব্যবহারকারী</div>
-                    </div>
-                    
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-coins"></i>
-                        </div>
-                        <div class="stat-value" id="totalRevenue">৳ ০</div>
-                        <div class="stat-label">মোট আয়</div>
-                    </div>
-                </div>
-                
-                <div class="table-container">
-                    <div class="table-header">
-                        <h3 class="table-title">সাম্প্রতিক বিশেষজ্ঞ আবেদন</h3>
-                        <a href="#professionals" class="btn btn-primary" onclick="showSection('professionals')">
-                            <i class="fas fa-eye"></i> সব দেখুন
-                        </a>
-                    </div>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>নাম</th>
-                                <th>ইমেইল</th>
-                                <th>সেবা</th>
-                                <th>তারিখ</th>
-                                <th>স্ট্যাটাস</th>
-                                <th>অ্যাকশন</th>
-                            </tr>
-                        </thead>
-                        <tbody id="recentProfessionals">
-                            <!-- Will be loaded dynamically -->
-                        </tbody>
-                    </table>
-                </div>
-                
-                <div class="table-container" style="margin-top: 1.5rem;">
-                    <div class="table-header">
-                        <h3 class="table-title">সাম্প্রতিক সেবা অনুরোধ</h3>
-                        <a href="#service-requests" class="btn btn-primary" onclick="showSection('service-requests')">
-                            <i class="fas fa-eye"></i> সব দেখুন
-                        </a>
-                    </div>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>গ্রাহক</th>
-                                <th>সেবা</th>
-                                <th>ঠিকানা</th>
-                                <th>তারিখ</th>
-                                <th>স্ট্যাটাস</th>
-                            </tr>
-                        </thead>
-                        <tbody id="recentRequests">
-                            <!-- Will be loaded dynamically -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Professionals Section -->
-            <div class="section" id="professionalsSection">
-                <h2 style="margin-bottom: 1rem;">বিশেষজ্ঞ আবেদন ম্যানেজমেন্ট</h2>
-                
-                <div class="filter-bar">
-                    <select class="filter-select" id="professionalFilter" onchange="filterProfessionals()">
-                        <option value="all">সব আবেদন</option>
-                        <option value="pending">অপেক্ষমান</option>
-                        <option value="approved">অনুমোদিত</option>
-                        <option value="rejected">প্রত্যাখ্যাত</option>
-                    </select>
-                </div>
-                
-                <div class="table-container">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>নাম</th>
-                                <th>ইমেইল</th>
-                                <th>ফোন</th>
-                                <th>সেবা</th>
-                                <th>এনআইডি</th>
-                                <th>তারিখ</th>
-                                <th>স্ট্যাটাস</th>
-                                <th>অ্যাকশন</th>
-                            </tr>
-                        </thead>
-                        <tbody id="professionalsTable">
-                            <!-- Will be loaded dynamically -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Service Requests Section -->
-            <div class="section" id="serviceRequestsSection">
-                <h2 style="margin-bottom: 1rem;">সেবা অনুরোধ</h2>
-                
-                <div class="filter-bar">
-                    <select class="filter-select" id="requestFilter" onchange="filterRequests()">
-                        <option value="all">সব অনুরোধ</option>
-                        <option value="pending">অপেক্ষমান</option>
-                        <option value="assigned">বিশেষজ্ঞ নিয়োগ</option>
-                        <option value="completed">সম্পন্ন</option>
-                        <option value="cancelled">বাতিল</option>
-                    </select>
-                </div>
-                
-                <div class="table-container">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>আইডি</th>
-                                <th>গ্রাহক</th>
-                                <th>সেবা</th>
-                                <th>সমস্যা</th>
-                                <th>ঠিকানা</th>
-                                <th>তারিখ</th>
-                                <th>স্ট্যাটাস</th>
-                                <th>অ্যাকশন</th>
-                            </tr>
-                        </thead>
-                        <tbody id="requestsTable">
-                            <!-- Will be loaded dynamically -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- Professional Details Modal -->
-    <div class="modal" id="professionalModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">বিশেষজ্ঞের বিস্তারিত তথ্য</h3>
-                <button class="modal-close" onclick="closeModal()">×</button>
-            </div>
-            <div class="modal-body" id="professionalModalBody">
-                <!-- Content will be loaded here -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Service Request Details Modal -->
-    <div class="modal" id="requestModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">সেবা অনুরোধের বিস্তারিত</h3>
-                <button class="modal-close" onclick="closeModal()">×</button>
-            </div>
-            <div class="modal-body" id="requestModalBody">
-                <!-- Content will be loaded here -->
-            </div>
-        </div>
-    </div>
-
-    <!DOCTYPE html>
-<html lang="bn">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>নিবাস - এডমিন ড্যাশবোর্ড</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Kalpurush&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #5629be;
-            --primary-light: #a78bfa;
-            --secondary: #0eaa69c5;
-            --dark-bg: #0f172a;
-            --dark-card: #1e293b;
-            --dark-text: #f1f5f9;
-            --dark-border: #334155;
-            --light-bg: #f8fafc;
-            --light-card: #ffffff;
-            --light-text: #1e293b;
-            --light-border: #e2e8f0;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --info: #3b82f6;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Hind Siliguri', 'Kalpurush', system-ui, sans-serif;
-        }
-
-        body {
-            background: var(--dark-bg);
-            color: var(--dark-text);
-            min-height: 100vh;
-        }
-
-        body.light-mode {
-            background: var(--light-bg);
-            color: var(--light-text);
-        }
-
-        /* Header */
-        .header {
-            padding: 1rem 2rem;
-            background: var(--dark-card);
-            border-bottom: 1px solid var(--dark-border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .light-mode .header {
-            background: var(--light-card);
-            border-bottom: 1px solid var(--light-border);
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        .logo i {
-            font-size: 1.8rem;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-
-        /* Dashboard Layout */
-        .dashboard {
-            display: grid;
-            grid-template-columns: 250px 1fr;
-            min-height: calc(100vh - 70px);
-        }
-
-        /* Sidebar */
-        .sidebar {
-            background: var(--dark-card);
-            border-right: 1px solid var(--dark-border);
-            padding: 1.5rem 0;
-        }
-
-        .light-mode .sidebar {
-            background: var(--light-card);
-            border-right: 1px solid var(--light-border);
-        }
-
-        .nav-menu {
-            list-style: none;
-        }
-
-        .nav-item {
-            margin-bottom: 0.25rem;
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1.5rem;
-            color: var(--dark-text);
-            text-decoration: none;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-
-        .light-mode .nav-link {
-            color: var(--light-text);
-        }
-
-        .nav-link:hover, .nav-link.active {
-            background: rgba(86, 41, 190, 0.1);
-            color: var(--primary);
-            border-right: 3px solid var(--primary);
-        }
-
-        .nav-link i {
-            width: 20px;
-            text-align: center;
-        }
-
-        /* Main Content */
-        .main-content {
-            padding: 2rem;
-            overflow-y: auto;
-        }
-
-        .section {
-            display: none;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        /* Stats Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: var(--dark-card);
-            padding: 1.5rem;
-            border-radius: 12px;
-            border: 1px solid var(--dark-border);
-            text-align: center;
-        }
-
-        .light-mode .stat-card {
-            background: var(--light-card);
-            border: 1px solid var(--light-border);
-        }
-
-        .stat-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5rem;
-            margin: 0 auto 1rem;
-        }
-
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 0.25rem;
-        }
-
-        .stat-label {
-            color: #94a3b8;
-            font-size: 0.9rem;
-        }
-
-        .light-mode .stat-label {
-            color: #64748b;
-        }
-
-        /* Tables */
-        .table-container {
-            background: var(--dark-card);
-            border-radius: 12px;
-            border: 1px solid var(--dark-border);
-            overflow: hidden;
-            margin-top: 1.5rem;
-        }
-
-        .light-mode .table-container {
-            background: var(--light-card);
-            border: 1px solid var(--light-border);
-        }
-
-        .table-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--dark-border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .light-mode .table-header {
-            border-bottom: 1px solid var(--light-border);
-        }
-
-        .table-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--dark-text);
-        }
-
-        .light-mode .table-title {
-            color: var(--light-text);
-        }
-
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .table th {
-            padding: 1rem;
-            text-align: left;
-            background: rgba(86, 41, 190, 0.1);
-            color: var(--dark-text);
-            font-weight: 600;
-            border-bottom: 1px solid var(--dark-border);
-        }
-
-        .light-mode .table th {
-            background: rgba(86, 41, 190, 0.05);
-            color: var(--light-text);
-            border-bottom: 1px solid var(--light-border);
-        }
-
-        .table td {
-            padding: 1rem;
-            border-bottom: 1px solid var(--dark-border);
-        }
-
-        .light-mode .table td {
-            border-bottom: 1px solid var(--light-border);
-        }
-
-        .table tbody tr:hover {
-            background: rgba(86, 41, 190, 0.05);
-        }
-
-        /* Status Badges */
-        .status-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            display: inline-block;
-        }
-
-        .status-pending {
-            background: rgba(245, 158, 11, 0.15);
-            color: var(--warning);
-        }
-
-        .status-approved {
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--success);
-        }
-
-        .status-rejected {
-            background: rgba(239, 68, 68, 0.15);
-            color: var(--danger);
-        }
-
-        .status-active {
-            background: rgba(86, 41, 190, 0.15);
-            color: var(--primary);
-        }
-
-        /* Action Buttons */
-        .action-buttons {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .btn {
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            font-weight: 500;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s;
-            text-decoration: none;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-light);
-            transform: translateY(-2px);
-        }
-
-        .btn-success {
-            background: var(--success);
-            color: white;
-        }
-
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-        }
-
-        .btn-info {
-            background: var(--info);
-            color: white;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
-
-        .modal-content {
-            background: var(--dark-card);
-            border-radius: 16px;
-            max-width: 600px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            border: 1px solid var(--dark-border);
-        }
-
-        .light-mode .modal-content {
-            background: var(--light-card);
-            border: 1px solid var(--light-border);
-        }
-
-        .modal-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--dark-border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .light-mode .modal-header {
-            border-bottom: 1px solid var(--light-border);
-        }
-
-        .modal-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--dark-text);
-        }
-
-        .light-mode .modal-title {
-            color: var(--light-text);
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            color: #94a3b8;
-            cursor: pointer;
-            font-size: 1.5rem;
-            transition: color 0.3s;
-        }
-
-        .modal-close:hover {
-            color: var(--danger);
-        }
-
-        .modal-body {
-            padding: 1.5rem;
-        }
-
-        .modal-footer {
-            padding: 1.5rem;
-            border-top: 1px solid var(--dark-border);
-            display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
-        }
-
-        .light-mode .modal-footer {
-            border-top: 1px solid var(--light-border);
-        }
-
-        /* Filter */
-        .filter-bar {
-            background: var(--dark-card);
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .light-mode .filter-bar {
-            background: var(--light-card);
-        }
-
-        .filter-select {
-            padding: 0.5rem 1rem;
-            background: var(--dark-bg);
-            border: 1px solid var(--dark-border);
-            border-radius: 6px;
-            color: var(--dark-text);
-        }
-
-        .light-mode .filter-select {
-            background: var(--light-bg);
-            border: 1px solid var(--light-border);
-            color: var(--light-text);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .dashboard {
-                grid-template-columns: 1fr;
-            }
-            
-            .sidebar {
-                display: none;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .table {
-                display: block;
-                overflow-x: auto;
-            }
-        }
-    </style>
-</head>
-<body class="dark-mode">
     <!-- Header -->
+    <header class="header">
         <a href="index.html" class="logo">
             <i class="fas fa-user-shield"></i>
             <span>নিবাস এডমিন</span>
@@ -1213,6 +496,7 @@
         <div class="user-info" id="userInfo">
             <!-- Will be populated by JavaScript -->
         </div>
+    </header>
 
     <!-- Dashboard -->
     <div class="dashboard">
@@ -1410,6 +694,52 @@
                         </thead>
                         <tbody id="requestsTable">
                             <!-- Will be loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Users Section -->
+            <div class="section" id="usersSection">
+                <h2 style="margin-bottom: 1rem;">ব্যবহারকারী ব্যবস্থাপনা</h2>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>নাম</th>
+                                <th>ইমেইল</th>
+                                <th>ফোন</th>
+                                <th>অ্যাকাউন্ট টাইপ</th>
+                                <th>স্ট্যাটাস</th>
+                                <th>নিবন্ধনের তারিখ</th>
+                                <th>অ্যাকশন</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTable">
+                            <!-- Users will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Payments Section -->
+            <div class="section" id="paymentsSection">
+                <h2 style="margin-bottom: 1rem;">পেমেন্ট ব্যবস্থাপনা</h2>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>পেমেন্ট আইডি</th>
+                                <th>গ্রাহক</th>
+                                <th>পরিষেবা</th>
+                                <th>পরিমাণ</th>
+                                <th>তারিখ</th>
+                                <th>স্ট্যাটাস</th>
+                                <th>অ্যাকশন</th>
+                            </tr>
+                        </thead>
+                        <tbody id="paymentsTable">
+                            <!-- Payments will be loaded here -->
                         </tbody>
                     </table>
                 </div>
@@ -1444,7 +774,6 @@
     </div>
 
     <script>
-        // === ADMIN DASHBOARD SCRIPT - FIXED VERSION ===
         let currentAdmin = null;
         let selectedProfessional = null;
         let selectedRequest = null;
@@ -1457,50 +786,51 @@
 
         // Single admin access check function
         function checkAdminAccess() {
-    console.log('🔐 Checking admin access...');
-    
-    const userData = localStorage.getItem('nibash_user');
-    const userToken = localStorage.getItem('nibash_token');
-    
-    if (!userData || !userToken) {
-        console.log('❌ No session found');
-        alert('Please login first');
-        window.location.href = '/login.html';
-        return;
-    }
-    
-    try {
-        currentAdmin = JSON.parse(userData);
-        console.log('👤 Current user:', currentAdmin);
-        
-        const isAdmin = currentAdmin.role === 'admin' || 
-                       currentAdmin.account_type === 'admin' || 
-                       currentAdmin.email === 'admin@nibash.com';
-        
-        if (!isAdmin) {
-            console.log('❌ User is not admin:', currentAdmin.role);
-            alert('Admin access only');
+            console.log('🔐 Checking admin access...');
             
-            if (currentAdmin.role === 'customer') {
-                window.location.href = '/customer.html';
-            } else if (currentAdmin.role === 'professional') {
-                window.location.href = '/professional.html';
-            } else {
-                window.location.href = '/index.html';
+            const userData = localStorage.getItem('nibash_user');
+            const userToken = localStorage.getItem('nibash_token');
+            
+            if (!userData || !userToken) {
+                console.log('❌ No session found');
+                alert('Please login first');
+                window.location.href = 'login.html';
+                return;
             }
-            return;
+            
+            try {
+                currentAdmin = JSON.parse(userData);
+                console.log('👤 Current user:', currentAdmin);
+                
+                const isAdmin = currentAdmin.role === 'admin' || 
+                               currentAdmin.account_type === 'admin' || 
+                               currentAdmin.email === 'admin@nibash.com';
+                
+                if (!isAdmin) {
+                    console.log('❌ User is not admin:', currentAdmin.role);
+                    alert('Admin access only');
+                    
+                    if (currentAdmin.role === 'customer') {
+                        window.location.href = 'customer.html';
+                    } else if (currentAdmin.role === 'professional') {
+                        window.location.href = 'professional.html';
+                    } else {
+                        window.location.href = 'index.html';
+                    }
+                    return;
+                }
+                
+                console.log('✅ Admin access granted for:', currentAdmin.email);
+                initAdminPanel();
+                
+            } catch (error) {
+                console.error('❌ Error parsing user data:', error);
+                alert('Session error. Please login again.');
+                localStorage.clear();
+                window.location.href = 'login.html';
+            }
         }
-        
-        console.log('✅ Admin access granted for:', currentAdmin.email);
-        initAdminPanel();
-        
-    } catch (error) {
-        console.error('❌ Error parsing user data:', error);
-        alert('Session error. Please login again.');
-        localStorage.clear();
-        window.location.href = '/login.html';
-    }
-}
+
         // Initialize admin panel
         function initAdminPanel() {
             console.log('🎯 Initializing admin panel...');
@@ -1510,6 +840,8 @@
             loadDashboardData();
             loadAllProfessionals();
             loadAllServiceRequests();
+            loadAllUsers();
+            loadAllPayments();
         }
 
         // Update user info display
@@ -1788,6 +1120,84 @@
             renderRequestsTable(filtered);
         }
 
+        // Load all users
+        function loadAllUsers() {
+            const users = JSON.parse(localStorage.getItem('nibash_users') || '[]');
+            const tbody = document.getElementById('usersTable');
+            
+            if (users.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 2rem; color: #94a3b8;">
+                            <i class="fas fa-users" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                            <div>কোন ব্যবহারকারী নেই</div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = users.map(user => `
+                <tr>
+                    <td>${user.fullName || 'N/A'}</td>
+                    <td>${user.email}</td>
+                    <td>${user.phone || 'N/A'}</td>
+                    <td>${user.role || user.accountType || 'customer'}</td>
+                    <td>
+                        <span class="status-badge ${user.status === 'active' ? 'status-active' : 'status-pending'}">
+                            ${user.status === 'active' ? 'সক্রিয়' : 'নিষ্ক্রিয়'}
+                        </span>
+                    </td>
+                    <td>${new Date(user.createdAt || new Date()).toLocaleDateString('bn-BD')}</td>
+                    <td>
+                        <button class="btn btn-info" onclick="viewUser('${user.email}')" style="padding: 0.25rem 0.5rem;">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Load all payments
+        function loadAllPayments() {
+            const payments = JSON.parse(localStorage.getItem('user_payments') || '[]');
+            const tbody = document.getElementById('paymentsTable');
+            
+            if (payments.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 2rem; color: #94a3b8;">
+                            <i class="fas fa-credit-card" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                            <div>কোন পেমেন্ট নেই</div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = payments.map(payment => `
+                <tr>
+                    <td>${payment.id || 'N/A'}</td>
+                    <td>${payment.customerName || 'গ্রাহক'}</td>
+                    <td>${payment.description || 'সেবা পেমেন্ট'}</td>
+                    <td>৳ ${parseFloat(payment.amount || 0).toLocaleString()}</td>
+                    <td>${new Date(payment.date || new Date()).toLocaleDateString('bn-BD')}</td>
+                    <td>
+                        <span class="status-badge ${payment.status === 'completed' ? 'status-approved' : 
+                            payment.status === 'pending' ? 'status-pending' : 'status-rejected'}">
+                            ${payment.status === 'completed' ? 'সম্পন্ন' : 
+                             payment.status === 'pending' ? 'অপেক্ষমান' : 'বাতিল'}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-info" onclick="viewPayment('${payment.id}')" style="padding: 0.25rem 0.5rem;">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
         // View professional details
         function viewProfessional(email) {
             const applications = JSON.parse(localStorage.getItem('nibash_applications') || '[]');
@@ -1941,6 +1351,7 @@
             closeModal();
             loadDashboardData();
             loadAllProfessionals();
+            loadAllUsers();
         }
 
         // Reject a professional
@@ -1958,10 +1369,20 @@
             });
             localStorage.setItem('nibash_applications', JSON.stringify(applications));
             
+            let users = JSON.parse(localStorage.getItem('nibash_users') || '[]');
+            users = users.map(user => {
+                if (user.email === email) {
+                    return { ...user, status: 'inactive' };
+                }
+                return user;
+            });
+            localStorage.setItem('nibash_users', JSON.stringify(users));
+            
             alert('বিশেষজ্ঞ প্রত্যাখ্যান করা হয়েছে!');
             closeModal();
             loadDashboardData();
             loadAllProfessionals();
+            loadAllUsers();
         }
 
         // Assign professional to service request
@@ -2064,30 +1485,6 @@
                 window.location.href = 'index.html';
             }
         }
-
-        // Debug function
-        window.debugAdminSession = function() {
-            console.log('=== ADMIN SESSION DEBUG ===');
-            console.log('1. localStorage contents:');
-            console.log('- nibash_user:', localStorage.getItem('nibash_user'));
-            console.log('- user_role:', localStorage.getItem('user_role'));
-            
-            console.log('2. Parsed user data:');
-            try {
-                const user = JSON.parse(localStorage.getItem('nibash_user') || '{}');
-                console.log(user);
-                console.log('Email:', user.email);
-                console.log('Role:', user.role);
-                console.log('Account Type:', user.accountType);
-                
-                const isAdmin = user.role === 'admin' || 
-                               user.accountType === 'admin' || 
-                               user.email === 'admin@nibash.com';
-                console.log('Is admin?', isAdmin);
-            } catch (e) {
-                console.log('Error parsing user:', e);
-            }
-        };
 
         // Close modal when clicking outside
         window.addEventListener('click', (e) => {
