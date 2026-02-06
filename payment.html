@@ -249,26 +249,26 @@
     if (!amount) {
         amount = localStorage.getItem('selectedProfessionalPrice') || 
                  localStorage.getItem('paymentAmount') || 
-                 '2500';
+                 '';
     }
     
     if (!professionalId) {
-        professionalId = localStorage.getItem('selectedProfessionalId') || 'PRO001';
+        professionalId = localStorage.getItem('selectedProfessionalId') || '';
     }
     
     if (!professionalName) {
-        professionalName = localStorage.getItem('selectedProfessionalName') || 'পেশাদার';
+        professionalName = localStorage.getItem('selectedProfessionalName') || '';
     }
     
     if (!service) {
-        service = localStorage.getItem('selectedProfessionalService') || 'সেবা';
+        service = localStorage.getItem('selectedProfessionalService') || '';
     }
     
     // Store in paymentData object
     paymentData = {
         id: 'PAY-' + Date.now(),
         amount: parseFloat(amount),
-        description: service + ' - ' + professionalName,
+        description: service && professionalName ? `${service} - ${professionalName}` : 'সেবা',
         serviceId: professionalId,
         professionalName: professionalName,
         service: service
@@ -276,22 +276,29 @@
     
     console.log('Payment Data Loaded:', paymentData);
     
-    // Update UI with EXACT amount
-    document.getElementById('amountDisplay').textContent = `৳ ${paymentData.amount.toLocaleString('bn-BD')}`;
+    const hasValidAmount = Number.isFinite(paymentData.amount) && paymentData.amount > 0;
+    const hasProfessional = Boolean(paymentData.professionalName && paymentData.serviceId);
     
-    // Store for SSLCommerz
-    localStorage.setItem('paymentAmount', paymentData.amount);
+    // Update UI with EXACT amount
+    document.getElementById('amountDisplay').textContent = hasValidAmount
+        ? `৳ ${paymentData.amount.toLocaleString('bn-BD')}`
+        : '৳ 0';
+    
+    // Store for SSLCommerz when valid
+    if (hasValidAmount) {
+        localStorage.setItem('paymentAmount', paymentData.amount);
+    }
     localStorage.setItem('currentPaymentData', JSON.stringify(paymentData));
     
     // Update service info
     document.getElementById('serviceInfo').innerHTML = `
         <div class="info-item">
             <span>সেবা:</span>
-            <span>${paymentData.service}</span>
+            <span>${paymentData.service || 'সেবা নির্ধারিত হয়নি'}</span>
         </div>
         <div class="info-item">
             <span>পেশাদার:</span>
-            <span>${paymentData.professionalName}</span>
+            <span>${paymentData.professionalName || 'পেশাদার নির্বাচন করুন'}</span>
         </div>
         <div class="info-item">
             <span>পেমেন্ট আইডি:</span>
@@ -302,6 +309,12 @@
             <span>${new Date().toLocaleDateString('bn-BD')}</span>
         </div>
     `;
+    
+    const payButton = document.getElementById('payButton');
+    if (!hasValidAmount || !hasProfessional) {
+        payButton.disabled = true;
+        payButton.innerHTML = '<i class="fas fa-info-circle"></i> পেমেন্টের আগে পেশাদার ও মূল্য নিশ্চিত করুন';
+    }
 }
 
         function setupPaymentMethods() {
@@ -341,7 +354,7 @@
             }
         }
 
-        async function initiateSSLCommerzPayment() {
+    async function initiateSSLCommerzPayment() {
     // Get user data
     const userData = localStorage.getItem('nibash_user');
     let user = null;
@@ -380,13 +393,22 @@
     localStorage.setItem('sslProfessionalName', paymentData.professionalName);
     localStorage.setItem('sslService', paymentData.service);
     
-    // For demo, simulate SSLCommerz redirect
+    // Redirect to SSLCommerz gateway (or mock gateway) first
     showProcessingMessage();
     
-    // Simulate payment processing
-    setTimeout(() => {
-        window.location.href = `payment-success.html?tran_id=${tran_id}&amount=${paymentData.amount}&professional=${paymentData.serviceId}&service=${encodeURIComponent(paymentData.service)}&name=${encodeURIComponent(paymentData.professionalName)}`;
-    }, 2000);
+    const response = await fetch('/api/payment/initiate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(paymentRequest)
+    });
+    
+    const result = await response.json();
+    
+    if (!response.ok || !result.success || !result.GatewayPageURL) {
+        throw new Error(result.error || 'SSLCommerz initiation failed');
+    }
+    
+    window.location.href = result.GatewayPageURL;
 }
 
 function showProcessingMessage() {
