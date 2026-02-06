@@ -3,319 +3,496 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>পেমেন্ট সফল</title>
+    <title>পেমেন্ট সফল | নিবাস</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #ecfdf3 0%, #d1fae5 100%);
+        :root {
+            --success-primary: #10b981;
+            --success-secondary: #34d399;
+            --success-accent: #a7f3d0;
+            --success-bg: #ecfdf5;
+            --success-card: #ffffff;
+            --success-text: #065f46;
+            --success-border: #a7f3d0;
+        }
+        
+        * {
             margin: 0;
-            padding: 40px 16px;
-            color: #14532d;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--success-bg);
+            color: var(--success-text);
             min-height: 100vh;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-        }
-        
-        .card {
-            max-width: 720px;
-            margin: 0 auto;
-            background: #fff;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(34, 197, 94, 0.2);
-            border-left: 8px solid #22c55e;
-            text-align: center;
-            position: relative;
-            z-index: 1;
-            transform: translateY(30px);
-            opacity: 0;
-            animation: floatUp 0.8s ease-out 0.2s forwards;
-        }
-        
-        @keyframes floatUp {
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        
-        h1 {
-            margin-top: 0;
-            font-size: 2.8rem;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, #16a34a, #22c55e);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            position: relative;
-            display: inline-block;
-        }
-        
-        h1:after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 25%;
-            width: 50%;
-            height: 4px;
-            background: linear-gradient(90deg, transparent, #22c55e, transparent);
-            border-radius: 2px;
-        }
-        
-        .success-icon {
-            font-size: 5rem;
-            color: #22c55e;
-            margin-bottom: 20px;
-            animation: successBounce 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55), successGlow 2s infinite 0.8s;
-        }
-        
-        @keyframes successBounce {
-            0% {
-                transform: scale(0.3) rotate(-180deg);
-                opacity: 0;
-            }
-            70% {
-                transform: scale(1.2) rotate(10deg);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(1) rotate(0deg);
-                opacity: 1;
-            }
-        }
-        
-        @keyframes successGlow {
-            0%, 100% {
-                filter: drop-shadow(0 0 10px rgba(34, 197, 94, 0.3));
-                transform: scale(1);
-            }
-            50% {
-                filter: drop-shadow(0 0 20px rgba(34, 197, 94, 0.6));
-                transform: scale(1.05);
-            }
-        }
-        
-        p {
-            font-size: 1.3rem;
-            line-height: 1.7;
-            margin-bottom: 30px;
-            color: #15803d;
-        }
-        
-        .success-details {
-            background: #f0fdf4;
             padding: 20px;
-            border-radius: 15px;
-            margin: 25px 0;
-            text-align: left;
-            border: 1px solid #bbf7d0;
-            animation: slideIn 0.5s ease-out 0.5s both;
         }
         
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        
-        .success-details h3 {
-            margin-top: 0;
-            color: #16a34a;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .actions {
-            margin-top: 35px;
-            animation: fadeIn 0.5s ease-out 0.8s both;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        a {
-            display: inline-block;
-            padding: 16px 32px;
-            background: linear-gradient(135deg, #22c55e, #16a34a);
-            color: #fff;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 25px rgba(34, 197, 94, 0.4);
+        .container {
             position: relative;
-            overflow: hidden;
+            z-index: 10;
+            width: 100%;
+            max-width: 480px;
         }
         
-        a:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(34, 197, 94, 0.6);
-            background: linear-gradient(135deg, #16a34a, #15803d);
-        }
-        
-        a:active {
-            transform: translateY(-1px);
-        }
-        
-        .confetti-container {
+        /* Animated Background */
+        .bg-animation {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 0;
+            z-index: 1;
         }
         
-        .confetti {
+        .gradient-orb {
             position: absolute;
-            width: 10px;
-            height: 10px;
-            opacity: 0;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, var(--success-secondary) 0%, transparent 70%);
+            filter: blur(60px);
+            opacity: 0.3;
+            animation: floatOrb 15s infinite ease-in-out;
         }
         
-        .confetti:nth-child(3n) {
-            width: 15px;
-            height: 15px;
+        .orb-1 {
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
         }
         
-        .confetti:nth-child(5n) {
-            width: 7px;
-            height: 7px;
+        .orb-2 {
+            bottom: 10%;
+            right: 10%;
+            animation-delay: 5s;
+            background: radial-gradient(circle, var(--success-accent) 0%, transparent 70%);
         }
         
-        .celebration-text {
+        @keyframes floatOrb {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            33% {
+                transform: translate(30px, -30px) scale(1.1);
+            }
+            66% {
+                transform: translate(-20px, 20px) scale(0.9);
+            }
+        }
+        
+        /* Success Card */
+        .success-card {
+            background: var(--success-card);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 
+                0 20px 60px rgba(16, 185, 129, 0.15),
+                0 1px 3px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--success-border);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .success-card::before {
+            content: '';
             position: absolute;
-            top: 20px;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--success-primary), var(--success-secondary));
+            border-radius: 24px 24px 0 0;
+        }
+        
+        /* Success Animation Container */
+        .success-animation {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+        }
+        
+        /* Progress Circle */
+        .progress-circle {
+            position: absolute;
+            top: 0;
             left: 0;
             width: 100%;
-            text-align: center;
-            font-size: 1.5rem;
-            color: #16a34a;
-            font-weight: bold;
+            height: 100%;
+        }
+        
+        .circle-bg {
+            fill: none;
+            stroke: var(--success-accent);
+            stroke-width: 4;
+        }
+        
+        .circle-progress {
+            fill: none;
+            stroke: var(--success-primary);
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-dasharray: 314;
+            stroke-dashoffset: 314;
+            transform-origin: center;
+            transform: rotate(-90deg);
+            animation: progressFill 1.5s ease-out forwards 0.3s;
+        }
+        
+        @keyframes progressFill {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+        
+        /* Morph Animation - Progress to Success */
+        .morph-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+        }
+        
+        .morph-shape {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: var(--success-primary);
+            border-radius: 50%;
             opacity: 0;
-            animation: celebrationFloat 3s ease-in-out infinite;
+            animation: morphAnimation 2s ease-out forwards 0.5s;
         }
         
-        @keyframes celebrationFloat {
-            0%, 100% {
+        @keyframes morphAnimation {
+            0% {
                 opacity: 0;
-                transform: translateY(0);
+                transform: scale(0) rotate(0deg);
+                border-radius: 50%;
+                background: var(--success-primary);
             }
-            10%, 90% {
+            20% {
                 opacity: 1;
+                transform: scale(1) rotate(180deg);
+                border-radius: 50%;
+                background: var(--success-primary);
             }
-            50% {
-                transform: translateY(-20px);
+            40% {
+                transform: scale(0.8) rotate(360deg);
+                border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+                background: var(--success-primary);
+            }
+            60% {
+                transform: scale(1) rotate(540deg);
+                border-radius: 50% 50% 20% 80% / 25% 80% 25% 75%;
+                background: var(--success-secondary);
+            }
+            80% {
+                transform: scale(1.1) rotate(720deg);
+                border-radius: 67% 33% 47% 53% / 37% 20% 80% 63%;
+                background: var(--success-primary);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(720deg);
+                border-radius: 50%;
+                background: var(--success-primary);
             }
         }
         
-        .sparkle {
+        /* Success Checkmark */
+        .checkmark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 40px;
+            height: 40px;
+            opacity: 0;
+            animation: checkmarkReveal 0.5s ease-out forwards 2.5s;
+        }
+        
+        .checkmark-path {
+            stroke: white;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: checkmarkDraw 0.5s ease-out forwards 3s;
+        }
+        
+        @keyframes checkmarkReveal {
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+        
+        @keyframes checkmarkDraw {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+        
+        /* Particle Effects */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .particle {
             position: absolute;
             width: 4px;
             height: 4px;
-            background: #22c55e;
+            background: var(--success-secondary);
             border-radius: 50%;
-            pointer-events: none;
             opacity: 0;
         }
         
-        .checkmark-circle {
-            position: relative;
-            display: inline-block;
+        /* Content */
+        .content {
+            text-align: center;
+            animation: contentFadeIn 0.5s ease-out forwards 3s;
+            opacity: 0;
+            transform: translateY(20px);
         }
         
-        .checkmark-circle:before {
-            content: '';
-            position: absolute;
-            top: -10px;
-            left: -10px;
-            right: -10px;
-            bottom: -10px;
-            border: 3px solid rgba(34, 197, 94, 0.2);
-            border-radius: 50%;
-            animation: circleExpand 1s ease-out 0.5s;
-        }
-        
-        @keyframes circleExpand {
-            0% {
-                transform: scale(0.5);
+        @keyframes contentFadeIn {
+            to {
                 opacity: 1;
+                transform: translateY(0);
             }
-            100% {
-                transform: scale(2);
+        }
+        
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--success-text), #047857);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #6b7280;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .amount {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--success-primary);
+            margin: 20px 0;
+            font-feature-settings: "tnum";
+        }
+        
+        .details {
+            background: var(--success-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
+            text-align: left;
+            border: 1px solid var(--success-border);
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        
+        .detail-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .label {
+            color: #6b7280;
+        }
+        
+        .value {
+            font-weight: 600;
+            color: var(--success-text);
+        }
+        
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary {
+            background: var(--success-primary);
+            color: white;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: var(--success-text);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--success-text);
+            border: 1.5px solid var(--success-border);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--success-bg);
+            transform: translateY(-2px);
+            border-color: var(--success-secondary);
+        }
+        
+        .btn-ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.7);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+        }
+        
+        @keyframes ripple {
+            to {
+                transform: scale(4);
                 opacity: 0;
             }
         }
         
-        @media (max-width: 768px) {
-            .card {
+        /* Micro-interactions */
+        .success-card {
+            animation: cardFloat 6s ease-in-out infinite;
+        }
+        
+        @keyframes cardFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        /* Responsive */
+        @media (max-width: 480px) {
+            .success-card {
                 padding: 30px 20px;
-                margin: 0 15px;
+            }
+            
+            .actions {
+                flex-direction: column;
             }
             
             h1 {
-                font-size: 2.2rem;
+                font-size: 24px;
             }
             
-            .success-icon {
-                font-size: 4rem;
-            }
-            
-            p {
-                font-size: 1.1rem;
+            .amount {
+                font-size: 32px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="confetti-container" id="confettiContainer"></div>
-    <div class="celebration-text" id="celebrationText">🎉 পেমেন্ট সফল! 🎉</div>
+    <div class="bg-animation">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+    </div>
     
-    <div class="card">
-        <div class="checkmark-circle">
-            <div class="success-icon">✅</div>
-        </div>
-        <h1>পেমেন্ট সফল!</h1>
-        <p>আপনার পেমেন্ট সফলভাবে সম্পন্ন হয়েছে। আপনাকে ধন্যবাদ! আপনার অর্ডার শীঘ্রই প্রক্রিয়াকরণ করা হবে।</p>
-        
-        <div class="success-details">
-            <h3>
-                <span style="color: #22c55e; font-size: 1.2rem;">✓</span>
-                পেমেন্ট বিবরণ
-            </h3>
-            <p><strong>লেনদেন আইডি:</strong> TXN-<span id="transactionId">123456</span></p>
-            <p><strong>সময়:</strong> <span id="transactionTime">আজ, ২:৩০ PM</span></p>
-            <p><strong>স্ট্যাটাস:</strong> <span style="color: #16a34a; font-weight: bold;">✓ সম্পন্ন</span></p>
-        </div>
-        
-        <div class="actions">
-            <a href="customer.html" id="dashboardBtn">ড্যাশবোর্ডে যান</a>
+    <div class="container">
+        <div class="success-card">
+            <div class="success-animation">
+                <svg class="progress-circle" viewBox="0 0 100 100">
+                    <circle class="circle-bg" cx="50" cy="50" r="45"></circle>
+                    <circle class="circle-progress" cx="50" cy="50" r="45"></circle>
+                </svg>
+                
+                <div class="morph-container">
+                    <div class="morph-shape"></div>
+                </div>
+                
+                <svg class="checkmark" viewBox="0 0 24 24">
+                    <path class="checkmark-path" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path>
+                </svg>
+                
+                <div class="particles" id="particles"></div>
+            </div>
+            
+            <div class="content">
+                <h1>পেমেন্ট সফল</h1>
+                <div class="subtitle">আপনার লেনদেন সফলভাবে সম্পন্ন হয়েছে</div>
+                
+                <div class="amount" id="amountDisplay">৳ ২,৫০০</div>
+                
+                <div class="details">
+                    <div class="detail-item">
+                        <span class="label">লেনদেন আইডি</span>
+                        <span class="value" id="transactionId">TXN-834729</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">তারিখ ও সময়</span>
+                        <span class="value" id="transactionTime">আজ, ২:৩০ PM</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">পেমেন্ট মাধ্যম</span>
+                        <span class="value">Visa •••• 4242</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">স্ট্যাটাস</span>
+                        <span class="value" style="color: var(--success-primary);">✓ সম্পূর্ণ</span>
+                    </div>
+                </div>
+                
+                <div class="actions">
+                    <a href="dashboard.html" class="btn btn-primary" id="dashboardBtn">ড্যাশবোর্ডে যান</a>
+                    <a href="receipt.html" class="btn btn-secondary">রসিদ ডাউনলোড</a>
+                </div>
+            </div>
         </div>
     </div>
 
     <audio id="successSound" preload="auto">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3" type="audio/mpeg">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3" type="audio/mpeg">
     </audio>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Generate random transaction ID
+            // Generate dynamic data
             document.getElementById('transactionId').textContent = 
-                Math.floor(100000 + Math.random() * 900000);
+                'TXN-' + Math.floor(100000 + Math.random() * 900000);
             
-            // Set current time
             const now = new Date();
             const timeString = now.toLocaleTimeString('bn-BD', { 
                 hour: '2-digit', 
@@ -324,214 +501,155 @@
             document.getElementById('transactionTime').textContent = 
                 `আজ, ${timeString}`;
             
-            // Play success sound
+            // Generate random amount
+            const amounts = [1250, 1899, 2500, 3200, 4500];
+            document.getElementById('amountDisplay').textContent = 
+                '৳ ' + amounts[Math.floor(Math.random() * amounts.length)].toLocaleString('bn-BD');
+            
+            // Play success sound with precise timing
             const successSound = document.getElementById('successSound');
-            
-            // Play sound after a short delay for dramatic effect
             setTimeout(() => {
-                successSound.volume = 0.3;
-                successSound.play().catch(e => console.log("Audio play failed:", e));
-            }, 300);
+                successSound.volume = 0.2;
+                successSound.play().catch(e => console.log("Audio autoplay blocked"));
+            }, 2200); // Sync with animation completion
             
-            // Create confetti
-            createConfetti();
+            // Create particle burst
+            createParticleBurst();
             
-            // Create celebration text
-            createCelebrationText();
-            
-            // Add button hover sparkles
-            const dashboardBtn = document.getElementById('dashboardBtn');
-            
-            dashboardBtn.addEventListener('mouseenter', function(e) {
-                createSparkles(e, this);
+            // Add ripple effect to buttons
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    createRippleEffect(e, this);
+                });
             });
             
-            // Add continuous sparkles
-            startContinuousSparkles();
+            // Create floating particles
+            startParticleSystem();
         });
         
-        function createConfetti() {
-            const container = document.getElementById('confettiContainer');
-            const colors = ['#22c55e', '#16a34a', '#86efac', '#4ade80', '#15803d'];
-            const shapes = ['🎉', '🎊', '✨', '⭐', '🌟', '💫', '💚', '💰'];
+        function createParticleBurst() {
+            const particlesContainer = document.getElementById('particles');
+            const centerX = 60;
+            const centerY = 60;
             
-            for (let i = 0; i < 150; i++) {
-                const confetti = document.createElement('div');
-                confetti.className = 'confetti';
+            for (let i = 0; i < 24; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
                 
-                // Randomly choose between emoji or colored div
-                if (Math.random() > 0.5) {
-                    confetti.textContent = shapes[Math.floor(Math.random() * shapes.length)];
-                    confetti.style.fontSize = Math.random() * 20 + 15 + 'px';
-                    confetti.style.color = colors[Math.floor(Math.random() * colors.length)];
-                } else {
-                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
-                    if (Math.random() > 0.7) {
-                        confetti.style.clipPath = 'polygon(50% 0%, 0% 100%, 100% 100%)';
-                    }
-                }
+                const angle = (i / 24) * Math.PI * 2;
+                const distance = 60;
+                const size = 2 + Math.random() * 4;
                 
-                confetti.style.left = Math.random() * 100 + 'vw';
-                confetti.style.top = '-50px';
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = centerX + 'px';
+                particle.style.top = centerY + 'px';
                 
-                container.appendChild(confetti);
+                particlesContainer.appendChild(particle);
                 
-                // Animate confetti
-                const duration = 3000 + Math.random() * 3000;
-                const delay = Math.random() * 1000;
-                const xMovement = (Math.random() - 0.5) * 200;
+                // Animate particle burst
+                const duration = 1200 + Math.random() * 800;
+                const delay = 2200 + Math.random() * 300;
                 
-                confetti.animate([
+                particle.animate([
                     {
                         opacity: 0,
-                        transform: 'translateY(0) rotate(0deg)'
+                        transform: `translate(0, 0) scale(0)`
                     },
                     {
                         opacity: 1,
-                        transform: `translateY(50px) rotate(180deg)`
+                        transform: `translate(0, 0) scale(1)`
                     },
                     {
-                        opacity: 1,
-                        transform: `translate(calc(${xMovement}px), calc(100vh + 100px)) rotate(360deg)`
+                        opacity: 0,
+                        transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) scale(0)`
                     }
                 ], {
                     duration: duration,
                     delay: delay,
-                    easing: 'cubic-bezier(0.215, 0.61, 0.355, 1)'
+                    easing: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)'
                 });
                 
-                // Remove confetti after animation
+                // Remove particle after animation
                 setTimeout(() => {
-                    confetti.remove();
-                }, duration + delay + 1000);
+                    particle.remove();
+                }, duration + delay);
             }
         }
         
-        function createCelebrationText() {
-            const text = document.getElementById('celebrationText');
-            const messages = [
-                '🎉 পেমেন্ট সফল! 🎉',
-                '✅ সফলভাবে সম্পন্ন! ✅',
-                '✨ ধন্যবাদ! ✨',
-                '💚 পেমেন্ট সম্পূর্ণ! 💚'
-            ];
+        function createRippleEffect(event, element) {
+            const rect = element.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
             
-            let messageIndex = 0;
+            const ripple = document.createElement('span');
+            ripple.classList.add('btn-ripple');
             
-            // Change message every 3 seconds
-            setInterval(() => {
-                messageIndex = (messageIndex + 1) % messages.length;
-                text.textContent = messages[messageIndex];
-                text.style.animation = 'none';
-                setTimeout(() => {
-                    text.style.animation = 'celebrationFloat 3s ease-in-out infinite';
-                }, 10);
-            }, 3000);
+            ripple.style.width = ripple.style.height = Math.max(rect.width, rect.height) + 'px';
+            ripple.style.left = x - ripple.offsetWidth / 2 + 'px';
+            ripple.style.top = y - ripple.offsetHeight / 2 + 'px';
+            
+            element.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
         }
         
-        function createSparkles(e, button) {
-            const rect = button.getBoundingClientRect();
+        function startParticleSystem() {
+            const container = document.querySelector('.bg-animation');
             
-            for (let i = 0; i < 20; i++) {
-                const sparkle = document.createElement('div');
-                sparkle.className = 'sparkle';
-                
-                const x = Math.random() * rect.width;
-                const y = Math.random() * rect.height;
-                
-                sparkle.style.left = x + 'px';
-                sparkle.style.top = y + 'px';
-                
-                button.appendChild(sparkle);
-                
-                // Animate sparkle
-                sparkle.animate([
-                    {
-                        opacity: 0,
-                        transform: 'scale(0) rotate(0deg)'
-                    },
-                    {
-                        opacity: 1,
-                        transform: 'scale(1.5) rotate(180deg)'
-                    },
-                    {
-                        opacity: 0,
-                        transform: 'scale(0) rotate(360deg)'
-                    }
-                ], {
-                    duration: 800,
-                    easing: 'ease-out'
-                });
-                
-                // Remove sparkle after animation
-                setTimeout(() => {
-                    sparkle.remove();
-                }, 800);
-            }
-        }
-        
-        function startContinuousSparkles() {
             setInterval(() => {
-                // Create random sparkles around the card
-                const sparkle = document.createElement('div');
-                sparkle.className = 'sparkle';
-                
-                const size = Math.random() * 6 + 2;
-                sparkle.style.width = size + 'px';
-                sparkle.style.height = size + 'px';
-                
-                sparkle.style.left = Math.random() * 100 + 'vw';
-                sparkle.style.top = Math.random() * 100 + 'vh';
-                sparkle.style.backgroundColor = 
-                    Math.random() > 0.5 ? '#22c55e' : '#86efac';
-                
-                document.body.appendChild(sparkle);
-                
-                // Animate sparkle
-                sparkle.animate([
-                    {
-                        opacity: 0,
-                        transform: 'scale(0)'
-                    },
-                    {
-                        opacity: 0.8,
-                        transform: 'scale(1)'
-                    },
-                    {
-                        opacity: 0,
-                        transform: 'scale(0)'
-                    }
-                ], {
-                    duration: 2000 + Math.random() * 2000,
-                    easing: 'ease-in-out'
-                });
-                
-                // Remove sparkle after animation
-                setTimeout(() => {
-                    sparkle.remove();
-                }, 4000);
+                if (Math.random() > 0.7) {
+                    createFloatingParticle(container);
+                }
             }, 300);
         }
         
-        // Add success pulse to card
-        const card = document.querySelector('.card');
-        setInterval(() => {
-            card.animate([
+        function createFloatingParticle(container) {
+            const particle = document.createElement('div');
+            particle.style.position = 'absolute';
+            particle.style.width = '1px';
+            particle.style.height = '1px';
+            particle.style.background = 'var(--success-secondary)';
+            particle.style.borderRadius = '50%';
+            particle.style.boxShadow = '0 0 10px var(--success-accent)';
+            particle.style.opacity = '0';
+            
+            const startX = Math.random() * 100;
+            particle.style.left = startX + 'vw';
+            particle.style.top = '100vh';
+            
+            container.appendChild(particle);
+            
+            // Animate floating particle
+            const duration = 3000 + Math.random() * 3000;
+            const endX = startX + (Math.random() - 0.5) * 30;
+            
+            particle.animate([
                 {
-                    boxShadow: '0 20px 60px rgba(34, 197, 94, 0.2)'
+                    opacity: 0,
+                    transform: 'translateY(0) scale(0)'
                 },
                 {
-                    boxShadow: '0 20px 80px rgba(34, 197, 94, 0.4)'
+                    opacity: 0.6,
+                    transform: 'translateY(-20px) scale(1)'
                 },
                 {
-                    boxShadow: '0 20px 60px rgba(34, 197, 94, 0.2)'
+                    opacity: 0,
+                    transform: `translateY(-100vh) translateX(${endX - startX}vw) scale(0)`
                 }
             ], {
-                duration: 2000,
-                easing: 'ease-in-out'
+                duration: duration,
+                easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
             });
-        }, 3000);
+            
+            // Remove particle after animation
+            setTimeout(() => {
+                particle.remove();
+            }, duration);
+        }
     </script>
 </body>
 </html>

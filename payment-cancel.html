@@ -3,352 +3,479 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>পেমেন্ট বাতিল</title>
+    <title>পেমেন্ট বাতিল | নিবাস</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+        :root {
+            --warning-primary: #f59e0b;
+            --warning-secondary: #fbbf24;
+            --warning-accent: #fde68a;
+            --warning-bg: #fffbeb;
+            --warning-card: #ffffff;
+            --warning-text: #78350f;
+            --warning-border: #fde68a;
+        }
+        
+        * {
             margin: 0;
-            padding: 40px 16px;
-            color: #9a3412;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SegUI UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--warning-bg);
+            color: var(--warning-text);
             min-height: 100vh;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            padding: 20px;
         }
         
-        .card {
-            max-width: 720px;
-            margin: 0 auto;
-            background: #fff;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(249, 115, 22, 0.2);
-            border-left: 8px solid #f97316;
-            text-align: center;
+        .container {
             position: relative;
-            z-index: 1;
-            transform: translateY(50px);
-            opacity: 0;
-            animation: slideUp 0.6s ease-out forwards;
+            z-index: 10;
+            width: 100%;
+            max-width: 480px;
         }
         
-        @keyframes slideUp {
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        
-        h1 {
-            margin-top: 0;
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            position: relative;
-            display: inline-block;
-        }
-        
-        h1:after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 25%;
-            width: 50%;
-            height: 4px;
-            background: linear-gradient(90deg, transparent, #f97316, transparent);
-            border-radius: 2px;
-        }
-        
-        .cancel-icon {
-            font-size: 4rem;
-            color: #f97316;
-            margin-bottom: 20px;
-            animation: pulse 2s infinite, shake 0.5s ease-in-out 0.5s;
-        }
-        
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-            50% {
-                transform: scale(1.1);
-                opacity: 0.8;
-            }
-        }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-        
-        p {
-            font-size: 1.2rem;
-            line-height: 1.6;
-            margin-bottom: 30px;
-            color: #7c2d12;
-        }
-        
-        .actions {
-            margin-top: 30px;
-        }
-        
-        a {
-            display: inline-block;
-            padding: 14px 28px;
-            background: linear-gradient(135deg, #f97316, #ea580c);
-            color: #fff;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 20px rgba(249, 115, 22, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        a:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(249, 115, 22, 0.4);
-            background: linear-gradient(135deg, #ea580c, #c2410c);
-        }
-        
-        a:active {
-            transform: translateY(-1px);
-        }
-        
-        .particle {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            background: #f97316;
-            border-radius: 50%;
-            pointer-events: none;
-            opacity: 0;
-        }
-        
-        .confetti {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            opacity: 0;
-            z-index: 0;
-        }
-        
-        .bg-animation {
+        /* Background */
+        .warning-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 0;
+            z-index: 1;
         }
         
-        .wave {
+        .warning-grid {
             position: absolute;
-            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(245, 158, 11, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(245, 158, 11, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: gridMove 20s linear infinite;
+        }
+        
+        @keyframes gridMove {
+            from { transform: translate(0, 0); }
+            to { transform: translate(40px, 40px); }
+        }
+        
+        /* Cancelled Card */
+        .cancelled-card {
+            background: var(--warning-card);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 
+                0 20px 60px rgba(245, 158, 11, 0.1),
+                0 1px 3px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--warning-border);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cancelled-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--warning-primary), var(--warning-secondary));
+            border-radius: 24px 24px 0 0;
+        }
+        
+        /* Cancelled Animation */
+        .cancelled-animation {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+        }
+        
+        /* Progress Bar Animation */
+        .progress-track {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 4px;
+            background: var(--warning-accent);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            position: absolute;
+            top: 0;
             left: 0;
             width: 100%;
-            height: 100px;
-            background: linear-gradient(90deg, transparent, rgba(249, 115, 22, 0.1), transparent);
-            animation: waveMove 3s infinite linear;
+            height: 100%;
+            background: linear-gradient(90deg, var(--warning-primary), var(--warning-secondary));
+            transform: translateX(-100%);
+            animation: progressTrack 1.2s ease-out forwards;
         }
         
-        @keyframes waveMove {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+        @keyframes progressTrack {
+            0% {
+                transform: translateX(-100%);
+            }
+            70% {
+                transform: translateX(0%);
+            }
+            85% {
+                transform: translateX(0%);
+            }
+            100% {
+                transform: translateX(100%);
+            }
         }
         
-        @media (max-width: 768px) {
-            .card {
+        /* Morph to Circle */
+        .cancelled-morph {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 80px;
+            height: 80px;
+        }
+        
+        .morph-cancel {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: var(--warning-primary);
+            border-radius: 50%;
+            opacity: 0;
+            animation: cancelMorph 1.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 1s;
+        }
+        
+        @keyframes cancelMorph {
+            0% {
+                opacity: 0;
+                transform: scale(0) rotate(0deg);
+                border-radius: 50%;
+            }
+            25% {
+                opacity: 1;
+                transform: scale(1) rotate(180deg);
+                border-radius: 50%;
+            }
+            40% {
+                transform: scale(1.1) rotate(270deg);
+                border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            }
+            60% {
+                transform: scale(0.9) rotate(360deg);
+                border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            }
+            80% {
+                transform: scale(1.05) rotate(450deg);
+                border-radius: 40% 60% 70% 30% / 40% 70% 30% 60%;
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(540deg);
+                border-radius: 50%;
+                box-shadow: 
+                    0 0 0 4px rgba(245, 158, 11, 0.1),
+                    0 0 0 8px rgba(245, 158, 11, 0.05);
+            }
+        }
+        
+        /* Cancel Symbol */
+        .cancel-symbol {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 32px;
+            height: 32px;
+            opacity: 0;
+            animation: cancelSymbolReveal 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards 2.2s;
+        }
+        
+        .cancel-path {
+            stroke: white;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-dasharray: 40;
+            stroke-dashoffset: 40;
+            animation: cancelSymbolDraw 0.4s ease-out forwards 2.4s;
+        }
+        
+        @keyframes cancelSymbolReveal {
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+        
+        @keyframes cancelSymbolDraw {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+        
+        /* Slash Animation */
+        .slash-animation {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            width: 100px;
+            height: 4px;
+            background: var(--warning-primary);
+            border-radius: 2px;
+            opacity: 0;
+            animation: slashDraw 0.5s ease-out forwards 2.8s;
+        }
+        
+        @keyframes slashDraw {
+            0% {
+                width: 0;
+                opacity: 1;
+            }
+            100% {
+                width: 100px;
+                opacity: 0.3;
+            }
+        }
+        
+        /* Content */
+        .cancelled-content {
+            text-align: center;
+            animation: cancelledContentFade 0.5s ease-out forwards 2.5s;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        @keyframes cancelledContentFade {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--warning-text), #92400e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #6b7280;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        
+        /* Info Box */
+        .cancelled-info {
+            background: var(--warning-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
+            text-align: left;
+            border: 1px solid var(--warning-border);
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        
+        .info-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .info-icon {
+            color: var(--warning-primary);
+            margin-right: 10px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .info-text {
+            color: var(--warning-text);
+            line-height: 1.5;
+        }
+        
+        /* Actions */
+        .cancelled-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+        
+        .cancelled-btn {
+            flex: 1;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cancelled-btn-primary {
+            background: var(--warning-primary);
+            color: white;
+            border: none;
+        }
+        
+        .cancelled-btn-primary:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.3);
+        }
+        
+        .cancelled-btn-secondary {
+            background: white;
+            color: var(--warning-text);
+            border: 1.5px solid var(--warning-border);
+        }
+        
+        .cancelled-btn-secondary:hover {
+            background: var(--warning-bg);
+            transform: translateY(-2px);
+            border-color: var(--warning-secondary);
+        }
+        
+        /* Subtle Animation */
+        .cancelled-card {
+            animation: cancelledCardBreath 6s ease-in-out infinite;
+        }
+        
+        @keyframes cancelledCardBreath {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-3px);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .cancelled-card {
                 padding: 30px 20px;
-                margin: 0 15px;
             }
             
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .cancel-icon {
-                font-size: 3rem;
+            .cancelled-actions {
+                flex-direction: column;
             }
         }
     </style>
 </head>
 <body>
-    <div class="bg-animation">
-        <div class="wave"></div>
+    <div class="warning-bg">
+        <div class="warning-grid"></div>
     </div>
     
-    <div class="card">
-        <div class="cancel-icon">✕</div>
-        <h1>পেমেন্ট বাতিল হয়েছে</h1>
-        <p>আপনি পেমেন্ট প্রক্রিয়া বাতিল করেছেন। প্রয়োজন হলে আবার চেষ্টা করুন। আপনার নিরাপত্তা সর্বদা আমাদের অগ্রাধিকার।</p>
-        <div class="actions">
-            <a href="payment.html" id="returnBtn">পেমেন্ট পেজে ফিরে যান</a>
+    <div class="container">
+        <div class="cancelled-card">
+            <div class="cancelled-animation">
+                <div class="progress-track">
+                    <div class="progress-fill"></div>
+                </div>
+                
+                <div class="cancelled-morph">
+                    <div class="morph-cancel"></div>
+                </div>
+                
+                <svg class="cancel-symbol" viewBox="0 0 24 24">
+                    <path class="cancel-path" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+                
+                <div class="slash-animation"></div>
+            </div>
+            
+            <div class="cancelled-content">
+                <h1>পেমেন্ট বাতিল</h1>
+                <div class="subtitle">আপনি পেমেন্ট প্রক্রিয়া বন্ধ করেছেন</div>
+                
+                <div class="cancelled-info">
+                    <div class="info-item">
+                        <div class="info-icon">↻</div>
+                        <div class="info-text">আপনি যে কোন সময় আবার চেষ্টা করতে পারেন</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">✓</div>
+                        <div class="info-text">কোন অর্থ আপনার অ্যাকাউন্ট থেকে কাটা হয়নি</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">🔒</div>
+                        <div class="info-text">আপনার নিরাপত্তা সর্বদা আমাদের অগ্রাধিকার</div>
+                    </div>
+                </div>
+                
+                <div class="cancelled-actions">
+                    <a href="payment.html" class="cancelled-btn cancelled-btn-primary" id="retryPaymentBtn">আবার চেষ্টা করুন</a>
+                    <a href="services.html" class="cancelled-btn cancelled-btn-secondary">সেবা ব্রাউজ করুন</a>
+                </div>
+            </div>
         </div>
     </div>
 
     <audio id="cancelSound" preload="auto">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3" type="audio/mpeg">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3" type="audio/mpeg">
     </audio>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Play cancellation sound
+            // Play cancel sound
             const cancelSound = document.getElementById('cancelSound');
-            
-            // Play sound with slight delay for better UX
             setTimeout(() => {
-                cancelSound.volume = 0.3;
-                cancelSound.play().catch(e => console.log("Audio play failed:", e));
-            }, 300);
+                cancelSound.volume = 0.2;
+                cancelSound.play().catch(e => console.log("Audio autoplay blocked"));
+            }, 1200);
             
-            // Create particles on button hover
-            const returnBtn = document.getElementById('returnBtn');
+            // Add interaction to retry button
+            const retryBtn = document.getElementById('retryPaymentBtn');
             
-            returnBtn.addEventListener('mouseenter', function(e) {
-                createButtonParticles(e, this);
+            retryBtn.addEventListener('click', function(e) {
+                // Prevent immediate navigation
+                e.preventDefault();
+                
+                // Add subtle bounce effect
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                    window.location.href = 'payment.html';
+                }, 150);
             });
             
-            // Create falling confetti animation
-            createCancelledConfetti();
-            
-            // Add page load animation
-            animatePageLoad();
+            // Add grid animation
+            animateWarningGrid();
         });
         
-        function createButtonParticles(e, button) {
-            const rect = button.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
+        function animateWarningGrid() {
+            const grid = document.querySelector('.warning-grid');
+            let scale = 1;
             
-            for (let i = 0; i < 8; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = x + 'px';
-                particle.style.top = y + 'px';
-                
-                const angle = (i / 8) * Math.PI * 2;
-                const speed = 1 + Math.random();
-                const distance = 20 + Math.random() * 30;
-                
-                particle.style.setProperty('--angle', angle);
-                particle.style.setProperty('--speed', speed);
-                particle.style.setProperty('--distance', distance);
-                
-                button.appendChild(particle);
-                
-                // Animate particle
-                particle.animate([
-                    {
-                        opacity: 1,
-                        transform: 'translate(0, 0) scale(1)'
-                    },
-                    {
-                        opacity: 0,
-                        transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) scale(0)`
-                    }
-                ], {
-                    duration: 600,
-                    easing: 'ease-out'
-                });
-                
-                // Remove particle after animation
-                setTimeout(() => {
-                    particle.remove();
-                }, 600);
-            }
-        }
-        
-        function createCancelledConfetti() {
-            const colors = ['#f97316', '#ea580c', '#c2410c', '#9a3412'];
-            
-            for (let i = 0; i < 30; i++) {
-                const confetti = document.createElement('div');
-                confetti.className = 'confetti';
-                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.left = Math.random() * 100 + 'vw';
-                confetti.style.top = '-20px';
-                confetti.style.width = Math.random() * 10 + 5 + 'px';
-                confetti.style.height = Math.random() * 10 + 5 + 'px';
-                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
-                
-                document.body.appendChild(confetti);
-                
-                // Animate confetti
-                const duration = 2000 + Math.random() * 2000;
-                const delay = Math.random() * 1000;
-                
-                confetti.animate([
-                    {
-                        opacity: 0,
-                        transform: 'translateY(0) rotate(0deg)'
-                    },
-                    {
-                        opacity: 1,
-                        transform: `translateY(20px) rotate(90deg)`
-                    },
-                    {
-                        opacity: 1,
-                        transform: `translateY(calc(100vh + 100px)) rotate(${180 + Math.random() * 180}deg)`
-                    }
-                ], {
-                    duration: duration,
-                    delay: delay,
-                    easing: 'cubic-bezier(0.215, 0.61, 0.355, 1)'
-                });
-                
-                // Remove confetti after animation
-                setTimeout(() => {
-                    confetti.remove();
-                }, duration + delay + 1000);
-            }
-        }
-        
-        function animatePageLoad() {
-            // Create initial splash animation
-            for (let i = 0; i < 15; i++) {
-                const splash = document.createElement('div');
-                splash.style.position = 'fixed';
-                splash.style.width = '4px';
-                splash.style.height = '4px';
-                splash.style.backgroundColor = '#f97316';
-                splash.style.borderRadius = '50%';
-                splash.style.pointerEvents = 'none';
-                splash.style.left = '50%';
-                splash.style.top = '50%';
-                splash.style.opacity = '0';
-                splash.style.zIndex = '999';
-                
-                document.body.appendChild(splash);
-                
-                const angle = (i / 15) * Math.PI * 2;
-                const distance = 100 + Math.random() * 200;
-                
-                splash.animate([
-                    {
-                        opacity: 1,
-                        transform: 'translate(-50%, -50%) scale(1)'
-                    },
-                    {
-                        opacity: 0,
-                        transform: `translate(calc(-50% + ${Math.cos(angle) * distance}px), calc(-50% + ${Math.sin(angle) * distance}px)) scale(0)`
-                    }
-                ], {
-                    duration: 800,
-                    delay: i * 50,
-                    easing: 'ease-out'
-                });
-                
-                setTimeout(() => {
-                    splash.remove();
-                }, 800 + i * 50);
-            }
+            setInterval(() => {
+                scale = scale === 1 ? 1.02 : 1;
+                grid.style.transform = `scale(${scale})`;
+            }, 3000);
         }
     </script>
 </body>

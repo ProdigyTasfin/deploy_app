@@ -3,417 +3,620 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>পেমেন্ট ব্যর্থ</title>
+    <title>পেমেন্ট ব্যর্থ | নিবাস</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+        :root {
+            --error-primary: #ef4444;
+            --error-secondary: #f87171;
+            --error-accent: #fca5a5;
+            --error-bg: #fef2f2;
+            --error-card: #ffffff;
+            --error-text: #7f1d1d;
+            --error-border: #fecaca;
+        }
+        
+        * {
             margin: 0;
-            padding: 40px 16px;
-            color: #7f1d1d;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--error-bg);
+            color: var(--error-text);
             min-height: 100vh;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 480px;
+        }
+        
+        /* Error Background */
+        .error-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .error-wave {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 50% 50%, 
+                rgba(239, 68, 68, 0.1) 0%, 
+                transparent 50%);
+            animation: waveDisturb 4s infinite linear;
+        }
+        
+        @keyframes waveDisturb {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.3;
+            }
+        }
+        
+        /* Error Card */
+        .error-card {
+            background: var(--error-card);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 
+                0 20px 60px rgba(239, 68, 68, 0.1),
+                0 1px 3px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--error-border);
+            position: relative;
             overflow: hidden;
         }
         
-        .card {
-            max-width: 720px;
-            margin: 0 auto;
-            background: #fff;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(239, 68, 68, 0.2);
-            border-left: 8px solid #ef4444;
-            text-align: center;
-            position: relative;
-            z-index: 1;
-            transform: scale(0.9);
-            opacity: 0;
-            animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-        }
-        
-        @keyframes popIn {
-            0% {
-                transform: scale(0.9);
-                opacity: 0;
-            }
-            70% {
-                transform: scale(1.05);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-        
-        h1 {
-            margin-top: 0;
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            position: relative;
-            display: inline-block;
-        }
-        
-        h1:after {
+        .error-card::before {
             content: '';
             position: absolute;
-            bottom: -10px;
-            left: 25%;
-            width: 50%;
+            top: 0;
+            left: 0;
+            right: 0;
             height: 4px;
-            background: linear-gradient(90deg, transparent, #ef4444, transparent);
-            border-radius: 2px;
+            background: linear-gradient(90deg, var(--error-primary), var(--error-secondary));
+            border-radius: 24px 24px 0 0;
         }
         
-        .error-icon {
-            font-size: 4rem;
-            color: #ef4444;
-            margin-bottom: 20px;
-            animation: errorShake 0.8s ease-in-out, errorPulse 2s infinite 0.8s;
+        /* Error Animation */
+        .error-animation {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+        }
+        
+        /* Progress Circle - Shows attempt */
+        .progress-circle {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .circle-bg {
+            fill: none;
+            stroke: var(--error-accent);
+            stroke-width: 4;
+        }
+        
+        .circle-progress {
+            fill: none;
+            stroke: var(--error-primary);
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-dasharray: 314;
+            stroke-dashoffset: 314;
+            transform-origin: center;
+            transform: rotate(-90deg);
+            animation: errorProgress 1s ease-out forwards;
+        }
+        
+        @keyframes errorProgress {
+            0% {
+                stroke-dashoffset: 314;
+            }
+            80% {
+                stroke-dashoffset: 63;
+            }
+            100% {
+                stroke-dashoffset: 63;
+            }
+        }
+        
+        /* Error Morph - Progress to Error State */
+        .error-morph {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 80px;
+            height: 80px;
+        }
+        
+        .morph-error {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: var(--error-primary);
+            border-radius: 50%;
+            animation: errorMorph 1.5s ease-out forwards 1s;
+        }
+        
+        @keyframes errorMorph {
+            0% {
+                opacity: 0;
+                transform: scale(0) rotate(0deg);
+                border-radius: 50%;
+            }
+            30% {
+                opacity: 1;
+                transform: scale(1) rotate(180deg);
+                border-radius: 50%;
+            }
+            50% {
+                transform: scale(1.2) rotate(270deg);
+                border-radius: 40% 60% 60% 40% / 40% 40% 60% 60%;
+            }
+            70% {
+                transform: scale(0.9) rotate(360deg);
+                border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(360deg);
+                border-radius: 50%;
+                box-shadow: 
+                    0 0 0 4px rgba(239, 68, 68, 0.1),
+                    0 0 0 8px rgba(239, 68, 68, 0.05);
+            }
+        }
+        
+        /* Error X Symbol */
+        .error-x {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 40px;
+            height: 40px;
+            opacity: 0;
+            animation: errorXReveal 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards 2s;
+        }
+        
+        .x-path {
+            stroke: white;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: errorXDraw 0.5s ease-out forwards 2.2s;
+        }
+        
+        @keyframes errorXReveal {
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+        
+        @keyframes errorXDraw {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+        
+        /* Error Shake */
+        .error-shake {
+            animation: errorShake 0.5s ease-in-out 2.7s;
         }
         
         @keyframes errorShake {
             0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
         
-        @keyframes errorPulse {
-            0%, 100% {
-                transform: scale(1);
+        /* Error Particles */
+        .error-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .error-particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--error-secondary);
+            border-radius: 50%;
+            opacity: 0;
+        }
+        
+        /* Content */
+        .error-content {
+            text-align: center;
+            animation: errorContentFade 0.5s ease-out forwards 2.5s;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        @keyframes errorContentFade {
+            to {
                 opacity: 1;
-            }
-            50% {
-                transform: scale(1.15);
-                opacity: 0.8;
+                transform: translateY(0);
             }
         }
         
-        p {
-            font-size: 1.2rem;
-            line-height: 1.6;
-            margin-bottom: 30px;
-            color: #991b1b;
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--error-text), #991b1b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
-        .error-details {
-            background: #fee2e2;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 20px 0;
+        .subtitle {
+            font-size: 16px;
+            color: #6b7280;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .error-code {
+            font-size: 14px;
+            color: var(--error-primary);
+            background: var(--error-bg);
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: inline-block;
+            margin: 15px 0;
+            font-family: 'Monaco', 'Courier New', monospace;
+            letter-spacing: 1px;
+            border: 1px solid var(--error-border);
+        }
+        
+        /* Troubleshooting */
+        .troubleshooting {
+            background: var(--error-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
             text-align: left;
-            border: 1px solid #fecaca;
+            border: 1px solid var(--error-border);
         }
         
-        .error-details h3 {
-            margin-top: 0;
-            color: #dc2626;
+        .troubleshooting h3 {
+            font-size: 15px;
+            color: var(--error-text);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
-        .actions {
+        .troubleshooting ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .troubleshooting li {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .troubleshooting li:before {
+            content: '•';
+            color: var(--error-primary);
+            position: absolute;
+            left: 0;
+        }
+        
+        /* Actions */
+        .error-actions {
+            display: flex;
+            gap: 12px;
             margin-top: 30px;
         }
         
-        a {
-            display: inline-block;
-            padding: 14px 28px;
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: #fff;
+        .error-btn {
+            flex: 1;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
             text-decoration: none;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 20px rgba(239, 68, 68, 0.3);
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
         }
         
-        a:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
-            background: linear-gradient(135deg, #dc2626, #b91c1c);
-        }
-        
-        a:active {
-            transform: translateY(-1px);
-        }
-        
-        .crack {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
-        
-        .crack-line {
-            position: absolute;
-            background: rgba(239, 68, 68, 0.1);
-            transform-origin: center;
-        }
-        
-        .error-particle {
-            position: fixed;
-            width: 6px;
-            height: 6px;
-            background: #ef4444;
-            border-radius: 50%;
-            pointer-events: none;
-            opacity: 0;
-            z-index: 0;
-        }
-        
-        .warning-sign {
-            position: absolute;
-            top: -30px;
-            right: -30px;
-            width: 60px;
-            height: 60px;
-            background: #ef4444;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .error-btn-primary {
+            background: var(--error-primary);
             color: white;
-            font-size: 2rem;
-            font-weight: bold;
-            animation: warningRotate 4s infinite linear;
-            box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4);
+            border: none;
         }
         
-        @keyframes warningRotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .error-btn-primary:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(239, 68, 68, 0.3);
         }
         
-        @media (max-width: 768px) {
-            .card {
+        .error-btn-secondary {
+            background: white;
+            color: var(--error-text);
+            border: 1.5px solid var(--error-border);
+        }
+        
+        .error-btn-secondary:hover {
+            background: var(--error-bg);
+            transform: translateY(-2px);
+            border-color: var(--error-secondary);
+        }
+        
+        /* Card Micro-interaction */
+        .error-card {
+            animation: errorCardPulse 8s ease-in-out infinite;
+        }
+        
+        @keyframes errorCardPulse {
+            0%, 100% {
+                box-shadow: 
+                    0 20px 60px rgba(239, 68, 68, 0.1),
+                    0 1px 3px rgba(0, 0, 0, 0.05);
+            }
+            50% {
+                box-shadow: 
+                    0 20px 60px rgba(239, 68, 68, 0.15),
+                    0 1px 3px rgba(0, 0, 0, 0.05);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .error-card {
                 padding: 30px 20px;
-                margin: 0 15px;
             }
             
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .error-icon {
-                font-size: 3rem;
-            }
-            
-            .warning-sign {
-                top: -20px;
-                right: -20px;
-                width: 40px;
-                height: 40px;
-                font-size: 1.5rem;
+            .error-actions {
+                flex-direction: column;
             }
         }
     </style>
 </head>
 <body>
-    <div class="crack" id="crackContainer"></div>
-    <div class="warning-sign">!</div>
+    <div class="error-bg">
+        <div class="error-wave"></div>
+    </div>
     
-    <div class="card">
-        <div class="error-icon">❌</div>
-        <h1>পেমেন্ট ব্যর্থ হয়েছে</h1>
-        <p>দয়া করে আবার চেষ্টা করুন অথবা অন্য পেমেন্ট পদ্ধতি নির্বাচন করুন।</p>
-        
-        <div class="error-details">
-            <h3>সম্ভাব্য কারণসমূহ:</h3>
-            <ul>
-                <li>কার্ডের তথ্য ভুল হতে পারে</li>
-                <li>পর্যাপ্ত ব্যালেন্স নেই</li>
-                <li>ইন্টারনেট সংযোগ সমস্যা</li>
-                <li>ব্যাংক সার্ভার সমস্যা</li>
-            </ul>
-        </div>
-        
-        <div class="actions">
-            <a href="payment.html" id="retryBtn">আবার চেষ্টা করুন</a>
+    <div class="container">
+        <div class="error-card">
+            <div class="error-animation">
+                <svg class="progress-circle" viewBox="0 0 100 100">
+                    <circle class="circle-bg" cx="50" cy="50" r="45"></circle>
+                    <circle class="circle-progress" cx="50" cy="50" r="45"></circle>
+                </svg>
+                
+                <div class="error-morph">
+                    <div class="morph-error"></div>
+                </div>
+                
+                <svg class="error-x" viewBox="0 0 24 24">
+                    <path class="x-path" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+                </svg>
+                
+                <div class="error-particles" id="errorParticles"></div>
+            </div>
+            
+            <div class="error-content">
+                <h1 class="error-shake">পেমেন্ট ব্যর্থ</h1>
+                <div class="subtitle">লেনদেন সম্পন্ন করা যায়নি</div>
+                
+                <div class="error-code" id="errorCode">ERR-4A7B</div>
+                
+                <div class="troubleshooting">
+                    <h3>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        সম্ভাব্য কারণসমূহ
+                    </h3>
+                    <ul>
+                        <li>অপর্যাপ্ত ব্যালেন্স</li>
+                        <li>কার্ডের তথ্য ভুল</li>
+                        <li>নেটওয়ার্ক সংযোগ সমস্যা</li>
+                        <li>ব্যাংক সীমাবদ্ধতা</li>
+                    </ul>
+                </div>
+                
+                <div class="error-actions">
+                    <a href="payment.html" class="error-btn error-btn-primary" id="retryBtn">আবার চেষ্টা করুন</a>
+                    <a href="support.html" class="error-btn error-btn-secondary">সাপোর্টে যোগাযোগ</a>
+                </div>
+            </div>
         </div>
     </div>
 
     <audio id="errorSound" preload="auto">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3" type="audio/mpeg">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-warning-alarm-buzzer-985.mp3" type="audio/mpeg">
     </audio>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Play error sound
+            // Generate error code
+            const chars = '0123456789ABCDEF';
+            let errorCode = 'ERR-';
+            for (let i = 0; i < 4; i++) {
+                errorCode += chars[Math.floor(Math.random() * chars.length)];
+            }
+            document.getElementById('errorCode').textContent = errorCode;
+            
+            // Play error sound with precise timing
             const errorSound = document.getElementById('errorSound');
-            
-            // Play sound with slight delay for dramatic effect
             setTimeout(() => {
-                errorSound.volume = 0.3;
-                errorSound.play().catch(e => console.log("Audio play failed:", e));
-            }, 500);
+                errorSound.volume = 0.15;
+                errorSound.play().catch(e => console.log("Audio autoplay blocked"));
+            }, 2000);
             
-            // Create crack effect
-            createCrackEffect();
+            // Create error particle burst
+            createErrorParticleBurst();
             
-            // Create error particles
-            createErrorParticles();
-            
-            // Add button hover effect
+            // Add interaction to retry button
             const retryBtn = document.getElementById('retryBtn');
-            
-            retryBtn.addEventListener('mouseenter', function(e) {
-                createRetryButtonEffect(e, this);
+            retryBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Create loading effect
+                this.innerHTML = `
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 8px;">
+                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" style="animation: rotate 1s linear infinite;"></path>
+                    </svg>
+                    পুনরায় চেষ্টা করা হচ্ছে...
+                `;
+                
+                // Simulate retry attempt
+                setTimeout(() => {
+                    window.location.href = 'payment.html';
+                }, 1500);
             });
             
-            // Add warning glow effect
-            createWarningGlow();
+            // Create random error waves
+            createErrorWaves();
         });
         
-        function createCrackEffect() {
-            const container = document.getElementById('crackContainer');
-            const numCracks = 8;
+        function createErrorParticleBurst() {
+            const container = document.getElementById('errorParticles');
+            const centerX = 60;
+            const centerY = 60;
             
-            for (let i = 0; i < numCracks; i++) {
-                const crack = document.createElement('div');
-                crack.className = 'crack-line';
-                
-                const length = 200 + Math.random() * 300;
-                const angle = Math.random() * Math.PI * 2;
-                const x = Math.random() * 100;
-                const y = Math.random() * 100;
-                const width = 2 + Math.random() * 3;
-                
-                crack.style.width = length + 'px';
-                crack.style.height = width + 'px';
-                crack.style.left = x + 'vw';
-                crack.style.top = y + 'vh';
-                crack.style.transform = `rotate(${angle}rad)`;
-                crack.style.opacity = '0';
-                
-                container.appendChild(crack);
-                
-                // Animate crack appearance
-                crack.animate([
-                    {
-                        opacity: 0,
-                        transform: `rotate(${angle}rad) scale(0.1)`
-                    },
-                    {
-                        opacity: 0.3,
-                        transform: `rotate(${angle}rad) scale(1)`
-                    }
-                ], {
-                    duration: 800,
-                    delay: i * 100,
-                    easing: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)'
-                });
-            }
-        }
-        
-        function createErrorParticles() {
-            for (let i = 0; i < 50; i++) {
+            for (let i = 0; i < 16; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'error-particle';
                 
-                particle.style.left = Math.random() * 100 + 'vw';
-                particle.style.top = Math.random() * 100 + 'vh';
-                particle.style.width = Math.random() * 8 + 4 + 'px';
-                particle.style.height = particle.style.width;
+                const angle = (i / 16) * Math.PI * 2;
+                const distance = 40 + Math.random() * 30;
+                const size = 2 + Math.random() * 3;
                 
-                document.body.appendChild(particle);
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = centerX + 'px';
+                particle.style.top = centerY + 'px';
                 
-                // Animate particle
-                const duration = 1000 + Math.random() * 2000;
-                const delay = Math.random() * 1000;
+                container.appendChild(particle);
+                
+                // Animate particle burst
+                const duration = 1000 + Math.random() * 500;
+                const delay = 2100;
                 
                 particle.animate([
                     {
                         opacity: 0,
-                        transform: 'scale(0) rotate(0deg)'
+                        transform: 'translate(0, 0) scale(0)'
                     },
                     {
                         opacity: 0.8,
-                        transform: 'scale(1) rotate(180deg)'
+                        transform: 'translate(0, 0) scale(1)'
                     },
                     {
                         opacity: 0,
-                        transform: 'scale(0) rotate(360deg)'
+                        transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) scale(0)`
                     }
                 ], {
                     duration: duration,
                     delay: delay,
-                    easing: 'ease-in-out'
+                    easing: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)'
                 });
                 
-                // Remove particle after animation
                 setTimeout(() => {
                     particle.remove();
-                }, duration + delay + 1000);
+                }, duration + delay);
             }
         }
         
-        function createRetryButtonEffect(e, button) {
-            const rect = button.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            // Create ripple effect
-            const ripple = document.createElement('div');
-            ripple.style.position = 'absolute';
-            ripple.style.left = x + 'px';
-            ripple.style.top = y + 'px';
-            ripple.style.width = '0';
-            ripple.style.height = '0';
-            ripple.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
-            ripple.style.borderRadius = '50%';
-            ripple.style.transform = 'translate(-50%, -50%)';
-            
-            button.appendChild(ripple);
-            
-            // Animate ripple
-            ripple.animate([
-                {
-                    width: '0',
-                    height: '0',
-                    opacity: 1
-                },
-                {
-                    width: '200px',
-                    height: '200px',
-                    opacity: 0
-                }
-            ], {
-                duration: 600,
-                easing: 'ease-out'
-            });
-            
-            // Remove ripple after animation
-            setTimeout(() => {
-                ripple.remove();
-            }, 600);
-        }
-        
-        function createWarningGlow() {
-            const warningSign = document.querySelector('.warning-sign');
+        function createErrorWaves() {
+            const bg = document.querySelector('.error-bg');
             
             setInterval(() => {
-                warningSign.animate([
-                    {
-                        boxShadow: '0 5px 15px rgba(239, 68, 68, 0.4)'
-                    },
-                    {
-                        boxShadow: '0 5px 25px rgba(239, 68, 68, 0.8)'
-                    },
-                    {
-                        boxShadow: '0 5px 15px rgba(239, 68, 68, 0.4)'
-                    }
-                ], {
-                    duration: 1500,
-                    easing: 'ease-in-out'
-                });
-            }, 2000);
+                if (Math.random() > 0.8) {
+                    const wave = document.createElement('div');
+                    wave.style.position = 'absolute';
+                    wave.style.width = '100px';
+                    wave.style.height = '100px';
+                    wave.style.background = 'radial-gradient(circle, rgba(239, 68, 68, 0.1) 0%, transparent 70%)';
+                    wave.style.borderRadius = '50%';
+                    wave.style.left = Math.random() * 100 + 'vw';
+                    wave.style.top = Math.random() * 100 + 'vh';
+                    wave.style.opacity = '0';
+                    
+                    bg.appendChild(wave);
+                    
+                    wave.animate([
+                        {
+                            opacity: 0,
+                            transform: 'scale(0)'
+                        },
+                        {
+                            opacity: 0.3,
+                            transform: 'scale(1)'
+                        },
+                        {
+                            opacity: 0,
+                            transform: 'scale(2)'
+                        }
+                    ], {
+                        duration: 2000,
+                        easing: 'ease-out'
+                    });
+                    
+                    setTimeout(() => {
+                        wave.remove();
+                    }, 2000);
+                }
+            }, 1000);
         }
     </script>
+    
+    <style>
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
 </body>
 </html>
