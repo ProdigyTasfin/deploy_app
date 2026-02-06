@@ -19,6 +19,10 @@
             --dark-card: #1e293b;
             --dark-text: #f1f5f9;
             --dark-border: #1b2430;
+            --light-bg: #f8fafc;
+            --light-card: #ffffff;
+            --light-text: #1e293b;
+            --light-border: #e2e8f0;
             --contract-color: #f59e0b;
             --contract-bg: rgba(245, 158, 11, 0.1);
         }
@@ -36,7 +40,12 @@
             color: var(--dark-text);
             font-family: 'Hind Siliguri', 'Kalpurush', system-ui, sans-serif;
             min-height: 100vh;
-            cursor: none;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        body.light-mode {
+            background: var(--light-bg);
+            color: var(--light-text);
         }
         
         .wrap {
@@ -49,6 +58,42 @@
             backdrop-filter: blur(10px);
             position: relative;
             z-index: 1;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        
+        body.light-mode .wrap {
+            background: var(--light-card);
+            border: 1px solid var(--light-border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(86, 41, 190, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .theme-toggle:hover {
+            transform: rotate(30deg);
+            box-shadow: 0 6px 16px rgba(86, 41, 190, 0.4);
+        }
+        
+        body.light-mode .theme-toggle {
+            background: var(--secondary);
         }
         
         h1 {
@@ -59,6 +104,7 @@
             padding-bottom: 15px;
             margin-bottom: 30px;
             position: relative;
+            transition: color 0.3s ease;
         }
         
         h1:after {
@@ -77,12 +123,22 @@
             font-size: 1.8rem;
             padding-left: 15px;
             border-left: 4px solid var(--contract-color);
+            transition: color 0.3s ease;
+        }
+        
+        body.light-mode h2 {
+            color: #b45309;
         }
         
         h3 {
             margin-top: 25px;
             color: #93c5fd;
             font-size: 1.4rem;
+            transition: color 0.3s ease;
+        }
+        
+        body.light-mode h3 {
+            color: #1d4ed8;
         }
         
         p, li {
@@ -113,6 +169,10 @@
             transition: all 0.3s ease;
         }
         
+        body.light-mode a {
+            color: #2563eb;
+        }
+        
         a:hover {
             color: var(--primary-light);
             text-decoration: underline;
@@ -124,6 +184,11 @@
             padding: 20px;
             margin: 25px 0;
             border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+        
+        body.light-mode .contract-notice {
+            background: rgba(245, 158, 11, 0.08);
         }
         
         .contract-notice h3 {
@@ -137,6 +202,11 @@
             background: rgba(255, 255, 255, 0.03);
             border-radius: 10px;
             border-left: 4px solid var(--contract-color);
+            transition: background 0.3s ease;
+        }
+        
+        body.light-mode .agreement-section {
+            background: rgba(245, 158, 11, 0.05);
         }
         
         .clause {
@@ -145,6 +215,17 @@
             background: rgba(255, 255, 255, 0.02);
             border-radius: 8px;
             border: 1px dashed rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        body.light-mode .clause {
+            background: rgba(245, 158, 11, 0.03);
+            border: 1px dashed rgba(245, 158, 11, 0.2);
+        }
+        
+        .clause:hover {
+            transform: translateX(5px);
+            border-style: solid;
         }
         
         .clause-number {
@@ -163,6 +244,11 @@
             padding: 20px;
             margin: 20px 0;
             border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+        
+        body.light-mode .warning-box {
+            background: rgba(239, 68, 68, 0.05);
         }
         
         .warning-box h3 {
@@ -181,12 +267,21 @@
             background: rgba(255, 255, 255, 0.05);
             border-radius: 10px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+        
+        body.light-mode .payment-term {
+            background: rgba(86, 41, 190, 0.05);
+            border: 1px solid rgba(86, 41, 190, 0.1);
         }
         
         .payment-term:hover {
             transform: translateY(-5px);
             background: rgba(255, 255, 255, 0.08);
+        }
+        
+        body.light-mode .payment-term:hover {
+            background: rgba(86, 41, 190, 0.1);
         }
         
         .term-icon {
@@ -201,12 +296,22 @@
             background: rgba(86, 41, 190, 0.1);
             border-radius: 10px;
             border: 1px solid var(--primary);
+            transition: background 0.3s ease;
+        }
+        
+        body.light-mode .jurisdiction {
+            background: rgba(86, 41, 190, 0.05);
         }
         
         .footer-nav {
             margin-top: 40px;
             padding-top: 25px;
             border-top: 1px solid rgba(255, 255, 255, .2);
+            transition: border-color 0.3s ease;
+        }
+        
+        body.light-mode .footer-nav {
+            border-top: 1px solid var(--light-border);
         }
         
         .footer-links {
@@ -245,79 +350,8 @@
             text-decoration: none;
         }
         
-        /* Legal Document Themed Cursor Effects */
-        .cursor-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 9999;
-        }
-        
-        .contract-cursor {
-            position: fixed;
-            width: 24px;
-            height: 24px;
-            border: 2px solid var(--contract-color);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 10000;
-            transform: translate(-50%, -50%);
-            backdrop-filter: blur(4px);
-            background: rgba(245, 158, 11, 0.1);
-            transition: all 0.3s ease;
-            box-shadow: 0 0 15px var(--contract-color);
-            mix-blend-mode: difference;
-        }
-        
-        .cursor-dot {
-            position: fixed;
-            width: 6px;
-            height: 6px;
-            background: var(--contract-color);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 10001;
-            transform: translate(-50%, -50%);
-            transition: transform 0.1s;
-            box-shadow: 0 0 10px var(--contract-color);
-        }
-        
-        .cursor-ink-trail {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 9998;
-        }
-        
-        .contract-stamp {
-            position: fixed;
-            width: 80px;
-            height: 80px;
-            border: 3px dashed var(--contract-color);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9997;
-            opacity: 0;
-            transform: translate(-50%, -50%) scale(0);
-            background: rgba(245, 158, 11, 0.1);
-        }
-        
-        .cursor-hover {
-            width: 40px;
-            height: 40px;
-            background: rgba(245, 158, 11, 0.2);
-            border-color: #10b981;
-            box-shadow: 0 0 20px #10b981;
-        }
-        
-        .cursor-sign {
-            transform: translate(-50%, -50%) scale(1.2);
-            border-style: solid;
-            box-shadow: 0 0 30px var(--contract-color);
+        body.light-mode .back-home:hover {
+            background: var(--secondary);
         }
         
         @media (max-width: 768px) {
@@ -346,24 +380,14 @@
                 align-items: center;
                 gap: 10px;
             }
-            
-            /* Hide cursor on mobile */
-            .contract-cursor, .cursor-dot, .cursor-ink-trail, .contract-stamp {
-                display: none;
-            }
-            
-            body {
-                cursor: auto;
-            }
         }
     </style>
 </head>
 <body>
-    <div class="cursor-container">
-        <div class="contract-cursor" id="contractCursor"></div>
-        <div class="cursor-dot" id="cursorDot"></div>
-        <div class="cursor-ink-trail" id="inkTrail"></div>
-    </div>
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+    </button>
     
     <main class="wrap">
         <h1><i class="fas fa-file-contract"></i> সেবার শর্তাবলী ও ব্যবহারকারী চুক্তি</h1>
@@ -805,166 +829,32 @@
     </main>
 
     <script>
-        // Legal Document Themed Cursor Effect
+        // Theme Toggle Functionality
         document.addEventListener('DOMContentLoaded', function() {
-            const contractCursor = document.getElementById('contractCursor');
-            const cursorDot = document.getElementById('cursorDot');
-            const inkTrailContainer = document.getElementById('inkTrail');
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = themeToggle.querySelector('i');
             
-            let mouseX = 0, mouseY = 0;
-            let cursorX = 0, cursorY = 0;
-            const inkDrops = [];
-            const maxInkDrops = 20;
-            
-            // Create ink drops
-            for (let i = 0; i < maxInkDrops; i++) {
-                const inkDrop = document.createElement('div');
-                inkDrop.style.position = 'absolute';
-                inkDrop.style.width = '8px';
-                inkDrop.style.height = '8px';
-                inkDrop.style.backgroundColor = '#f59e0b';
-                inkDrop.style.borderRadius = '50%';
-                inkDrop.style.opacity = '0';
-                inkDrop.style.filter = 'blur(1px)';
-                inkTrailContainer.appendChild(inkDrop);
-                inkDrops.push({
-                    element: inkDrop,
-                    x: 0,
-                    y: 0,
-                    life: 0,
-                    maxLife: Math.random() * 40 + 20
-                });
+            // Check for saved theme preference or default to dark
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+                themeIcon.className = 'fas fa-sun';
             }
             
-            // Mouse movement tracking
-            document.addEventListener('mousemove', (e) => {
-                mouseX = e.clientX;
-                mouseY = e.clientY;
+            // Toggle theme
+            themeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('light-mode');
                 
-                // Update dot immediately
-                cursorDot.style.left = mouseX + 'px';
-                cursorDot.style.top = mouseY + 'px';
-                
-                // Create ink trail
-                createInkTrail();
-            });
-            
-            function createInkTrail() {
-                for (let i = 0; i < inkDrops.length; i++) {
-                    const inkDrop = inkDrops[i];
-                    if (inkDrop.life <= 0) {
-                        inkDrop.x = mouseX + (Math.random() - 0.5) * 15;
-                        inkDrop.y = mouseY + (Math.random() - 0.5) * 15;
-                        inkDrop.life = inkDrop.maxLife;
-                        inkDrop.element.style.opacity = '0.7';
-                        inkDrop.element.style.transform = 'scale(1)';
-                        break;
-                    }
+                if (document.body.classList.contains('light-mode')) {
+                    themeIcon.className = 'fas fa-sun';
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    themeIcon.className = 'fas fa-moon';
+                    localStorage.setItem('theme', 'dark');
                 }
-            }
-            
-            // Hover effects for legal clauses
-            const legalClauses = document.querySelectorAll('.clause, .agreement-section, .contract-notice');
-            
-            legalClauses.forEach(clause => {
-                clause.addEventListener('mouseenter', () => {
-                    contractCursor.classList.add('cursor-hover');
-                    contractCursor.style.borderColor = '#10b981';
-                    contractCursor.style.boxShadow = '0 0 20px #10b981';
-                    
-                    // Add signature effect
-                    clause.style.transition = 'all 0.3s ease';
-                    clause.style.boxShadow = '0 0 20px rgba(16, 185, 129, 0.3)';
-                });
-                
-                clause.addEventListener('mouseleave', () => {
-                    contractCursor.classList.remove('cursor-hover');
-                    contractCursor.style.borderColor = '#f59e0b';
-                    contractCursor.style.boxShadow = '0 0 15px #f59e0b';
-                    
-                    // Remove signature effect
-                    clause.style.boxShadow = 'none';
-                });
             });
             
-            // Click effect - Digital Signature
-            document.addEventListener('mousedown', () => {
-                contractCursor.classList.add('cursor-sign');
-                contractCursor.style.borderColor = '#3b82f6';
-                contractCursor.style.boxShadow = '0 0 30px #3b82f6';
-                
-                // Create digital signature effect
-                createDigitalSignature(mouseX, mouseY);
-            });
-            
-            document.addEventListener('mouseup', () => {
-                contractCursor.classList.remove('cursor-sign');
-                contractCursor.style.borderColor = '#f59e0b';
-                contractCursor.style.boxShadow = '0 0 15px #f59e0b';
-            });
-            
-            function createDigitalSignature(x, y) {
-                // Create signature stamp
-                const stamp = document.createElement('div');
-                stamp.className = 'contract-stamp';
-                stamp.style.left = x + 'px';
-                stamp.style.top = y + 'px';
-                
-                const signature = document.createElement('div');
-                signature.innerHTML = '<i class="fas fa-signature"></i>';
-                signature.style.position = 'absolute';
-                signature.style.top = '50%';
-                signature.style.left = '50%';
-                signature.style.transform = 'translate(-50%, -50%)';
-                signature.style.fontSize = '1.5rem';
-                signature.style.color = '#3b82f6';
-                
-                stamp.appendChild(signature);
-                document.querySelector('.cursor-container').appendChild(stamp);
-                
-                // Animate stamp
-                stamp.style.transition = 'all 0.5s ease';
-                stamp.style.opacity = '1';
-                stamp.style.transform = 'translate(-50%, -50%) scale(1)';
-                
-                // Remove stamp after animation
-                setTimeout(() => {
-                    stamp.style.opacity = '0';
-                    stamp.style.transform = 'translate(-50%, -50%) scale(0)';
-                    setTimeout(() => {
-                        stamp.remove();
-                    }, 500);
-                }, 1000);
-            }
-            
-            // Animation loop
-            function animateCursor() {
-                // Smooth cursor movement
-                cursorX += (mouseX - cursorX) * 0.15;
-                cursorY += (mouseY - cursorY) * 0.15;
-                
-                contractCursor.style.left = cursorX + 'px';
-                contractCursor.style.top = cursorY + 'px';
-                
-                // Update ink drops
-                for (let i = 0; i < inkDrops.length; i++) {
-                    const inkDrop = inkDrops[i];
-                    if (inkDrop.life > 0) {
-                        inkDrop.life--;
-                        inkDrop.element.style.left = inkDrop.x + 'px';
-                        inkDrop.element.style.top = inkDrop.y + 'px';
-                        inkDrop.element.style.opacity = (inkDrop.life / inkDrop.maxLife) * 0.7;
-                        inkDrop.element.style.transform = `scale(${0.5 + (inkDrop.life / inkDrop.maxLife) * 0.5})`;
-                    }
-                }
-                
-                requestAnimationFrame(animateCursor);
-            }
-            
-            // Start animation
-            animateCursor();
-            
-            // Add page turning effect on scroll
+            // Add scroll effect for page turning
             let lastScrollTop = 0;
             const mainWrap = document.querySelector('.wrap');
             
@@ -972,13 +862,13 @@
                 const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
                 
                 if (scrollTop > lastScrollTop) {
-                    // Scrolling down - page turn forward
-                    mainWrap.style.boxShadow = '15px 0 30px rgba(0, 0, 0, 0.3)';
-                    mainWrap.style.transform = 'perspective(1000px) rotateY(2deg)';
+                    // Scrolling down
+                    mainWrap.style.boxShadow = '15px 0 30px rgba(0, 0, 0, 0.2)';
+                    mainWrap.style.transform = 'perspective(1000px) rotateY(1deg)';
                 } else {
-                    // Scrolling up - page turn backward
-                    mainWrap.style.boxShadow = '-15px 0 30px rgba(0, 0, 0, 0.3)';
-                    mainWrap.style.transform = 'perspective(1000px) rotateY(-2deg)';
+                    // Scrolling up
+                    mainWrap.style.boxShadow = '-15px 0 30px rgba(0, 0, 0, 0.2)';
+                    mainWrap.style.transform = 'perspective(1000px) rotateY(-1deg)';
                 }
                 
                 // Reset after scroll ends
@@ -991,81 +881,67 @@
                 lastScrollTop = scrollTop;
             });
             
-            // Add contract acceptance animation
-            const acceptButton = document.querySelector('.back-home');
-            if (acceptButton) {
-                acceptButton.addEventListener('mouseenter', () => {
-                    // Create acceptance seal
-                    const seal = document.createElement('div');
-                    seal.style.position = 'fixed';
-                    seal.style.left = (mouseX - 40) + 'px';
-                    seal.style.top = (mouseY - 40) + 'px';
-                    seal.style.width = '80px';
-                    seal.style.height = '80px';
-                    seal.style.border = '3px solid #10b981';
-                    seal.style.borderRadius = '50%';
-                    seal.style.background = 'radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, transparent 70%)';
-                    seal.style.boxShadow = '0 0 20px #10b981';
-                    seal.style.opacity = '0';
-                    seal.style.zIndex = '9996';
-                    seal.style.pointerEvents = 'none';
-                    seal.style.animation = 'sealApprove 0.5s ease-out forwards';
-                    
-                    document.body.appendChild(seal);
-                    
-                    // Add CSS animation
-                    const style = document.createElement('style');
-                    style.textContent = `
-                        @keyframes sealApprove {
-                            0% {
-                                transform: scale(0);
-                                opacity: 0;
-                            }
-                            50% {
-                                transform: scale(1.2);
-                                opacity: 1;
-                            }
-                            100% {
-                                transform: scale(1);
-                                opacity: 0.8;
-                            }
-                        }
-                    `;
-                    document.head.appendChild(style);
-                    
-                    setTimeout(() => {
-                        seal.remove();
-                        style.remove();
-                    }, 500);
+            // Add clause highlighting on hover
+            const clauses = document.querySelectorAll('.clause');
+            clauses.forEach(clause => {
+                clause.addEventListener('mouseenter', () => {
+                    clause.style.boxShadow = '0 4px 12px rgba(245, 158, 11, 0.2)';
                 });
-            }
-            
-            // Add section highlighting on hover
-            const sections = document.querySelectorAll('h2');
-            sections.forEach(section => {
-                section.addEventListener('mouseenter', () => {
-                    const sectionNumber = section.textContent.match(/\d+/);
-                    if (sectionNumber) {
-                        highlightSection(sectionNumber[0]);
-                    }
+                
+                clause.addEventListener('mouseleave', () => {
+                    clause.style.boxShadow = 'none';
                 });
             });
             
-            function highlightSection(sectionNum) {
-                // Remove previous highlights
-                document.querySelectorAll('.highlighted').forEach(el => {
-                    el.classList.remove('highlighted');
+            // Add section navigation
+            const sections = document.querySelectorAll('h2');
+            sections.forEach(section => {
+                section.style.cursor = 'pointer';
+                section.addEventListener('click', () => {
+                    section.scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    
+                    // Highlight section temporarily
+                    section.style.transition = 'all 0.3s ease';
+                    section.style.color = '#f97316';
+                    
+                    setTimeout(() => {
+                        if (document.body.classList.contains('light-mode')) {
+                            section.style.color = '#b45309';
+                        } else {
+                            section.style.color = '#fbbf24';
+                        }
+                    }, 1500);
+                });
+            });
+            
+            // Add acceptance animation to home button
+            const backHomeBtn = document.querySelector('.back-home');
+            if (backHomeBtn) {
+                backHomeBtn.addEventListener('mouseenter', () => {
+                    const checkmark = document.createElement('i');
+                    checkmark.className = 'fas fa-check';
+                    checkmark.style.position = 'absolute';
+                    checkmark.style.right = '10px';
+                    checkmark.style.opacity = '0';
+                    checkmark.style.transition = 'opacity 0.3s ease';
+                    
+                    backHomeBtn.style.position = 'relative';
+                    backHomeBtn.appendChild(checkmark);
+                    
+                    setTimeout(() => {
+                        checkmark.style.opacity = '1';
+                    }, 10);
                 });
                 
-                // Add highlight to current section
-                const currentSection = document.querySelector(`h2:contains("ধারা ${sectionNum}")`);
-                if (currentSection) {
-                    let nextElement = currentSection.nextElementSibling;
-                    while (nextElement && !nextElement.matches('h2')) {
-                        nextElement.classList.add('highlighted');
-                        nextElement = nextElement.nextElementSibling;
+                backHomeBtn.addEventListener('mouseleave', () => {
+                    const checkmark = backHomeBtn.querySelector('.fa-check');
+                    if (checkmark) {
+                        checkmark.remove();
                     }
-                }
+                });
             }
         });
     </script>
