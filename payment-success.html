@@ -489,44 +489,161 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Generate dynamic data
-            document.getElementById('transactionId').textContent = 
-                'TXN-' + Math.floor(100000 + Math.random() * 900000);
-            
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('bn-BD', { 
-                hour: '2-digit', 
-                minute: '2-digit' 
-            });
-            document.getElementById('transactionTime').textContent = 
-                `আজ, ${timeString}`;
-            
-            // Generate random amount
-            const amounts = [1250, 1899, 2500, 3200, 4500];
-            document.getElementById('amountDisplay').textContent = 
-                '৳ ' + amounts[Math.floor(Math.random() * amounts.length)].toLocaleString('bn-BD');
-            
-            // Play success sound with precise timing
-            const successSound = document.getElementById('successSound');
-            setTimeout(() => {
-                successSound.volume = 0.2;
-                successSound.play().catch(e => console.log("Audio autoplay blocked"));
-            }, 2200); // Sync with animation completion
-            
-            // Create particle burst
-            createParticleBurst();
-            
-            // Add ripple effect to buttons
-            const buttons = document.querySelectorAll('.btn');
-            buttons.forEach(button => {
-                button.addEventListener('click', function(e) {
-                    createRippleEffect(e, this);
-                });
-            });
-            
-            // Create floating particles
-            startParticleSystem();
+    // Get payment data from multiple sources
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    // Priority: URL params > localStorage > random
+    const tranId = urlParams.get('tran_id') || 
+                   localStorage.getItem('sslTransactionId') || 
+                   'TXN-' + Math.floor(100000 + Math.random() * 900000);
+    
+    // Get EXACT amount - this is the key fix
+    let exactAmount = null;
+    
+    // Try to get amount in this order:
+    if (urlParams.get('amount')) {
+        exactAmount = parseFloat(urlParams.get('amount'));
+    } else if (localStorage.getItem('sslAmount')) {
+        exactAmount = parseFloat(localStorage.getItem('sslAmount'));
+    } else if (localStorage.getItem('paymentAmount')) {
+        exactAmount = parseFloat(localStorage.getItem('paymentAmount'));
+    } else if (localStorage.getItem('selectedProfessionalPrice')) {
+        exactAmount = parseFloat(localStorage.getItem('selectedProfessionalPrice'));
+    } else {
+        // Fallback to last successful payment amount
+        const lastPayment = localStorage.getItem('lastSuccessfulPayment');
+        if (lastPayment) {
+            exactAmount = JSON.parse(lastPayment).amount;
+        } else {
+            exactAmount = 2500; // Default fallback
+        }
+    }
+    
+    // Get professional info
+    const professionalName = urlParams.get('name') || 
+                            localStorage.getItem('sslProfessionalName') || 
+                            localStorage.getItem('selectedProfessionalName') || 
+                            'নির্বাচিত পেশাদার';
+    
+    const serviceType = urlParams.get('service') || 
+                       localStorage.getItem('sslService') || 
+                       localStorage.getItem('selectedProfessionalService') || 
+                       'সেবা';
+    
+    console.log('Success Page Data:', {
+        tranId,
+        exactAmount,
+        professionalName,
+        serviceType
+    });
+    
+    // Display EXACT amount - no random!
+    document.getElementById('amountDisplay').textContent = '৳ ' + exactAmount.toLocaleString('bn-BD');
+    document.getElementById('transactionId').textContent = tranId;
+    
+    const now = new Date();
+    const timeString = now.toLocaleTimeString('bn-BD', { 
+        hour: '2-digit', 
+        minute: '2-digit' 
+    });
+    const dateString = now.toLocaleDateString('bn-BD', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+    document.getElementById('transactionTime').textContent = `${dateString}, ${timeString}`;
+    
+    // Update details with professional info
+    const detailsContainer = document.querySelector('.details');
+    detailsContainer.innerHTML = `
+        <div class="detail-item">
+            <span class="label">লেনদেন আইডি</span>
+            <span class="value">${tranId}</span>
+        </div>
+        <div class="detail-item">
+            <span class="label">পরিমাণ</span>
+            <span class="value" style="color: var(--success-primary); font-weight: bold;">৳ ${exactAmount.toLocaleString('bn-BD')}</span>
+        </div>
+        <div class="detail-item">
+            <span class="label">তারিখ ও সময়</span>
+            <span class="value">${dateString}, ${timeString}</span>
+        </div>
+        <div class="detail-item">
+            <span class="label">পেশাদার</span>
+            <span class="value">${professionalName}</span>
+        </div>
+        <div class="detail-item">
+            <span class="label">সেবার ধরন</span>
+            <span class="value">${serviceType}</span>
+        </div>
+        <div class="detail-item">
+            <span class="label">স্ট্যাটাস</span>
+            <span class="value" style="color: var(--success-primary); font-weight: bold;">✓ সম্পূর্ণ</span>
+        </div>
+    `;
+    
+    // Store as last successful payment
+    const successfulPayment = {
+        id: tranId,
+        amount: exactAmount,
+        professionalName: professionalName,
+        service: serviceType,
+        date: now.toISOString(),
+        status: 'completed'
+    };
+    
+    localStorage.setItem('lastSuccessfulPayment', JSON.stringify(successfulPayment));
+    
+    // Also add to payment history
+    const existingPayments = JSON.parse(localStorage.getItem('user_payments') || '[]');
+    existingPayments.unshift({
+        id: tranId,
+        amount: exactAmount,
+        description: `${serviceType} - ${professionalName}`,
+        date: now.toISOString(),
+        status: 'completed',
+        type: 'professional_service'
+    });
+    localStorage.setItem('user_payments', JSON.stringify(existingPayments));
+    
+    // Update dashboard stats
+    updateDashboardStats();
+    
+    // Play success sound
+    const successSound = document.getElementById('successSound');
+    setTimeout(() => {
+        successSound.volume = 0.2;
+        successSound.play().catch(e => console.log("Audio autoplay blocked"));
+    }, 2200);
+    
+    // Create particle burst
+    createParticleBurst();
+    
+    // Add ripple effect to buttons
+    const buttons = document.querySelectorAll('.btn');
+    buttons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            createRippleEffect(e, this);
         });
+    });
+    
+    // Update dashboard button link
+    const dashboardBtn = document.getElementById('dashboardBtn');
+    if (dashboardBtn) {
+        dashboardBtn.href = 'customer.html';
+    }
+});
+
+function updateDashboardStats() {
+    // Update the total spent in customer dashboard
+    const payments = JSON.parse(localStorage.getItem('user_payments') || '[]');
+    const totalSpent = payments
+        .filter(p => p.status === 'completed')
+        .reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0);
+
+    // This will be used when customer returns to dashboard
+    localStorage.setItem('totalSpent', totalSpent.toString());
+}
         
         function createParticleBurst() {
             const particlesContainer = document.getElementById('particles');

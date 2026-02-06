@@ -236,38 +236,73 @@
         });
 
         function loadPaymentData() {
-            // Get payment data from URL or localStorage
-            const urlParams = new URLSearchParams(window.location.search);
-            const paymentId = urlParams.get('payment_id') || 'default';
-            
-            // In production, fetch from database
-            const payments = JSON.parse(localStorage.getItem('user_payments') || '[]');
-            const payment = payments.find(p => p.id === paymentId) || {
-                id: paymentId,
-                amount: '2500',
-                description: 'বৈদ্যুতিক কাজের সেবা',
-                serviceId: 'SVC-001'
-            };
-            
-            paymentData = payment;
-            
-            // Update UI
-            document.getElementById('amountDisplay').textContent = `৳ ${parseFloat(paymentData.amount).toLocaleString()}`;
-            document.getElementById('serviceInfo').innerHTML = `
-                <div class="info-item">
-                    <span>সেবা:</span>
-                    <span>${paymentData.description}</span>
-                </div>
-                <div class="info-item">
-                    <span>পেমেন্ট আইডি:</span>
-                    <span>${paymentData.id.substring(0, 8)}</span>
-                </div>
-                <div class="info-item">
-                    <span>তারিখ:</span>
-                    <span>${new Date().toLocaleDateString('bn-BD')}</span>
-                </div>
-            `;
-        }
+    // Get payment data from multiple sources
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    // Get from URL parameters first
+    let amount = urlParams.get('amount');
+    let professionalId = urlParams.get('professional');
+    let service = urlParams.get('service');
+    let professionalName = urlParams.get('name');
+    
+    // If not in URL, get from localStorage
+    if (!amount) {
+        amount = localStorage.getItem('selectedProfessionalPrice') || 
+                 localStorage.getItem('paymentAmount') || 
+                 '2500';
+    }
+    
+    if (!professionalId) {
+        professionalId = localStorage.getItem('selectedProfessionalId') || 'PRO001';
+    }
+    
+    if (!professionalName) {
+        professionalName = localStorage.getItem('selectedProfessionalName') || 'পেশাদার';
+    }
+    
+    if (!service) {
+        service = localStorage.getItem('selectedProfessionalService') || 'সেবা';
+    }
+    
+    // Store in paymentData object
+    paymentData = {
+        id: 'PAY-' + Date.now(),
+        amount: parseFloat(amount),
+        description: service + ' - ' + professionalName,
+        serviceId: professionalId,
+        professionalName: professionalName,
+        service: service
+    };
+    
+    console.log('Payment Data Loaded:', paymentData);
+    
+    // Update UI with EXACT amount
+    document.getElementById('amountDisplay').textContent = `৳ ${paymentData.amount.toLocaleString('bn-BD')}`;
+    
+    // Store for SSLCommerz
+    localStorage.setItem('paymentAmount', paymentData.amount);
+    localStorage.setItem('currentPaymentData', JSON.stringify(paymentData));
+    
+    // Update service info
+    document.getElementById('serviceInfo').innerHTML = `
+        <div class="info-item">
+            <span>সেবা:</span>
+            <span>${paymentData.service}</span>
+        </div>
+        <div class="info-item">
+            <span>পেশাদার:</span>
+            <span>${paymentData.professionalName}</span>
+        </div>
+        <div class="info-item">
+            <span>পেমেন্ট আইডি:</span>
+            <span>${paymentData.id}</span>
+        </div>
+        <div class="info-item">
+            <span>তারিখ:</span>
+            <span>${new Date().toLocaleDateString('bn-BD')}</span>
+        </div>
+    `;
+}
 
         function setupPaymentMethods() {
             const methodCards = document.querySelectorAll('.method-card');
@@ -307,49 +342,77 @@
         }
 
         async function initiateSSLCommerzPayment() {
-            // Generate transaction ID
-            const tran_id = 'TXN' + Date.now();
-            
-            const paymentRequest = {
-                total_amount: parseFloat(paymentData.amount),
-                currency: 'BDT',
-                tran_id: tran_id,
-                success_url: `${window.location.origin}/payment-success.html?tran_id=${tran_id}`,
-                fail_url: `${window.location.origin}/payment-failed.html`,
-                cancel_url: `${window.location.origin}/payment-cancel.html`,
-                cus_name: 'Customer Name', // Get from user data
-                cus_email: 'customer@email.com', // Get from user data
-                cus_phone: '01234567890', // Get from user data
-                cus_add1: 'Customer Address', // Get from user data
-                product_name: paymentData.description,
-                product_category: 'Service',
-                product_profile: 'general'
-            };
-            
-            try {
-                // Call your backend API
-                const response = await fetch('/api/payment/initiate', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(paymentRequest)
-                });
-                
-                const result = await response.json();
-                
-                if (result.GatewayPageURL) {
-                    // Redirect to SSLCommerz payment page
-                    window.location.href = result.GatewayPageURL;
-                } else {
-                    throw new Error('Payment initiation failed');
-                }
-            } catch (error) {
-                console.error('SSLCommerz initiation error:', error);
-                throw error;
-            }
-        }
+    // Get user data
+    const userData = localStorage.getItem('nibash_user');
+    let user = null;
+    
+    try {
+        user = userData ? JSON.parse(userData) : {};
+    } catch (e) {
+        user = {};
+    }
+    
+    // Generate transaction ID
+    const tran_id = 'TXN' + Date.now();
+    
+    // Create payment request with EXACT amount
+    const paymentRequest = {
+        total_amount: paymentData.amount, // Exact amount from professional selection
+        currency: 'BDT',
+        tran_id: tran_id,
+        success_url: `${window.location.origin}/payment-success.html?tran_id=${tran_id}&amount=${paymentData.amount}&professional=${paymentData.serviceId}&service=${encodeURIComponent(paymentData.service)}`,
+        fail_url: `${window.location.origin}/payment-failed.html`,
+        cancel_url: `${window.location.origin}/payment-cancel.html`,
+        cus_name: user.fullName || user.full_name || 'গ্রাহক',
+        cus_email: user.email || 'customer@email.com',
+        cus_phone: user.phone || user.phoneNumber || '01234567890',
+        cus_add1: user.address || 'গ্রাহকের ঠিকানা',
+        product_name: paymentData.description,
+        product_category: 'Service',
+        product_profile: 'general'
+    };
+    
+    console.log('SSLCommerz Request:', paymentRequest);
+    
+    // Store transaction data for success page
+    localStorage.setItem('sslTransactionId', tran_id);
+    localStorage.setItem('sslAmount', paymentData.amount.toString());
+    localStorage.setItem('sslProfessionalName', paymentData.professionalName);
+    localStorage.setItem('sslService', paymentData.service);
+    
+    // For demo, simulate SSLCommerz redirect
+    showProcessingMessage();
+    
+    // Simulate payment processing
+    setTimeout(() => {
+        window.location.href = `payment-success.html?tran_id=${tran_id}&amount=${paymentData.amount}&professional=${paymentData.serviceId}&service=${encodeURIComponent(paymentData.service)}&name=${encodeURIComponent(paymentData.professionalName)}`;
+    }, 2000);
+}
 
+function showProcessingMessage() {
+    const button = document.getElementById('payButton');
+    const originalHTML = button.innerHTML;
+    
+    button.innerHTML = `
+        <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+            <div style="width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+            SSLCommerz এ পেমেন্ট প্রক্রিয়াধীন...
+        </div>
+    `;
+    button.disabled = true;
+    
+    // Add CSS for spinner
+    if (!document.querySelector('#spinner-style')) {
+        const style = document.createElement('style');
+        style.id = 'spinner-style';
+        style.textContent = `
+            @keyframes spin {
+                to { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+}
         async function saveCODPayment() {
             // Save COD payment to database
             const payments = JSON.parse(localStorage.getItem('user_payments') || '[]');

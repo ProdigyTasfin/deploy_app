@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>পেশাদার নির্বাচন - নিবাস</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #5629be;
+            --secondary: #0eaa69c5;
+            --success: #10b981;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Hind Siliguri', sans-serif;
+        }
+        
+        body {
+            background: #f8fafc;
+            color: #1e293b;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            margin-bottom: 1rem;
+        }
+        
+        .professionals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .professional-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .professional-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(86, 41, 190, 0.2);
+            border-color: var(--primary);
+        }
+        
+        .professional-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .professional-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .professional-info h3 {
+            margin-bottom: 0.25rem;
+        }
+        
+        .professional-rating {
+            color: #f59e0b;
+            margin: 0.5rem 0;
+        }
+        
+        .professional-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+        
+        .skill-tag {
+            background: rgba(86, 41, 190, 0.1);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .pricing-section {
+            background: rgba(16, 185, 129, 0.1);
+            padding: 1rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            text-align: center;
+        }
+        
+        .price-amount {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--success);
+        }
+        
+        .price-note {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-top: 0.5rem;
+        }
+        
+        .select-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .select-btn:hover {
+            background: #4a1fa8;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="customer.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> ড্যাশবোর্ডে ফিরে যান
+        </a>
+        <h1>পেশাদার নির্বাচন করুন</h1>
+        <p>আপনার প্রয়োজন অনুযায়ী পেশাদার নির্বাচন করুন</p>
+    </div>
+    
+    <div class="professionals-grid" id="professionalsList">
+        <!-- Professionals will be loaded here -->
+    </div>
+
+    <script>
+        // Sample professionals data with fixed prices
+        const professionals = [
+            {
+                id: 'PRO001',
+                name: 'মোঃ রফিকুল ইসলাম',
+                service: 'বৈদ্যুতিক কাজ',
+                rating: 4.8,
+                completedJobs: 125,
+                skills: ['বিদ্যুৎ সংযোগ', 'ফ্যান/লাইট মেরামত', 'নতুন তারকাটা'],
+                price: 2000,
+                hourlyRate: '৳ ৫০০/ঘন্টা',
+                experience: '৫ বছর',
+                location: 'ধানমন্ডি, ঢাকা'
+            },
+            {
+                id: 'PRO002',
+                name: 'মোঃ জামাল উদ্দিন',
+                service: 'প্লাম্বিং',
+                rating: 4.7,
+                completedJobs: 98,
+                skills: ['পাইপ মেরামত', 'নতুন সংযোগ', 'ওয়াটার হিটার'],
+                price: 1500,
+                hourlyRate: '৳ ৪০০/ঘন্টা',
+                experience: '৪ বছর',
+                location: 'গুলশান, ঢাকা'
+            },
+            {
+                id: 'PRO003',
+                name: 'মোঃ সোহেল রানা',
+                service: 'এসি সার্ভিস',
+                rating: 4.9,
+                completedJobs: 75,
+                skills: ['এসি সার্ভিসিং', 'গ্যাস রিফিল', 'মেরামত'],
+                price: 2500,
+                hourlyRate: '৳ ৬০০/ঘন্টা',
+                experience: '৬ বছর',
+                location: 'বনানী, ঢাকা'
+            },
+            {
+                id: 'PRO004',
+                name: 'মোঃ করিম মিয়া',
+                service: 'কাঠের কাজ',
+                rating: 4.6,
+                completedJobs: 110,
+                skills: ['ফার্নিচার মেরামত', 'ক্যাবিনেট তৈরি', 'দরজা-জানালা'],
+                price: 3000,
+                hourlyRate: '৳ ৭০০/ঘন্টা',
+                experience: '৮ বছর',
+                location: 'মিরপুর, ঢাকা'
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const professionalsList = document.getElementById('professionalsList');
+            
+            professionalsList.innerHTML = professionals.map(pro => `
+                <div class="professional-card">
+                    <div class="professional-header">
+                        <div class="professional-avatar">${pro.name.charAt(0)}</div>
+                        <div class="professional-info">
+                            <h3>${pro.name}</h3>
+                            <div style="color: #64748b; font-size: 0.9rem;">
+                                <i class="fas fa-map-marker-alt"></i> ${pro.location}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin: 1rem 0;">
+                        <span style="background: rgba(86, 41, 190, 0.1); color: var(--primary); padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: 500;">
+                            ${pro.service}
+                        </span>
+                    </div>
+                    
+                    <div class="professional-rating">
+                        ${'★'.repeat(5)} <span style="color: #64748b;">(${pro.rating})</span>
+                    </div>
+                    
+                    <div style="font-size: 0.9rem; color: #64748b; margin: 0.5rem 0;">
+                        <i class="fas fa-briefcase"></i> ${pro.completedJobs} টি কাজ সম্পন্ন
+                        <br>
+                        <i class="fas fa-clock"></i> ${pro.experience} অভিজ্ঞতা
+                    </div>
+                    
+                    <div class="professional-skills">
+                        ${pro.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                    </div>
+                    
+                    <div class="pricing-section">
+                        <div class="price-amount">৳ ${pro.price.toLocaleString('bn-BD')}</div>
+                        <div class="price-note">ফিক্সড মূল্য | ${pro.hourlyRate}</div>
+                    </div>
+                    
+                    <button class="select-btn" onclick="selectProfessional('${pro.id}', '${pro.name}', '${pro.service}', ${pro.price})">
+                        <i class="fas fa-check-circle"></i> এই পেশাদার নির্বাচন করুন
+                    </button>
+                </div>
+            `).join('');
+        });
+
+        function selectProfessional(proId, proName, proService, proPrice) {
+            // Store professional data in localStorage
+            localStorage.setItem('selectedProfessionalId', proId);
+            localStorage.setItem('selectedProfessionalName', proName);
+            localStorage.setItem('selectedProfessionalService', proService);
+            localStorage.setItem('selectedProfessionalPrice', proPrice);
+            
+            // Also store for payment
+            localStorage.setItem('paymentAmount', proPrice);
+            
+            console.log('Selected Professional:', {
+                id: proId,
+                name: proName,
+                service: proService,
+                price: proPrice
+            });
+            
+            // Redirect to payment page with parameters
+            window.location.href = `payment.html?professional=${proId}&amount=${proPrice}&service=${encodeURIComponent(proService)}&name=${encodeURIComponent(proName)}`;
+        }
+    </script>
+</body>
+</html>
