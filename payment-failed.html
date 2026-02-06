@@ -498,15 +498,22 @@
             // Simulate processing delay
             setTimeout(() => {
                 // Get the original payment URL with amount
-                const amount = localStorage.getItem('paymentAmount');
-                const serviceId = localStorage.getItem('selectedService');
-                
-                if (amount && serviceId) {
-                    // Redirect back to payment with same amount
-                    window.location.href = `payment.html?amount=${amount}&service=${serviceId}`;
-                } else {
-                    window.location.href = 'payment.html';
-                }
+            const amount = localStorage.getItem('paymentAmount');
+            const professionalId = localStorage.getItem('selectedProfessionalId');
+            const professionalName = localStorage.getItem('selectedProfessionalName');
+            const service = localStorage.getItem('selectedProfessionalService');
+
+            if (amount && professionalId && professionalName && service) {
+                const query = new URLSearchParams({
+                    amount,
+                    professional: professionalId,
+                    name: professionalName,
+                    service
+                });
+                window.location.href = `payment.html?${query.toString()}`;
+            } else {
+                window.location.href = 'payment.html';
+            }
             }, 1500);
         }
     </script>

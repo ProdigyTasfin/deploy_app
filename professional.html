@@ -728,14 +728,34 @@
 
         // Check if user is logged in
         async function checkLogin() {
-            const userData = localStorage.getItem('nibash_user');
-            if (!userData) {
+            const userToken = localStorage.getItem('nibash_token');
+            if (!userToken) {
                 window.location.href = 'login.html';
                 return;
             }
             
             try {
-                currentUser = JSON.parse(userData);
+                const response = await fetch('/api/auth/me', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${userToken}`
+                    }
+                });
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    throw new Error(data.error || 'Session invalid');
+                }
+
+                currentUser = data.user;
+                localStorage.setItem('nibash_user', JSON.stringify(currentUser));
+
+                if (currentUser.role !== 'professional' && currentUser.accountType !== 'professional') {
+                    localStorage.clear();
+                    window.location.href = 'login.html';
+                    return;
+                }
+
                 updateUserInfo();
             } catch (error) {
                 console.error('Error parsing user data:', error);
@@ -864,36 +884,34 @@
         // Load available jobs
         async function loadAvailableJobs() {
             const jobsList = document.getElementById('availableJobsList');
-            
-            // Sample jobs data
-            const availableJobs = [
-                {
-                    id: 'JOB001',
-                    service: 'বৈদ্যুতিক কাজ',
-                    customerName: 'মাহমুদ হাসান',
-                    location: 'ধানমন্ডি, ঢাকা',
-                    description: 'বৈদ্যুতিক তার পরিবর্তন এবং নতুন আউটলেট বসানো প্রয়োজন। পুরাতন তারে সমস্যা হচ্ছে।',
-                    customerBudget: '৳ ২,০০০',
-                    date: 'আজ',
-                    time: 'বিকাল ৪টা - ৬টা',
-                    address: '১২/৩, রোড ৭, ধানমন্ডি, ঢাকা',
-                    phone: '০১৭১২৩৪৫৬৭৮',
-                    status: 'available'
-                },
-                {
-                    id: 'JOB002',
-                    service: 'প্লাম্বিং',
-                    customerName: 'সায়মা ইসলাম',
-                    location: 'গুলশান, ঢাকা',
-                    description: 'বাথরুমের পাইপ মেরামত প্রয়োজন। পানি চুইয়ে পড়ছে।',
-                    customerBudget: '৳ ১,৫০০',
-                    date: 'আগামীকাল',
-                    time: 'সকাল ১০টা - ১২টা',
-                    address: '২৩/এ, রোড ১২, গুলশান, ঢাকা',
-                    phone: '০১৮৭৬৫৪৩২১০',
-                    status: 'available'
+
+            let availableJobs = [];
+            try {
+                const userToken = localStorage.getItem('nibash_token');
+                const response = await fetch('/api/services/list?status=pending', {
+                    headers: {
+                        'Authorization': `Bearer ${userToken}`
+                    }
+                });
+                const data = await response.json();
+                if (response.ok && data.success) {
+                    availableJobs = data.requests.map(request => ({
+                        id: request.service_id || request.id,
+                        service: request.service_type,
+                        customerName: request.customer_name || 'গ্রাহক',
+                        location: request.address || 'ঠিকানা নেই',
+                        description: request.description,
+                        customerBudget: request.estimated_budget ? `৳ ${request.estimated_budget}` : '৳ ০',
+                        date: request.preferred_date,
+                        time: request.preferred_time,
+                        address: request.address,
+                        phone: request.customer_phone || 'নম্বর নেই',
+                        status: request.status || 'available'
+                    }));
                 }
-            ];
+            } catch (error) {
+                console.error('Failed to load available jobs:', error);
+            }
             
             jobsList.innerHTML = availableJobs.map(job => `
                 <div class="job-card" id="job-${job.id}">

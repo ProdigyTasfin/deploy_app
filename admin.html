@@ -788,47 +788,58 @@
         function checkAdminAccess() {
             console.log('🔐 Checking admin access...');
             
-            const userData = localStorage.getItem('nibash_user');
             const userToken = localStorage.getItem('nibash_token');
             
-            if (!userData || !userToken) {
+            if (!userToken) {
                 console.log('❌ No session found');
                 alert('Please login first');
                 window.location.href = 'login.html';
                 return;
             }
             
-            try {
-                currentAdmin = JSON.parse(userData);
-                console.log('👤 Current user:', currentAdmin);
-                
-                const isAdmin = currentAdmin.role === 'admin' || 
-                               currentAdmin.account_type === 'admin' || 
-                               currentAdmin.email === 'admin@nibash.com';
-                
-                if (!isAdmin) {
-                    console.log('❌ User is not admin:', currentAdmin.role);
-                    alert('Admin access only');
-                    
-                    if (currentAdmin.role === 'customer') {
-                        window.location.href = 'customer.html';
-                    } else if (currentAdmin.role === 'professional') {
-                        window.location.href = 'professional.html';
-                    } else {
-                        window.location.href = 'index.html';
-                    }
-                    return;
+            fetch('/api/auth/me', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${userToken}`
                 }
-                
-                console.log('✅ Admin access granted for:', currentAdmin.email);
-                initAdminPanel();
-                
-            } catch (error) {
-                console.error('❌ Error parsing user data:', error);
-                alert('Session error. Please login again.');
-                localStorage.clear();
-                window.location.href = 'login.html';
-            }
+            })
+                .then(response => response.json().then(data => ({ response, data })))
+                .then(({ response, data }) => {
+                    if (!response.ok || !data.success) {
+                        throw new Error(data.error || 'Session invalid');
+                    }
+
+                    currentAdmin = data.user;
+                    localStorage.setItem('nibash_user', JSON.stringify(currentAdmin));
+                    console.log('👤 Current user:', currentAdmin);
+
+                    const isAdmin = currentAdmin.role === 'admin' ||
+                        currentAdmin.account_type === 'admin' ||
+                        currentAdmin.email === 'admin@nibash.com';
+
+                    if (!isAdmin) {
+                        console.log('❌ User is not admin:', currentAdmin.role);
+                        alert('Admin access only');
+
+                        if (currentAdmin.role === 'customer') {
+                            window.location.href = 'customer.html';
+                        } else if (currentAdmin.role === 'professional') {
+                            window.location.href = 'professional.html';
+                        } else {
+                            window.location.href = 'index.html';
+                        }
+                        return;
+                    }
+
+                    console.log('✅ Admin access granted for:', currentAdmin.email);
+                    initAdminPanel();
+                })
+                .catch(error => {
+                    console.error('❌ Error validating session:', error);
+                    alert('Session error. Please login again.');
+                    localStorage.clear();
+                    window.location.href = 'login.html';
+                });
         }
 
         // Initialize admin panel

@@ -452,13 +452,13 @@
                 amount = localStorage.getItem('paymentAmount');
             }
             if (!professionalId) {
-                professionalId = localStorage.getItem('selectedProfessional');
+                professionalId = localStorage.getItem('selectedProfessionalId');
             }
             if (!professionalName) {
                 professionalName = localStorage.getItem('selectedProfessionalName');
             }
             if (!serviceDetails) {
-                serviceDetails = localStorage.getItem('selectedServiceDetails');
+                serviceDetails = localStorage.getItem('selectedProfessionalService');
             }
             
             // Display amount
@@ -489,10 +489,10 @@
                 }
                 
                 // Store for retry
-                localStorage.setItem('selectedProfessional', professionalId);
+                localStorage.setItem('selectedProfessionalId', professionalId);
                 localStorage.setItem('selectedProfessionalName', professionalName);
                 if (serviceDetails) {
-                    localStorage.setItem('selectedServiceDetails', serviceDetails);
+                    localStorage.setItem('selectedProfessionalService', serviceDetails);
                 }
             }
             
@@ -537,14 +537,15 @@
             
             // Get saved data
             const amount = localStorage.getItem('paymentAmount');
-            const professionalId = localStorage.getItem('selectedProfessional');
+            const professionalId = localStorage.getItem('selectedProfessionalId');
             const professionalName = localStorage.getItem('selectedProfessionalName');
+            const service = localStorage.getItem('selectedProfessionalService');
             
             // Simulate processing delay
             setTimeout(() => {
-                if (amount && professionalId) {
+                if (amount && professionalId && service) {
                     // Redirect back to payment with all parameters
-                    let paymentUrl = `payment.html?amount=${amount}&professional=${professionalId}`;
+                    let paymentUrl = `payment.html?amount=${amount}&professional=${professionalId}&service=${encodeURIComponent(service)}`;
                     if (professionalName) {
                         paymentUrl += `&name=${encodeURIComponent(professionalName)}`;
                     }

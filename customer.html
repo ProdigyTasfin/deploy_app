@@ -739,16 +739,29 @@
         });
 
         async function initializeDashboard() {
-            const userData = localStorage.getItem('nibash_user');
             const userToken = localStorage.getItem('nibash_token');
 
-            if (!userData || !userToken) {
+            if (!userToken) {
                 window.location.href = 'login.html';
                 return;
             }
 
             try {
-                currentUser = JSON.parse(userData);
+                const response = await fetch('/api/auth/me', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${userToken}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    throw new Error(data.error || 'Session invalid');
+                }
+
+                currentUser = data.user;
+                localStorage.setItem('nibash_user', JSON.stringify(currentUser));
 
                 // Verify user is a customer
                 if (currentUser.role !== 'customer' && currentUser.accountType !== 'customer') {
@@ -1062,12 +1075,68 @@
             };
 
             try {
-                // Save to localStorage
+                const userToken = localStorage.getItem('nibash_token');
+
+                const serviceResponse = await fetch('/api/services/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${userToken}`
+                    },
+                    body: JSON.stringify({
+                        service_id: newService.id,
+                        service_type: newService.type,
+                        description: newService.description,
+                        preferred_date: newService.date,
+                        preferred_time: newService.time,
+                        address: newService.address,
+                        status: newService.status,
+                        customer_name: newService.customerName,
+                        customer_id: newService.customerId,
+                        customer_phone: currentUser.phone || ''
+                    })
+                });
+
+                const serviceData = await serviceResponse.json();
+                if (!serviceResponse.ok || !serviceData.success) {
+                    throw new Error(serviceData.error || 'Service request failed');
+                }
+
+                // Create a pending payment
+                const payment = {
+                    id: 'PAY-' + Date.now(),
+                    serviceId: newService.id,
+                    description: `${newService.typeName} এর পেমেন্ট`,
+                    amount: calculateServiceAmount(newService.type),
+                    status: 'pending',
+                    date: new Date().toISOString()
+                };
+
+                const paymentResponse = await fetch('/api/payments/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${userToken}`
+                    },
+                    body: JSON.stringify({
+                        payment_id: payment.id,
+                        service_id: payment.serviceId,
+                        description: payment.description,
+                        amount: payment.amount,
+                        status: payment.status,
+                        customer_id: newService.customerId
+                    })
+                });
+
+                const paymentData = await paymentResponse.json();
+                if (!paymentResponse.ok || !paymentData.success) {
+                    throw new Error(paymentData.error || 'Payment creation failed');
+                }
+
                 const existingServices = JSON.parse(localStorage.getItem('user_services') || '[]');
-                existingServices.unshift(newService); // Add to beginning
+                existingServices.unshift(newService);
                 localStorage.setItem('user_services', JSON.stringify(existingServices));
 
-                // Admin panel এর জন্য সার্ভিস রিকোয়েস্ট সংরক্ষণ
                 const existingRequests = JSON.parse(localStorage.getItem('service_requests') || '[]');
                 existingRequests.unshift({
                     id: newService.id,
@@ -1082,17 +1151,6 @@
                     createdAt: newService.createdAt
                 });
                 localStorage.setItem('service_requests', JSON.stringify(existingRequests));
-
-
-                // Create a pending payment
-                const payment = {
-                    id: 'PAY-' + Date.now(),
-                    serviceId: newService.id,
-                    description: `${newService.typeName} এর পেমেন্ট`,
-                    amount: calculateServiceAmount(newService.type),
-                    status: 'pending',
-                    date: new Date().toISOString()
-                };
 
                 const existingPayments = JSON.parse(localStorage.getItem('user_payments') || '[]');
                 existingPayments.unshift(payment);

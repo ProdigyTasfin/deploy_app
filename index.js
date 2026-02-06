@@ -12,10 +12,15 @@ app.use(express.static(__dirname));
 // API routes
 app.use('/api/payment/initiate', require('./api/payment/initiate'));
 app.use('/api/payment/validate', require('./api/payment/validate'));
+app.use('/api/payment/lookup', require('./api/payment/lookup'));
 app.use('/api/auth/login', require('./api/auth/login'));
 app.use('/api/auth/signup', require('./api/auth/signup'));
+app.use('/api/auth/me', require('./api/auth/me'));
 app.use('/api/login', require('./api/login'));
 app.use('/api/signup', require('./api/signup'));
+app.use('/api/payments/create', require('./api/payments/create'));
+app.use('/api/services/create', require('./api/services/create'));
+app.use('/api/services/list', require('./api/services/list'));
 
 // Test endpoint
 app.get('/api/test', (req, res) => {

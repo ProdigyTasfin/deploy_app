@@ -116,17 +116,23 @@ module.exports = async (req, res) => {
       
     } catch (fetchError) {
       console.error('SSLCommerz error:', fetchError);
-      
-      // Fallback to mock response for development
-      return res.json({
-        success: true,
-        GatewayPageURL: `${baseUrl}/payment-success.html?tran_id=${transactionId}&status=success_mock`,
-        tran_id: transactionId,
-        amount: total_amount,
-        currency: currency,
-        gateway: 'mock',
-        is_sandbox: true,
-        message: 'Using mock payment for development'
+
+      if (process.env.NODE_ENV === 'development') {
+        return res.json({
+          success: true,
+          GatewayPageURL: `${baseUrl}/payment-success.html?tran_id=${transactionId}&status=success_mock`,
+          tran_id: transactionId,
+          amount: total_amount,
+          currency: currency,
+          gateway: 'mock',
+          is_sandbox: true,
+          message: 'Using mock payment for development'
+        });
+      }
+
+      return res.status(502).json({
+        success: false,
+        error: 'Payment gateway unavailable'
       });
     }
     
