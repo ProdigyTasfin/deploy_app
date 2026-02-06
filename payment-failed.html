@@ -6,44 +6,414 @@
     <title>পেমেন্ট ব্যর্থ</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: #fef2f2;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
             margin: 0;
             padding: 40px 16px;
             color: #7f1d1d;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
+        
         .card {
             max-width: 720px;
             margin: 0 auto;
             background: #fff;
-            border-radius: 12px;
-            padding: 32px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            border-left: 6px solid #ef4444;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(239, 68, 68, 0.2);
+            border-left: 8px solid #ef4444;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            transform: scale(0.9);
+            opacity: 0;
+            animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
         }
+        
+        @keyframes popIn {
+            0% {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
         h1 {
             margin-top: 0;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
         }
+        
+        h1:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 25%;
+            width: 50%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #ef4444, transparent);
+            border-radius: 2px;
+        }
+        
+        .error-icon {
+            font-size: 4rem;
+            color: #ef4444;
+            margin-bottom: 20px;
+            animation: errorShake 0.8s ease-in-out, errorPulse 2s infinite 0.8s;
+        }
+        
+        @keyframes errorShake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        @keyframes errorPulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.15);
+                opacity: 0.8;
+            }
+        }
+        
+        p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #991b1b;
+        }
+        
+        .error-details {
+            background: #fee2e2;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+            border: 1px solid #fecaca;
+        }
+        
+        .error-details h3 {
+            margin-top: 0;
+            color: #dc2626;
+        }
+        
         .actions {
-            margin-top: 24px;
+            margin-top: 30px;
         }
+        
         a {
             display: inline-block;
-            padding: 10px 16px;
-            background: #ef4444;
+            padding: 14px 28px;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
             color: #fff;
             text-decoration: none;
-            border-radius: 6px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(239, 68, 68, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+        }
+        
+        a:active {
+            transform: translateY(-1px);
+        }
+        
+        .crack {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .crack-line {
+            position: absolute;
+            background: rgba(239, 68, 68, 0.1);
+            transform-origin: center;
+        }
+        
+        .error-particle {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            background: #ef4444;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 0;
+        }
+        
+        .warning-sign {
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            width: 60px;
+            height: 60px;
+            background: #ef4444;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            animation: warningRotate 4s infinite linear;
+            box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4);
+        }
+        
+        @keyframes warningRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .card {
+                padding: 30px 20px;
+                margin: 0 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .error-icon {
+                font-size: 3rem;
+            }
+            
+            .warning-sign {
+                top: -20px;
+                right: -20px;
+                width: 40px;
+                height: 40px;
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="crack" id="crackContainer"></div>
+    <div class="warning-sign">!</div>
+    
     <div class="card">
-        <h1>❌ পেমেন্ট ব্যর্থ হয়েছে</h1>
+        <div class="error-icon">❌</div>
+        <h1>পেমেন্ট ব্যর্থ হয়েছে</h1>
         <p>দয়া করে আবার চেষ্টা করুন অথবা অন্য পেমেন্ট পদ্ধতি নির্বাচন করুন।</p>
+        
+        <div class="error-details">
+            <h3>সম্ভাব্য কারণসমূহ:</h3>
+            <ul>
+                <li>কার্ডের তথ্য ভুল হতে পারে</li>
+                <li>পর্যাপ্ত ব্যালেন্স নেই</li>
+                <li>ইন্টারনেট সংযোগ সমস্যা</li>
+                <li>ব্যাংক সার্ভার সমস্যা</li>
+            </ul>
+        </div>
+        
         <div class="actions">
-            <a href="payment.html">আবার চেষ্টা করুন</a>
+            <a href="payment.html" id="retryBtn">আবার চেষ্টা করুন</a>
         </div>
     </div>
+
+    <audio id="errorSound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Play error sound
+            const errorSound = document.getElementById('errorSound');
+            
+            // Play sound with slight delay for dramatic effect
+            setTimeout(() => {
+                errorSound.volume = 0.3;
+                errorSound.play().catch(e => console.log("Audio play failed:", e));
+            }, 500);
+            
+            // Create crack effect
+            createCrackEffect();
+            
+            // Create error particles
+            createErrorParticles();
+            
+            // Add button hover effect
+            const retryBtn = document.getElementById('retryBtn');
+            
+            retryBtn.addEventListener('mouseenter', function(e) {
+                createRetryButtonEffect(e, this);
+            });
+            
+            // Add warning glow effect
+            createWarningGlow();
+        });
+        
+        function createCrackEffect() {
+            const container = document.getElementById('crackContainer');
+            const numCracks = 8;
+            
+            for (let i = 0; i < numCracks; i++) {
+                const crack = document.createElement('div');
+                crack.className = 'crack-line';
+                
+                const length = 200 + Math.random() * 300;
+                const angle = Math.random() * Math.PI * 2;
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                const width = 2 + Math.random() * 3;
+                
+                crack.style.width = length + 'px';
+                crack.style.height = width + 'px';
+                crack.style.left = x + 'vw';
+                crack.style.top = y + 'vh';
+                crack.style.transform = `rotate(${angle}rad)`;
+                crack.style.opacity = '0';
+                
+                container.appendChild(crack);
+                
+                // Animate crack appearance
+                crack.animate([
+                    {
+                        opacity: 0,
+                        transform: `rotate(${angle}rad) scale(0.1)`
+                    },
+                    {
+                        opacity: 0.3,
+                        transform: `rotate(${angle}rad) scale(1)`
+                    }
+                ], {
+                    duration: 800,
+                    delay: i * 100,
+                    easing: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)'
+                });
+            }
+        }
+        
+        function createErrorParticles() {
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'error-particle';
+                
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.top = Math.random() * 100 + 'vh';
+                particle.style.width = Math.random() * 8 + 4 + 'px';
+                particle.style.height = particle.style.width;
+                
+                document.body.appendChild(particle);
+                
+                // Animate particle
+                const duration = 1000 + Math.random() * 2000;
+                const delay = Math.random() * 1000;
+                
+                particle.animate([
+                    {
+                        opacity: 0,
+                        transform: 'scale(0) rotate(0deg)'
+                    },
+                    {
+                        opacity: 0.8,
+                        transform: 'scale(1) rotate(180deg)'
+                    },
+                    {
+                        opacity: 0,
+                        transform: 'scale(0) rotate(360deg)'
+                    }
+                ], {
+                    duration: duration,
+                    delay: delay,
+                    easing: 'ease-in-out'
+                });
+                
+                // Remove particle after animation
+                setTimeout(() => {
+                    particle.remove();
+                }, duration + delay + 1000);
+            }
+        }
+        
+        function createRetryButtonEffect(e, button) {
+            const rect = button.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            // Create ripple effect
+            const ripple = document.createElement('div');
+            ripple.style.position = 'absolute';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            ripple.style.width = '0';
+            ripple.style.height = '0';
+            ripple.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
+            ripple.style.borderRadius = '50%';
+            ripple.style.transform = 'translate(-50%, -50%)';
+            
+            button.appendChild(ripple);
+            
+            // Animate ripple
+            ripple.animate([
+                {
+                    width: '0',
+                    height: '0',
+                    opacity: 1
+                },
+                {
+                    width: '200px',
+                    height: '200px',
+                    opacity: 0
+                }
+            ], {
+                duration: 600,
+                easing: 'ease-out'
+            });
+            
+            // Remove ripple after animation
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        }
+        
+        function createWarningGlow() {
+            const warningSign = document.querySelector('.warning-sign');
+            
+            setInterval(() => {
+                warningSign.animate([
+                    {
+                        boxShadow: '0 5px 15px rgba(239, 68, 68, 0.4)'
+                    },
+                    {
+                        boxShadow: '0 5px 25px rgba(239, 68, 68, 0.8)'
+                    },
+                    {
+                        boxShadow: '0 5px 15px rgba(239, 68, 68, 0.4)'
+                    }
+                ], {
+                    duration: 1500,
+                    easing: 'ease-in-out'
+                });
+            }, 2000);
+        }
+    </script>
 </body>
 </html>

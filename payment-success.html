@@ -6,44 +6,532 @@
     <title>পেমেন্ট সফল</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: #ecfdf3;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ecfdf3 0%, #d1fae5 100%);
             margin: 0;
             padding: 40px 16px;
             color: #14532d;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
+        
         .card {
             max-width: 720px;
             margin: 0 auto;
             background: #fff;
-            border-radius: 12px;
-            padding: 32px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            border-left: 6px solid #22c55e;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(34, 197, 94, 0.2);
+            border-left: 8px solid #22c55e;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            transform: translateY(30px);
+            opacity: 0;
+            animation: floatUp 0.8s ease-out 0.2s forwards;
         }
+        
+        @keyframes floatUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
         h1 {
             margin-top: 0;
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            display: inline-block;
         }
+        
+        h1:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 25%;
+            width: 50%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #22c55e, transparent);
+            border-radius: 2px;
+        }
+        
+        .success-icon {
+            font-size: 5rem;
+            color: #22c55e;
+            margin-bottom: 20px;
+            animation: successBounce 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55), successGlow 2s infinite 0.8s;
+        }
+        
+        @keyframes successBounce {
+            0% {
+                transform: scale(0.3) rotate(-180deg);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.2) rotate(10deg);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes successGlow {
+            0%, 100% {
+                filter: drop-shadow(0 0 10px rgba(34, 197, 94, 0.3));
+                transform: scale(1);
+            }
+            50% {
+                filter: drop-shadow(0 0 20px rgba(34, 197, 94, 0.6));
+                transform: scale(1.05);
+            }
+        }
+        
+        p {
+            font-size: 1.3rem;
+            line-height: 1.7;
+            margin-bottom: 30px;
+            color: #15803d;
+        }
+        
+        .success-details {
+            background: #f0fdf4;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 25px 0;
+            text-align: left;
+            border: 1px solid #bbf7d0;
+            animation: slideIn 0.5s ease-out 0.5s both;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .success-details h3 {
+            margin-top: 0;
+            color: #16a34a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
         .actions {
-            margin-top: 24px;
+            margin-top: 35px;
+            animation: fadeIn 0.5s ease-out 0.8s both;
         }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
         a {
             display: inline-block;
-            padding: 10px 16px;
-            background: #22c55e;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
             color: #fff;
             text-decoration: none;
-            border-radius: 6px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 25px rgba(34, 197, 94, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(34, 197, 94, 0.6);
+            background: linear-gradient(135deg, #16a34a, #15803d);
+        }
+        
+        a:active {
+            transform: translateY(-1px);
+        }
+        
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            opacity: 0;
+        }
+        
+        .confetti:nth-child(3n) {
+            width: 15px;
+            height: 15px;
+        }
+        
+        .confetti:nth-child(5n) {
+            width: 7px;
+            height: 7px;
+        }
+        
+        .celebration-text {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 1.5rem;
+            color: #16a34a;
+            font-weight: bold;
+            opacity: 0;
+            animation: celebrationFloat 3s ease-in-out infinite;
+        }
+        
+        @keyframes celebrationFloat {
+            0%, 100% {
+                opacity: 0;
+                transform: translateY(0);
+            }
+            10%, 90% {
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+        
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #22c55e;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+        }
+        
+        .checkmark-circle {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .checkmark-circle:before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border: 3px solid rgba(34, 197, 94, 0.2);
+            border-radius: 50%;
+            animation: circleExpand 1s ease-out 0.5s;
+        }
+        
+        @keyframes circleExpand {
+            0% {
+                transform: scale(0.5);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .card {
+                padding: 30px 20px;
+                margin: 0 15px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .success-icon {
+                font-size: 4rem;
+            }
+            
+            p {
+                font-size: 1.1rem;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="confetti-container" id="confettiContainer"></div>
+    <div class="celebration-text" id="celebrationText">🎉 পেমেন্ট সফল! 🎉</div>
+    
     <div class="card">
-        <h1>✅ পেমেন্ট সফল!</h1>
-        <p>আপনার পেমেন্ট সফলভাবে সম্পন্ন হয়েছে।</p>
+        <div class="checkmark-circle">
+            <div class="success-icon">✅</div>
+        </div>
+        <h1>পেমেন্ট সফল!</h1>
+        <p>আপনার পেমেন্ট সফলভাবে সম্পন্ন হয়েছে। আপনাকে ধন্যবাদ! আপনার অর্ডার শীঘ্রই প্রক্রিয়াকরণ করা হবে।</p>
+        
+        <div class="success-details">
+            <h3>
+                <span style="color: #22c55e; font-size: 1.2rem;">✓</span>
+                পেমেন্ট বিবরণ
+            </h3>
+            <p><strong>লেনদেন আইডি:</strong> TXN-<span id="transactionId">123456</span></p>
+            <p><strong>সময়:</strong> <span id="transactionTime">আজ, ২:৩০ PM</span></p>
+            <p><strong>স্ট্যাটাস:</strong> <span style="color: #16a34a; font-weight: bold;">✓ সম্পন্ন</span></p>
+        </div>
+        
         <div class="actions">
-            <a href="customer.html">ড্যাশবোর্ডে যান</a>
+            <a href="customer.html" id="dashboardBtn">ড্যাশবোর্ডে যান</a>
         </div>
     </div>
+
+    <audio id="successSound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Generate random transaction ID
+            document.getElementById('transactionId').textContent = 
+                Math.floor(100000 + Math.random() * 900000);
+            
+            // Set current time
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('bn-BD', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            document.getElementById('transactionTime').textContent = 
+                `আজ, ${timeString}`;
+            
+            // Play success sound
+            const successSound = document.getElementById('successSound');
+            
+            // Play sound after a short delay for dramatic effect
+            setTimeout(() => {
+                successSound.volume = 0.3;
+                successSound.play().catch(e => console.log("Audio play failed:", e));
+            }, 300);
+            
+            // Create confetti
+            createConfetti();
+            
+            // Create celebration text
+            createCelebrationText();
+            
+            // Add button hover sparkles
+            const dashboardBtn = document.getElementById('dashboardBtn');
+            
+            dashboardBtn.addEventListener('mouseenter', function(e) {
+                createSparkles(e, this);
+            });
+            
+            // Add continuous sparkles
+            startContinuousSparkles();
+        });
+        
+        function createConfetti() {
+            const container = document.getElementById('confettiContainer');
+            const colors = ['#22c55e', '#16a34a', '#86efac', '#4ade80', '#15803d'];
+            const shapes = ['🎉', '🎊', '✨', '⭐', '🌟', '💫', '💚', '💰'];
+            
+            for (let i = 0; i < 150; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                
+                // Randomly choose between emoji or colored div
+                if (Math.random() > 0.5) {
+                    confetti.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+                    confetti.style.fontSize = Math.random() * 20 + 15 + 'px';
+                    confetti.style.color = colors[Math.floor(Math.random() * colors.length)];
+                } else {
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                    if (Math.random() > 0.7) {
+                        confetti.style.clipPath = 'polygon(50% 0%, 0% 100%, 100% 100%)';
+                    }
+                }
+                
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = '-50px';
+                
+                container.appendChild(confetti);
+                
+                // Animate confetti
+                const duration = 3000 + Math.random() * 3000;
+                const delay = Math.random() * 1000;
+                const xMovement = (Math.random() - 0.5) * 200;
+                
+                confetti.animate([
+                    {
+                        opacity: 0,
+                        transform: 'translateY(0) rotate(0deg)'
+                    },
+                    {
+                        opacity: 1,
+                        transform: `translateY(50px) rotate(180deg)`
+                    },
+                    {
+                        opacity: 1,
+                        transform: `translate(calc(${xMovement}px), calc(100vh + 100px)) rotate(360deg)`
+                    }
+                ], {
+                    duration: duration,
+                    delay: delay,
+                    easing: 'cubic-bezier(0.215, 0.61, 0.355, 1)'
+                });
+                
+                // Remove confetti after animation
+                setTimeout(() => {
+                    confetti.remove();
+                }, duration + delay + 1000);
+            }
+        }
+        
+        function createCelebrationText() {
+            const text = document.getElementById('celebrationText');
+            const messages = [
+                '🎉 পেমেন্ট সফল! 🎉',
+                '✅ সফলভাবে সম্পন্ন! ✅',
+                '✨ ধন্যবাদ! ✨',
+                '💚 পেমেন্ট সম্পূর্ণ! 💚'
+            ];
+            
+            let messageIndex = 0;
+            
+            // Change message every 3 seconds
+            setInterval(() => {
+                messageIndex = (messageIndex + 1) % messages.length;
+                text.textContent = messages[messageIndex];
+                text.style.animation = 'none';
+                setTimeout(() => {
+                    text.style.animation = 'celebrationFloat 3s ease-in-out infinite';
+                }, 10);
+            }, 3000);
+        }
+        
+        function createSparkles(e, button) {
+            const rect = button.getBoundingClientRect();
+            
+            for (let i = 0; i < 20; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                
+                const x = Math.random() * rect.width;
+                const y = Math.random() * rect.height;
+                
+                sparkle.style.left = x + 'px';
+                sparkle.style.top = y + 'px';
+                
+                button.appendChild(sparkle);
+                
+                // Animate sparkle
+                sparkle.animate([
+                    {
+                        opacity: 0,
+                        transform: 'scale(0) rotate(0deg)'
+                    },
+                    {
+                        opacity: 1,
+                        transform: 'scale(1.5) rotate(180deg)'
+                    },
+                    {
+                        opacity: 0,
+                        transform: 'scale(0) rotate(360deg)'
+                    }
+                ], {
+                    duration: 800,
+                    easing: 'ease-out'
+                });
+                
+                // Remove sparkle after animation
+                setTimeout(() => {
+                    sparkle.remove();
+                }, 800);
+            }
+        }
+        
+        function startContinuousSparkles() {
+            setInterval(() => {
+                // Create random sparkles around the card
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                
+                const size = Math.random() * 6 + 2;
+                sparkle.style.width = size + 'px';
+                sparkle.style.height = size + 'px';
+                
+                sparkle.style.left = Math.random() * 100 + 'vw';
+                sparkle.style.top = Math.random() * 100 + 'vh';
+                sparkle.style.backgroundColor = 
+                    Math.random() > 0.5 ? '#22c55e' : '#86efac';
+                
+                document.body.appendChild(sparkle);
+                
+                // Animate sparkle
+                sparkle.animate([
+                    {
+                        opacity: 0,
+                        transform: 'scale(0)'
+                    },
+                    {
+                        opacity: 0.8,
+                        transform: 'scale(1)'
+                    },
+                    {
+                        opacity: 0,
+                        transform: 'scale(0)'
+                    }
+                ], {
+                    duration: 2000 + Math.random() * 2000,
+                    easing: 'ease-in-out'
+                });
+                
+                // Remove sparkle after animation
+                setTimeout(() => {
+                    sparkle.remove();
+                }, 4000);
+            }, 300);
+        }
+        
+        // Add success pulse to card
+        const card = document.querySelector('.card');
+        setInterval(() => {
+            card.animate([
+                {
+                    boxShadow: '0 20px 60px rgba(34, 197, 94, 0.2)'
+                },
+                {
+                    boxShadow: '0 20px 80px rgba(34, 197, 94, 0.4)'
+                },
+                {
+                    boxShadow: '0 20px 60px rgba(34, 197, 94, 0.2)'
+                }
+            ], {
+                duration: 2000,
+                easing: 'ease-in-out'
+            });
+        }, 3000);
+    </script>
 </body>
 </html>
