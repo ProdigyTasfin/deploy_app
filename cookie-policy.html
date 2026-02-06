@@ -21,6 +21,10 @@
             --dark-card: #1e293b;
             --dark-text: #f1f5f9;
             --dark-border: #1b2430;
+            --light-bg: #f8fafc;
+            --light-card: #ffffff;
+            --light-text: #1e293b;
+            --light-border: #e2e8f0;
         }
         
         * {
@@ -36,7 +40,12 @@
             color: var(--dark-text);
             font-family: 'Hind Siliguri', 'Kalpurush', system-ui, sans-serif;
             min-height: 100vh;
-            cursor: none;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        body.light-mode {
+            background: var(--light-bg);
+            color: var(--light-text);
         }
         
         .wrap {
@@ -49,6 +58,42 @@
             backdrop-filter: blur(10px);
             position: relative;
             z-index: 1;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        
+        body.light-mode .wrap {
+            background: var(--light-card);
+            border: 1px solid var(--light-border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(86, 41, 190, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .theme-toggle:hover {
+            transform: rotate(30deg);
+            box-shadow: 0 6px 16px rgba(86, 41, 190, 0.4);
+        }
+        
+        body.light-mode .theme-toggle {
+            background: var(--secondary);
         }
         
         h1 {
@@ -59,6 +104,7 @@
             padding-bottom: 15px;
             margin-bottom: 30px;
             position: relative;
+            transition: color 0.3s ease;
         }
         
         h1:after {
@@ -77,12 +123,22 @@
             font-size: 1.8rem;
             padding-left: 15px;
             border-left: 4px solid var(--cookie-color);
+            transition: color 0.3s ease;
+        }
+        
+        body.light-mode h2 {
+            color: #c2410c;
         }
         
         h3 {
             margin-top: 25px;
             color: #93c5fd;
             font-size: 1.4rem;
+            transition: color 0.3s ease;
+        }
+        
+        body.light-mode h3 {
+            color: #1d4ed8;
         }
         
         p, li {
@@ -113,6 +169,10 @@
             transition: all 0.3s ease;
         }
         
+        body.light-mode a {
+            color: #2563eb;
+        }
+        
         a:hover {
             color: var(--primary-light);
             text-decoration: underline;
@@ -129,6 +189,11 @@
             z-index: 1000;
             display: none;
             backdrop-filter: blur(10px);
+            transition: background 0.3s ease;
+        }
+        
+        body.light-mode .cookie-banner {
+            background: rgba(249, 115, 22, 0.08);
         }
         
         .cookie-notice {
@@ -137,6 +202,11 @@
             padding: 20px;
             margin: 25px 0;
             border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+        
+        body.light-mode .cookie-notice {
+            background: rgba(249, 115, 22, 0.08);
         }
         
         .cookie-notice h3 {
@@ -156,12 +226,21 @@
             background: rgba(255, 255, 255, 0.05);
             border-radius: 10px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+        
+        body.light-mode .cookie-type {
+            background: rgba(249, 115, 22, 0.05);
+            border: 1px solid rgba(249, 115, 22, 0.1);
         }
         
         .cookie-type:hover {
             transform: translateY(-5px);
             background: rgba(255, 255, 255, 0.08);
+        }
+        
+        body.light-mode .cookie-type:hover {
+            background: rgba(249, 115, 22, 0.1);
         }
         
         .cookie-icon {
@@ -176,6 +255,11 @@
             background: rgba(255, 255, 255, 0.03);
             border-radius: 10px;
             border-left: 4px solid var(--primary);
+            transition: background 0.3s ease;
+        }
+        
+        body.light-mode .cookie-controls {
+            background: rgba(86, 41, 190, 0.05);
         }
         
         .browser-instructions {
@@ -188,6 +272,12 @@
             padding: 20px;
             margin-bottom: 20px;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: background 0.3s ease;
+        }
+        
+        body.light-mode .browser-card {
+            background: rgba(86, 41, 190, 0.05);
+            border: 1px solid rgba(86, 41, 190, 0.1);
         }
         
         .cookie-table {
@@ -200,16 +290,31 @@
             padding: 12px 15px;
             text-align: left;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: border-color 0.3s ease;
+        }
+        
+        body.light-mode .cookie-table th,
+        body.light-mode .cookie-table td {
+            border-bottom: 1px solid var(--light-border);
         }
         
         .cookie-table th {
             background: rgba(249, 115, 22, 0.2);
             color: var(--cookie-color);
             font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        
+        body.light-mode .cookie-table th {
+            background: rgba(249, 115, 22, 0.1);
         }
         
         .cookie-table tr:hover {
             background: rgba(255, 255, 255, 0.03);
+        }
+        
+        body.light-mode .cookie-table tr:hover {
+            background: rgba(249, 115, 22, 0.05);
         }
         
         .cookie-status {
@@ -218,6 +323,11 @@
             background: rgba(86, 41, 190, 0.1);
             border-radius: 10px;
             border: 1px solid var(--primary);
+            transition: background 0.3s ease;
+        }
+        
+        body.light-mode .cookie-status {
+            background: rgba(86, 41, 190, 0.05);
         }
         
         .cookie-consent-buttons {
@@ -242,10 +352,20 @@
             color: white;
         }
         
+        .accept-all:hover {
+            background: #ea580c;
+            transform: translateY(-2px);
+        }
+        
         .essential-only {
             background: transparent;
             color: var(--cookie-color);
             border: 2px solid var(--cookie-color);
+        }
+        
+        .essential-only:hover {
+            background: rgba(249, 115, 22, 0.1);
+            transform: translateY(-2px);
         }
         
         .customize {
@@ -253,10 +373,20 @@
             color: white;
         }
         
+        .customize:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+        
         .footer-nav {
             margin-top: 40px;
             padding-top: 25px;
             border-top: 1px solid rgba(255, 255, 255, .2);
+            transition: border-color 0.3s ease;
+        }
+        
+        body.light-mode .footer-nav {
+            border-top: 1px solid var(--light-border);
         }
         
         .footer-links {
@@ -295,67 +425,96 @@
             text-decoration: none;
         }
         
-        /* Cookie Themed Cursor Effects */
-        .cursor-container {
+        body.light-mode .back-home:hover {
+            background: var(--secondary);
+        }
+        
+        /* Modal Styles */
+        .modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
-            z-index: 9999;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            display: none;
         }
         
-        .cookie-cursor {
-            position: fixed;
-            width: 30px;
-            height: 30px;
+        .modal-content {
+            background: var(--dark-card);
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
             border: 2px solid var(--cookie-color);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 10000;
-            transform: translate(-50%, -50%);
-            backdrop-filter: blur(4px);
-            background: rgba(249, 115, 22, 0.1);
-            transition: all 0.3s ease;
-            box-shadow: 0 0 15px var(--cookie-color);
+            transition: background 0.3s ease;
         }
         
-        .cursor-dot {
-            position: fixed;
-            width: 8px;
-            height: 8px;
-            background: var(--cookie-color);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 10001;
-            transform: translate(-50%, -50%);
-            transition: transform 0.1s;
-            box-shadow: 0 0 10px var(--cookie-color);
+        body.light-mode .modal-content {
+            background: var(--light-card);
         }
         
-        .cookie-crumb {
-            position: fixed;
-            width: 6px;
-            height: 6px;
-            background: var(--cookie-color);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9998;
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        
+        .switch input {
             opacity: 0;
+            width: 0;
+            height: 0;
         }
         
-        .cookie-hover {
-            width: 45px;
-            height: 45px;
-            background: rgba(249, 115, 22, 0.2);
-            border-color: #fbbf24;
-            box-shadow: 0 0 20px #fbbf24;
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #475569;
+            transition: .4s;
+            border-radius: 34px;
         }
         
-        .cookie-click {
-            transform: translate(-50%, -50%) scale(0.9);
-            box-shadow: 0 0 25px #84cc16;
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: #f97316;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        input:disabled + .slider {
+            background-color: #334155;
+            cursor: not-allowed;
+        }
+        
+        body.light-mode .slider {
+            background-color: #cbd5e1;
+        }
+        
+        body.light-mode input:disabled + .slider {
+            background-color: #e2e8f0;
         }
         
         @media (max-width: 768px) {
@@ -393,18 +552,8 @@
                 align-items: center;
                 gap: 10px;
             }
-            
-            /* Hide cursor on mobile */
-            .cookie-cursor, .cursor-dot, .cookie-crumb {
-                display: none;
-            }
-            
-            body {
-                cursor: auto;
-            }
         }
         
-        /* Cookie banner responsive */
         @media (max-width: 480px) {
             .cookie-banner {
                 padding: 15px;
@@ -417,6 +566,11 @@
     </style>
 </head>
 <body>
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+    </button>
+
     <!-- Cookie Banner -->
     <div class="cookie-banner" id="cookieBanner">
         <div style="max-width: 960px; margin: 0 auto;">
@@ -440,8 +594,8 @@
     </div>
 
     <!-- Cookie Settings Modal -->
-    <div class="modal" id="cookieSettings" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center;">
-        <div style="background: var(--dark-card); padding: 30px; border-radius: 12px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;">
+    <div class="modal" id="cookieSettings">
+        <div class="modal-content">
             <h3 style="color: var(--cookie-color); margin-top: 0;">
                 <i class="fas fa-cog"></i> কুকি সেটিংস
             </h3>
@@ -507,11 +661,6 @@
                 </button>
             </div>
         </div>
-    </div>
-
-    <div class="cursor-container">
-        <div class="cookie-cursor" id="cookieCursor"></div>
-        <div class="cursor-dot" id="cursorDot"></div>
     </div>
     
     <main class="wrap">
@@ -707,154 +856,36 @@
     </main>
 
     <script>
-        // Cookie-themed Cursor Effect
+        // Theme Toggle Functionality
         document.addEventListener('DOMContentLoaded', function() {
-            const cookieCursor = document.getElementById('cookieCursor');
-            const cursorDot = document.getElementById('cursorDot');
-            const cookieBanner = document.getElementById('cookieBanner');
-            const cookieStatusText = document.getElementById('cookieStatusText');
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = themeToggle.querySelector('i');
             
-            let mouseX = 0, mouseY = 0;
-            let cursorX = 0, cursorY = 0;
-            const cookieCrumbs = [];
-            const maxCrumbs = 15;
-            
-            // Create cookie crumbs
-            for (let i = 0; i < maxCrumbs; i++) {
-                const crumb = document.createElement('div');
-                crumb.className = 'cookie-crumb';
-                crumb.style.left = '0px';
-                crumb.style.top = '0px';
-                document.querySelector('.cursor-container').appendChild(crumb);
-                cookieCrumbs.push({
-                    element: crumb,
-                    x: 0,
-                    y: 0,
-                    life: 0,
-                    maxLife: Math.random() * 30 + 20
-                });
+            // Check for saved theme preference or default to dark
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+                themeIcon.className = 'fas fa-sun';
             }
             
-            // Mouse movement tracking
-            document.addEventListener('mousemove', (e) => {
-                mouseX = e.clientX;
-                mouseY = e.clientY;
+            // Toggle theme
+            themeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('light-mode');
                 
-                // Update dot immediately
-                cursorDot.style.left = mouseX + 'px';
-                cursorDot.style.top = mouseY + 'px';
-                
-                // Create cookie crumb trail
-                createCookieCrumbTrail();
-            });
-            
-            function createCookieCrumbTrail() {
-                for (let i = 0; i < cookieCrumbs.length; i++) {
-                    const crumb = cookieCrumbs[i];
-                    if (crumb.life <= 0) {
-                        crumb.x = mouseX + (Math.random() - 0.5) * 20;
-                        crumb.y = mouseY + (Math.random() - 0.5) * 20;
-                        crumb.life = crumb.maxLife;
-                        crumb.element.style.opacity = '0.8';
-                        crumb.element.style.left = crumb.x + 'px';
-                        crumb.element.style.top = crumb.y + 'px';
-                        break;
-                    }
+                if (document.body.classList.contains('light-mode')) {
+                    themeIcon.className = 'fas fa-sun';
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    themeIcon.className = 'fas fa-moon';
+                    localStorage.setItem('theme', 'dark');
                 }
-            }
-            
-            // Hover effects for cookie elements
-            const cookieElements = document.querySelectorAll('.cookie-type, .cookie-btn, .browser-card');
-            
-            cookieElements.forEach(element => {
-                element.addEventListener('mouseenter', () => {
-                    cookieCursor.classList.add('cookie-hover');
-                    cookieCursor.style.borderColor = '#fbbf24';
-                    cookieCursor.style.boxShadow = '0 0 20px #fbbf24';
-                });
-                
-                element.addEventListener('mouseleave', () => {
-                    cookieCursor.classList.remove('cookie-hover');
-                    cookieCursor.style.borderColor = '#f97316';
-                    cookieCursor.style.boxShadow = '0 0 15px #f97316';
-                });
             });
-            
-            // Click effect with cookie bite animation
-            document.addEventListener('mousedown', () => {
-                cookieCursor.classList.add('cookie-click');
-                cookieCursor.style.borderColor = '#84cc16';
-                cookieCursor.style.boxShadow = '0 0 25px #84cc16';
-                
-                // Create cookie bite animation
-                createCookieBiteAnimation(mouseX, mouseY);
-            });
-            
-            document.addEventListener('mouseup', () => {
-                cookieCursor.classList.remove('cookie-click');
-                cookieCursor.style.borderColor = '#f97316';
-                cookieCursor.style.boxShadow = '0 0 15px #f97316';
-            });
-            
-            function createCookieBiteAnimation(x, y) {
-                const bite = document.createElement('div');
-                bite.style.position = 'fixed';
-                bite.style.left = (x - 15) + 'px';
-                bite.style.top = (y - 15) + 'px';
-                bite.style.width = '30px';
-                bite.style.height = '30px';
-                bite.style.borderRadius = '50%';
-                bite.style.backgroundColor = '#f97316';
-                bite.style.boxShadow = '0 0 15px #f97316';
-                bite.style.opacity = '0';
-                bite.style.zIndex = '9996';
-                bite.style.pointerEvents = 'none';
-                bite.style.clipPath = 'polygon(50% 50%, 0% 0%, 100% 0%)';
-                bite.style.transform = 'rotate(45deg) scale(0)';
-                bite.style.transition = 'all 0.3s ease';
-                
-                document.body.appendChild(bite);
-                
-                // Animate bite
-                setTimeout(() => {
-                    bite.style.opacity = '1';
-                    bite.style.transform = 'rotate(45deg) scale(1)';
-                    
-                    setTimeout(() => {
-                        bite.style.opacity = '0';
-                        bite.style.transform = 'rotate(45deg) scale(0)';
-                        setTimeout(() => {
-                            bite.remove();
-                        }, 300);
-                    }, 300);
-                }, 10);
-            }
-            
-            // Animation loop
-            function animateCursor() {
-                // Smooth cursor movement
-                cursorX += (mouseX - cursorX) * 0.15;
-                cursorY += (mouseY - cursorY) * 0.15;
-                
-                cookieCursor.style.left = cursorX + 'px';
-                cookieCursor.style.top = cursorY + 'px';
-                
-                // Update cookie crumbs
-                for (let i = 0; i < cookieCrumbs.length; i++) {
-                    const crumb = cookieCrumbs[i];
-                    if (crumb.life > 0) {
-                        crumb.life--;
-                        crumb.element.style.opacity = (crumb.life / crumb.maxLife) * 0.8;
-                    }
-                }
-                
-                requestAnimationFrame(animateCursor);
-            }
-            
-            // Start animation
-            animateCursor();
             
             // Cookie consent management
+            const cookieBanner = document.getElementById('cookieBanner');
+            const cookieSettings = document.getElementById('cookieSettings');
+            const cookieStatusText = document.getElementById('cookieStatusText');
+            
             function getCookieConsent() {
                 return localStorage.getItem('cookie_consent') || 'not_set';
             }
@@ -915,7 +946,7 @@
             }
             
             function showCookieSettings() {
-                document.getElementById('cookieSettings').style.display = 'flex';
+                cookieSettings.style.display = 'flex';
                 const prefs = JSON.parse(localStorage.getItem('cookie_preferences') || '{"essential":true,"preferences":true,"statistics":true,"marketing":false}');
                 
                 document.getElementById('prefCookies').checked = prefs.preferences;
@@ -924,7 +955,7 @@
             }
             
             function closeCookieSettings() {
-                document.getElementById('cookieSettings').style.display = 'none';
+                cookieSettings.style.display = 'none';
             }
             
             function saveCookieSettings() {
@@ -1009,72 +1040,8 @@
                 showCookieBanner();
             }, 1000);
             
-            // Add switch toggle styling
-            const style = document.createElement('style');
-            style.textContent = `
-                .switch {
-                    position: relative;
-                    display: inline-block;
-                    width: 60px;
-                    height: 34px;
-                }
-                
-                .switch input {
-                    opacity: 0;
-                    width: 0;
-                    height: 0;
-                }
-                
-                .slider {
-                    position: absolute;
-                    cursor: pointer;
-                    top: 0;
-                    left: 0;
-                    right: 0;
-                    bottom: 0;
-                    background-color: #475569;
-                    transition: .4s;
-                    border-radius: 34px;
-                }
-                
-                .slider:before {
-                    position: absolute;
-                    content: "";
-                    height: 26px;
-                    width: 26px;
-                    left: 4px;
-                    bottom: 4px;
-                    background-color: white;
-                    transition: .4s;
-                    border-radius: 50%;
-                }
-                
-                input:checked + .slider {
-                    background-color: #f97316;
-                }
-                
-                input:checked + .slider:before {
-                    transform: translateX(26px);
-                }
-                
-                input:disabled + .slider {
-                    background-color: #334155;
-                    cursor: not-allowed;
-                }
-                
-                .modal {
-                    animation: fadeIn 0.3s ease;
-                }
-                
-                @keyframes fadeIn {
-                    from { opacity: 0; }
-                    to { opacity: 1; }
-                }
-            `;
-            document.head.appendChild(style);
-            
             // Close modal when clicking outside
-            document.getElementById('cookieSettings').addEventListener('click', function(e) {
+            cookieSettings.addEventListener('click', function(e) {
                 if (e.target === this) {
                     closeCookieSettings();
                 }
@@ -1082,9 +1049,17 @@
             
             // Add keyboard support for modal
             document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && document.getElementById('cookieSettings').style.display === 'flex') {
+                if (e.key === 'Escape' && cookieSettings.style.display === 'flex') {
                     closeCookieSettings();
                 }
+            });
+            
+            // Add animation to table rows
+            const tableRows = document.querySelectorAll('.cookie-table tr');
+            tableRows.forEach(row => {
+                row.addEventListener('mouseenter', () => {
+                    row.style.transition = 'all 0.3s ease';
+                });
             });
         });
     </script>
