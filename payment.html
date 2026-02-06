@@ -235,15 +235,44 @@
             setupPaymentMethods();
         });
 
-        function loadPaymentData() {
+        async function loadPaymentData() {
     // Get payment data from multiple sources
     const urlParams = new URLSearchParams(window.location.search);
+    const paymentId = urlParams.get('payment_id');
+
+    if (paymentId) {
+        try {
+            const userToken = localStorage.getItem('nibash_token');
+            const response = await fetch(`/api/payment/lookup?payment_id=${encodeURIComponent(paymentId)}`, {
+                headers: {
+                    'Authorization': `Bearer ${userToken}`
+                }
+            });
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                throw new Error(result.error || 'Payment lookup failed');
+            }
+
+            const payment = result.payment;
+            paymentData = {
+                id: payment.payment_id || payment.id,
+                amount: parseFloat(payment.amount),
+                description: payment.description || 'সেবা',
+                serviceId: payment.professional_id || payment.service_id,
+                professionalName: payment.professional_name || '',
+                service: payment.service_name || ''
+            };
+        } catch (error) {
+            console.error('Payment lookup error:', error);
+        }
+    }
     
     // Get from URL parameters first
-    let amount = urlParams.get('amount');
-    let professionalId = urlParams.get('professional');
-    let service = urlParams.get('service');
-    let professionalName = urlParams.get('name');
+    let amount = paymentData.amount || urlParams.get('amount');
+    let professionalId = paymentData.serviceId || urlParams.get('professional');
+    let service = paymentData.service || urlParams.get('service');
+    let professionalName = paymentData.professionalName || urlParams.get('name');
     
     // If not in URL, get from localStorage
     if (!amount) {
@@ -266,7 +295,7 @@
     
     // Store in paymentData object
     paymentData = {
-        id: 'PAY-' + Date.now(),
+        id: paymentData.id || 'PAY-' + Date.now(),
         amount: parseFloat(amount),
         description: service && professionalName ? `${service} - ${professionalName}` : 'সেবা',
         serviceId: professionalId,
@@ -287,6 +316,15 @@
     // Store for SSLCommerz when valid
     if (hasValidAmount) {
         localStorage.setItem('paymentAmount', paymentData.amount);
+    }
+    if (paymentData.serviceId) {
+        localStorage.setItem('selectedProfessionalId', paymentData.serviceId);
+    }
+    if (paymentData.professionalName) {
+        localStorage.setItem('selectedProfessionalName', paymentData.professionalName);
+    }
+    if (paymentData.service) {
+        localStorage.setItem('selectedProfessionalService', paymentData.service);
     }
     localStorage.setItem('currentPaymentData', JSON.stringify(paymentData));
     

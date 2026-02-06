@@ -488,56 +488,51 @@
     </audio>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-    // Get payment data from multiple sources
+        document.addEventListener('DOMContentLoaded', async function() {
     const urlParams = new URLSearchParams(window.location.search);
-    
-    // Priority: URL params > localStorage > random
-    const tranId = urlParams.get('tran_id') || 
-                   localStorage.getItem('sslTransactionId') || 
-                   'TXN-' + Math.floor(100000 + Math.random() * 900000);
-    
-    // Get EXACT amount - this is the key fix
-    let exactAmount = null;
-    
-    // Try to get amount in this order:
-    if (urlParams.get('amount')) {
-        exactAmount = parseFloat(urlParams.get('amount'));
-    } else if (localStorage.getItem('sslAmount')) {
-        exactAmount = parseFloat(localStorage.getItem('sslAmount'));
-    } else if (localStorage.getItem('paymentAmount')) {
-        exactAmount = parseFloat(localStorage.getItem('paymentAmount'));
-    } else if (localStorage.getItem('selectedProfessionalPrice')) {
-        exactAmount = parseFloat(localStorage.getItem('selectedProfessionalPrice'));
-    } else {
-        // Fallback to last successful payment amount
-        const lastPayment = localStorage.getItem('lastSuccessfulPayment');
-        if (lastPayment) {
-            exactAmount = JSON.parse(lastPayment).amount;
-        } else {
-            exactAmount = 2500; // Default fallback
-        }
+    const valId = urlParams.get('val_id');
+    const tranIdParam = urlParams.get('tran_id') || localStorage.getItem('sslTransactionId');
+
+    if (!valId) {
+        window.location.href = 'payment-failed.html';
+        return;
     }
-    
-    // Get professional info
-    const professionalName = urlParams.get('name') || 
-                            localStorage.getItem('sslProfessionalName') || 
-                            localStorage.getItem('selectedProfessionalName') || 
-                            'নির্বাচিত পেশাদার';
-    
-    const serviceType = urlParams.get('service') || 
-                       localStorage.getItem('sslService') || 
-                       localStorage.getItem('selectedProfessionalService') || 
-                       'সেবা';
-    
-    console.log('Success Page Data:', {
-        tranId,
-        exactAmount,
-        professionalName,
-        serviceType
-    });
-    
-    // Display EXACT amount - no random!
+
+    let validationData = null;
+
+    try {
+        const response = await fetch(`/api/payment/validate?val_id=${encodeURIComponent(valId)}&tran_id=${encodeURIComponent(tranIdParam || '')}`);
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.error || 'Payment validation failed');
+        }
+
+        validationData = result.data;
+    } catch (error) {
+        console.error('Payment validation error:', error);
+        window.location.href = 'payment-failed.html';
+        return;
+    }
+
+    const tranId = validationData.tran_id || tranIdParam;
+    const exactAmount = parseFloat(validationData.amount);
+
+    if (!Number.isFinite(exactAmount)) {
+        window.location.href = 'payment-failed.html';
+        return;
+    }
+
+    const professionalName = urlParams.get('name') ||
+        localStorage.getItem('sslProfessionalName') ||
+        localStorage.getItem('selectedProfessionalName') ||
+        'নির্বাচিত পেশাদার';
+
+    const serviceType = urlParams.get('service') ||
+        localStorage.getItem('sslService') ||
+        localStorage.getItem('selectedProfessionalService') ||
+        'সেবা';
+
     document.getElementById('amountDisplay').textContent = '৳ ' + exactAmount.toLocaleString('bn-BD');
     document.getElementById('transactionId').textContent = tranId;
     
