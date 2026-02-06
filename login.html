@@ -925,13 +925,13 @@ function redirectUser(userData) {
         if (userRole === 'admin' || userRole === 'Admin') {
             window.location.href = 'admin.html';
         } else if (userRole === 'professional' || userRole === 'Professional') {
-            window.location.href = 'employer.html';
+            window.location.href = 'professional.html';
         } else if (userRole === 'customer' || userRole === 'Customer') {
             window.location.href = 'customer.html';
         } else {
             // Default fallback
             if (localStorage.getItem('selectedRole') === 'professional') {
-                window.location.href = 'employer.html';
+                window.location.href = 'professional.html';
             } else {
                 window.location.href = 'customer.html';
             }
