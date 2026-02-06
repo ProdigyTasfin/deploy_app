@@ -44,7 +44,7 @@
         }
         
         body.light-mode {
-            background: var(--light-bg);
+            background: var(--primary-light);
             color: var(--light-text);
         }
         
@@ -174,7 +174,7 @@
         }
         
         a:hover {
-            color: var(--primary-light);
+            color: #e2e8f0;
             text-decoration: underline;
         }
         
@@ -345,7 +345,7 @@
         }
         
         .back-home:hover {
-            background: var(--primary-light);
+            background: #a2e920c5
             transform: translateY(-2px);
             text-decoration: none;
         }
@@ -852,33 +852,6 @@
                     themeIcon.className = 'fas fa-moon';
                     localStorage.setItem('theme', 'dark');
                 }
-            });
-            
-            // Add scroll effect for page turning
-            let lastScrollTop = 0;
-            const mainWrap = document.querySelector('.wrap');
-            
-            window.addEventListener('scroll', () => {
-                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                
-                if (scrollTop > lastScrollTop) {
-                    // Scrolling down
-                    mainWrap.style.boxShadow = '15px 0 30px rgba(0, 0, 0, 0.2)';
-                    mainWrap.style.transform = 'perspective(1000px) rotateY(1deg)';
-                } else {
-                    // Scrolling up
-                    mainWrap.style.boxShadow = '-15px 0 30px rgba(0, 0, 0, 0.2)';
-                    mainWrap.style.transform = 'perspective(1000px) rotateY(-1deg)';
-                }
-                
-                // Reset after scroll ends
-                clearTimeout(window.scrollEndTimer);
-                window.scrollEndTimer = setTimeout(() => {
-                    mainWrap.style.boxShadow = 'none';
-                    mainWrap.style.transform = 'none';
-                }, 100);
-                
-                lastScrollTop = scrollTop;
             });
             
             // Add clause highlighting on hover
