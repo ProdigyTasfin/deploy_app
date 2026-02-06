@@ -19,6 +19,10 @@
             --dark-card: #1e293b;
             --dark-text: #f1f5f9;
             --dark-border: #1b2430;
+            --light-bg: #f8fafc;
+            --light-card: #ffffff;
+            --light-text: #1e293b;
+            --light-border: #e2e8f0;
         }
         
         * {
@@ -34,7 +38,12 @@
             color: var(--dark-text);
             font-family: 'Hind Siliguri', 'Kalpurush', system-ui, sans-serif;
             min-height: 100vh;
-            cursor: none;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        body.light-mode {
+            background: var(--light-bg);
+            color: var(--light-text);
         }
         
         .wrap {
@@ -47,6 +56,42 @@
             backdrop-filter: blur(10px);
             position: relative;
             z-index: 1;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        
+        body.light-mode .wrap {
+            background: var(--light-card);
+            border: 1px solid var(--light-border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(86, 41, 190, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .theme-toggle:hover {
+            transform: rotate(30deg);
+            box-shadow: 0 6px 16px rgba(86, 41, 190, 0.4);
+        }
+        
+        body.light-mode .theme-toggle {
+            background: var(--secondary);
         }
         
         h1 {
@@ -57,6 +102,11 @@
             padding-bottom: 15px;
             margin-bottom: 30px;
             position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        body.light-mode h1 {
+            color: var(--primary);
         }
         
         h1:after {
@@ -75,12 +125,22 @@
             font-size: 1.8rem;
             padding-left: 15px;
             border-left: 4px solid var(--primary);
+            transition: color 0.3s ease;
+        }
+        
+        body.light-mode h2 {
+            color: #4c1d95;
         }
         
         h3 {
             margin-top: 25px;
             color: #93c5fd;
             font-size: 1.4rem;
+            transition: color 0.3s ease;
+        }
+        
+        body.light-mode h3 {
+            color: #1d4ed8;
         }
         
         p, li {
@@ -114,6 +174,10 @@
             position: relative;
         }
         
+        body.light-mode a {
+            color: #2563eb;
+        }
+        
         a:hover {
             color: var(--primary-light);
             text-decoration: underline;
@@ -125,6 +189,11 @@
             padding: 20px;
             margin: 25px 0;
             border-radius: 0 8px 8px 0;
+            transition: background 0.3s ease;
+        }
+        
+        body.light-mode .highlight-box {
+            background: linear-gradient(135deg, rgba(86, 41, 190, 0.05), rgba(14, 170, 105, 0.05));
         }
         
         .company-stats {
@@ -140,12 +209,21 @@
             background: rgba(255, 255, 255, 0.05);
             border-radius: 10px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+        
+        body.light-mode .stat-item {
+            background: rgba(86, 41, 190, 0.05);
+            border: 1px solid rgba(86, 41, 190, 0.1);
         }
         
         .stat-item:hover {
             transform: translateY(-5px);
             background: rgba(255, 255, 255, 0.08);
+        }
+        
+        body.light-mode .stat-item:hover {
+            background: rgba(86, 41, 190, 0.1);
         }
         
         .stat-number {
@@ -154,11 +232,21 @@
             color: var(--primary-light);
             display: block;
             margin-bottom: 5px;
+            transition: color 0.3s ease;
+        }
+        
+        body.light-mode .stat-number {
+            color: var(--primary);
         }
         
         .stat-label {
             color: #94a3b8;
             font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+        
+        body.light-mode .stat-label {
+            color: #64748b;
         }
         
         .mission-vision {
@@ -173,6 +261,13 @@
             border-radius: 12px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: background 0.3s ease;
+        }
+        
+        body.light-mode .mission-box,
+        body.light-mode .vision-box {
+            background: rgba(86, 41, 190, 0.05);
+            border: 1px solid rgba(86, 41, 190, 0.1);
         }
         
         .mission-box {
@@ -200,6 +295,21 @@
             background: rgba(255, 255, 255, 0.05);
             border-radius: 10px;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+        
+        body.light-mode .team-member {
+            background: rgba(86, 41, 190, 0.05);
+            border: 1px solid rgba(86, 41, 190, 0.1);
+        }
+        
+        .team-member:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        body.light-mode .team-member:hover {
+            background: rgba(86, 41, 190, 0.1);
         }
         
         .member-avatar {
@@ -219,6 +329,11 @@
             margin-top: 40px;
             padding-top: 25px;
             border-top: 1px solid rgba(255, 255, 255, .2);
+            transition: border-color 0.3s ease;
+        }
+        
+        body.light-mode .footer-nav {
+            border-top: 1px solid var(--light-border);
         }
         
         .footer-links {
@@ -257,77 +372,8 @@
             text-decoration: none;
         }
         
-        /* Advanced Cursor Effects */
-        .cursor-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 9999;
-        }
-        
-        .main-cursor {
-            position: fixed;
-            width: 22px;
-            height: 22px;
-            border: 2px solid var(--primary-light);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 10000;
-            transform: translate(-50%, -50%);
-            backdrop-filter: blur(4px);
-            background: rgba(167, 139, 250, 0.1);
-            transition: width 0.3s, height 0.3s, background 0.3s, border-color 0.3s;
-            mix-blend-mode: difference;
-        }
-        
-        .cursor-dot {
-            position: fixed;
-            width: 6px;
-            height: 6px;
-            background: var(--primary-light);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 10001;
-            transform: translate(-50%, -50%);
-            transition: transform 0.1s;
-        }
-        
-        .cursor-trail {
-            position: fixed;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
+        body.light-mode .back-home:hover {
             background: var(--secondary);
-            pointer-events: none;
-            z-index: 9998;
-            opacity: 0.3;
-            transform: translate(-50%, -50%);
-            filter: blur(2px);
-        }
-        
-        .cursor-glow {
-            position: fixed;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(86, 41, 190, 0.4) 0%, rgba(86, 41, 190, 0) 70%);
-            pointer-events: none;
-            z-index: 9997;
-            transform: translate(-50%, -50%);
-        }
-        
-        .cursor-hover {
-            width: 40px;
-            height: 40px;
-            background: rgba(167, 139, 250, 0.2);
-            border-color: var(--secondary);
-        }
-        
-        .cursor-click {
-            transform: translate(-50%, -50%) scale(0.8);
         }
         
         @media (max-width: 768px) {
@@ -356,15 +402,6 @@
                 align-items: center;
                 gap: 10px;
             }
-            
-            /* Hide cursor on mobile */
-            .main-cursor, .cursor-dot, .cursor-trail, .cursor-glow {
-                display: none;
-            }
-            
-            body {
-                cursor: auto;
-            }
         }
         
         @media (max-width: 480px) {
@@ -379,11 +416,9 @@
     </style>
 </head>
 <body>
-    <div class="cursor-container">
-        <div class="main-cursor" id="mainCursor"></div>
-        <div class="cursor-dot" id="cursorDot"></div>
-        <div class="cursor-glow" id="cursorGlow"></div>
-    </div>
+    <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+    </button>
     
     <main class="wrap">
         <h1><i class="fas fa-info-circle"></i> আমাদের সম্পর্কে: নিবাস</h1>
@@ -546,104 +581,38 @@
     </main>
 
     <script>
-        // Advanced Cursor Effect
+        // Theme Toggle Functionality
         document.addEventListener('DOMContentLoaded', function() {
-            const mainCursor = document.getElementById('mainCursor');
-            const cursorDot = document.getElementById('cursorDot');
-            const cursorGlow = document.getElementById('cursorGlow');
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = themeToggle.querySelector('i');
             
-            // Create trail elements
-            const trailCount = 5;
-            const trailElements = [];
-            
-            for (let i = 0; i < trailCount; i++) {
-                const trail = document.createElement('div');
-                trail.className = 'cursor-trail';
-                trail.style.opacity = 0.3 - (i * 0.05);
-                trail.style.width = 20 - (i * 3) + 'px';
-                trail.style.height = 20 - (i * 3) + 'px';
-                document.querySelector('.cursor-container').appendChild(trail);
-                trailElements.push(trail);
+            // Check for saved theme preference or default to dark
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+                themeIcon.className = 'fas fa-sun';
             }
             
-            let mouseX = 0, mouseY = 0;
-            let cursorX = 0, cursorY = 0;
-            let trailX = Array(trailCount).fill(0);
-            let trailY = Array(trailCount).fill(0);
-            
-            // Mouse movement tracking
-            document.addEventListener('mousemove', (e) => {
-                mouseX = e.clientX;
-                mouseY = e.clientY;
+            // Toggle theme
+            themeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('light-mode');
                 
-                // Immediate update for dot
-                cursorDot.style.left = mouseX + 'px';
-                cursorDot.style.top = mouseY + 'px';
-                
-                // Update glow
-                cursorGlow.style.left = mouseX + 'px';
-                cursorGlow.style.top = mouseY + 'px';
-            });
-            
-            // Hover effects
-            const hoverElements = document.querySelectorAll('a, button, .back-home, .stat-item, .team-member');
-            
-            hoverElements.forEach(el => {
-                el.addEventListener('mouseenter', () => {
-                    mainCursor.classList.add('cursor-hover');
-                    cursorDot.style.transform = 'translate(-50%, -50%) scale(1.5)';
-                    cursorGlow.style.width = '80px';
-                    cursorGlow.style.height = '80px';
-                });
-                
-                el.addEventListener('mouseleave', () => {
-                    mainCursor.classList.remove('cursor-hover');
-                    cursorDot.style.transform = 'translate(-50%, -50%) scale(1)';
-                    cursorGlow.style.width = '60px';
-                    cursorGlow.style.height = '60px';
-                });
-            });
-            
-            // Click effect
-            document.addEventListener('mousedown', () => {
-                mainCursor.classList.add('cursor-click');
-                cursorDot.style.transform = 'translate(-50%, -50%) scale(0.7)';
-            });
-            
-            document.addEventListener('mouseup', () => {
-                mainCursor.classList.remove('cursor-click');
-                cursorDot.style.transform = 'translate(-50%, -50%) scale(1)';
-            });
-            
-            // Animation loop for smooth cursor movement
-            function animateCursor() {
-                // Smooth main cursor movement
-                cursorX += (mouseX - cursorX) * 0.15;
-                cursorY += (mouseY - cursorY) * 0.15;
-                
-                mainCursor.style.left = cursorX + 'px';
-                mainCursor.style.top = cursorY + 'px';
-                
-                // Trail effect
-                trailX[0] += (mouseX - trailX[0]) * 0.1;
-                trailY[0] += (mouseY - trailY[0]) * 0.1;
-                
-                trailElements[0].style.left = trailX[0] + 'px';
-                trailElements[0].style.top = trailY[0] + 'px';
-                
-                for (let i = 1; i < trailCount; i++) {
-                    trailX[i] += (trailX[i-1] - trailX[i]) * 0.2;
-                    trailY[i] += (trailY[i-1] - trailY[i]) * 0.2;
-                    
-                    trailElements[i].style.left = trailX[i] + 'px';
-                    trailElements[i].style.top = trailY[i] + 'px';
+                if (document.body.classList.contains('light-mode')) {
+                    themeIcon.className = 'fas fa-sun';
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    themeIcon.className = 'fas fa-moon';
+                    localStorage.setItem('theme', 'dark');
                 }
-                
-                requestAnimationFrame(animateCursor);
-            }
+            });
             
-            // Start animation
-            animateCursor();
+            // Simple cursor effect
+            document.addEventListener('mousemove', function(e) {
+                const cursor = document.querySelector('.custom-cursor');
+                if (!cursor) return;
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            });
             
             // Animate statistics
             function animateStats() {
