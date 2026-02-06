@@ -910,23 +910,34 @@
     }
 
     // Redirect user after login
-    function redirectUser(userData) {
-        console.log('✅ Login successful for:', userData.email);
-        alert('✅ লগইন সফল! ড্যাশবোর্ডে যাচ্ছে...');
-        
-        // Redirect based on role/account type
-        setTimeout(() => {
-            if (userData.role === 'admin' || userData.accountType === 'admin') {
-                window.location.href = 'admin.html';
-            } else if (userData.role === 'customer' || userData.accountType === 'customer') {
-                window.location.href = 'customer.html';
-            } else if (userData.role === 'professional' || userData.accountType === 'professional') {
-                window.location.href = 'professional.html';
+    // FIXED: Redirect user after login - LINE ~400
+function redirectUser(userData) {
+    console.log('✅ Login successful for:', userData);
+    alert('✅ লগইন সফল! ড্যাশবোর্ডে যাচ্ছে...');
+    
+    // Determine user role
+    let userRole = userData.role || userData.accountType || userData.account_type || 'customer';
+    
+    console.log('👤 User role detected:', userRole);
+    
+    // Redirect based on role
+    setTimeout(() => {
+        if (userRole === 'admin' || userRole === 'Admin') {
+            window.location.href = 'admin.html';
+        } else if (userRole === 'professional' || userRole === 'Professional') {
+            window.location.href = 'employer.html';
+        } else if (userRole === 'customer' || userRole === 'Customer') {
+            window.location.href = 'customer.html';
+        } else {
+            // Default fallback
+            if (localStorage.getItem('selectedRole') === 'professional') {
+                window.location.href = 'employer.html';
             } else {
-                window.location.href = 'index.html';
+                window.location.href = 'customer.html';
             }
-        }, 1000);
-    }
+        }
+    }, 1000);
+}
 
     // Auto-login check
     function checkAutoLogin() {

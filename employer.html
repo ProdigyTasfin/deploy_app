@@ -77,6 +77,7 @@
             font-size: 1.5rem;
             font-weight: 700;
             color: var(--primary);
+            cursor: pointer;
         }
 
         .logo i {
@@ -89,23 +90,18 @@
             gap: 1.5rem;
         }
 
-        .nav-btn {
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            background: var(--card-bg);
-            color: var(--text-color);
+        .theme-toggle {
+            background: var(--primary);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-
-        .nav-btn:hover {
-            background: var(--hover-bg);
-            transform: translateY(-1px);
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
         }
 
         .user-info {
@@ -157,6 +153,7 @@
             color: var(--text-color);
             text-decoration: none;
             transition: all 0.3s;
+            cursor: pointer;
         }
 
         .nav-link:hover, .nav-link.active {
@@ -165,15 +162,18 @@
             border-right: 3px solid var(--primary);
         }
 
-        .nav-link i {
-            width: 20px;
-            text-align: center;
-        }
-
         /* Main Content */
         .main-content {
             padding: 2rem;
             overflow-y: auto;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
         }
 
         /* Stats Grid */
@@ -189,26 +189,6 @@
             padding: 1.5rem;
             border-radius: 12px;
             border: 1px solid var(--border-color);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .stat-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .stat-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5rem;
         }
 
         .stat-value {
@@ -223,25 +203,35 @@
             font-size: 0.9rem;
         }
 
-        /* Available Jobs */
-        .jobs-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
+        /* Jobs Container */
+        .jobs-container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
             margin-bottom: 2rem;
         }
 
+        .jobs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Job Cards */
         .job-card {
             background: var(--card-bg);
+            border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 1.5rem;
-            border: 1px solid var(--border-color);
+            margin-bottom: 1rem;
             transition: all 0.3s;
         }
 
         .job-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
             border-color: var(--primary);
         }
 
@@ -261,26 +251,26 @@
             font-weight: 500;
         }
 
-        .job-urgency {
+        .job-status {
             padding: 0.25rem 0.75rem;
             border-radius: 20px;
             font-size: 0.85rem;
             font-weight: 500;
         }
 
-        .urgency-high {
-            background: rgba(239, 68, 68, 0.15);
-            color: var(--danger);
+        .status-available {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
         }
 
-        .urgency-medium {
+        .status-pending {
             background: rgba(245, 158, 11, 0.15);
             color: var(--warning);
         }
 
-        .urgency-low {
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--success);
+        .status-negotiating {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--info);
         }
 
         .job-customer {
@@ -302,15 +292,6 @@
             font-weight: bold;
         }
 
-        .customer-info h4 {
-            margin-bottom: 0.25rem;
-        }
-
-        .customer-location {
-            font-size: 0.85rem;
-            color: #94a3b8;
-        }
-
         .job-description {
             color: var(--text-color);
             margin-bottom: 1rem;
@@ -318,13 +299,17 @@
         }
 
         .job-details {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
         }
 
         .detail {
             text-align: center;
+            padding: 0.5rem;
+            background: var(--hover-bg);
+            border-radius: 8px;
         }
 
         .detail-value {
@@ -337,34 +322,49 @@
             color: #94a3b8;
         }
 
-        /* Table Styles */
-        .table-container {
-            background: var(--card-bg);
+        /* Price Negotiation Box */
+        .price-negotiation {
+            background: var(--hover-bg);
             border-radius: 12px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            border: 1px dashed var(--border-color);
         }
 
-        .table-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--border-color);
+        .negotiation-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 1rem;
         }
 
-        .table-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--text-color);
+        .price-display {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            text-align: center;
+            margin: 1rem 0;
         }
 
-        .table-actions {
+        .price-input-group {
             display: flex;
-            gap: 0.75rem;
+            gap: 0.5rem;
+            align-items: center;
+            margin: 1rem 0;
         }
 
+        .price-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-color);
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        /* Buttons */
         .btn {
             padding: 0.5rem 1rem;
             border-radius: 8px;
@@ -388,6 +388,24 @@
             box-shadow: 0 4px 12px rgba(86, 41, 190, 0.3);
         }
 
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #0da271;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
         .btn-secondary {
             background: var(--card-bg);
             color: var(--text-color);
@@ -398,95 +416,10 @@
             background: var(--hover-bg);
         }
 
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .table th {
-            padding: 1rem;
-            text-align: left;
-            background: var(--hover-bg);
-            color: var(--text-color);
-            font-weight: 600;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .table td {
-            padding: 1rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .table tbody tr:hover {
-            background: var(--hover-bg);
-        }
-
-        /* Status Badges */
-        .status-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-
-        .status-pending {
-            background: rgba(245, 158, 11, 0.15);
-            color: var(--warning);
-        }
-
-        .status-active {
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--success);
-        }
-
-        .status-completed {
-            background: rgba(86, 41, 190, 0.15);
-            color: var(--primary);
-        }
-
-        .status-cancelled {
-            background: rgba(239, 68, 68, 0.15);
-            color: var(--danger);
-        }
-
-        /* Action Buttons */
         .action-buttons {
             display: flex;
             gap: 0.5rem;
-        }
-
-        .btn-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            border: none;
-            background: var(--card-bg);
-            color: var(--text-color);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-        }
-
-        .btn-icon:hover {
-            background: var(--hover-bg);
-            transform: translateY(-1px);
-        }
-
-        .btn-accept {
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--success);
-        }
-
-        .btn-reject {
-            background: rgba(239, 68, 68, 0.15);
-            color: var(--danger);
-        }
-
-        .btn-view {
-            background: rgba(59, 130, 246, 0.15);
-            color: var(--info);
+            margin-top: 1rem;
         }
 
         /* Modal */
@@ -522,29 +455,11 @@
             align-items: center;
         }
 
-        .modal-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--text-color);
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            color: #94a3b8;
-            cursor: pointer;
-            font-size: 1.5rem;
-            transition: color 0.3s;
-        }
-
-        .modal-close:hover {
-            color: var(--danger);
-        }
-
         .modal-body {
             padding: 1.5rem;
         }
 
+        /* Form Styles */
         .form-group {
             margin-bottom: 1.5rem;
         }
@@ -564,44 +479,38 @@
             border-radius: 8px;
             color: var(--text-color);
             font-size: 1rem;
-            transition: all 0.3s;
         }
 
         .form-input:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(86, 41, 190, 0.1);
         }
 
         /* Responsive */
-        @media (max-width: 1024px) {
+        @media (max-width: 768px) {
             .dashboard {
                 grid-template-columns: 1fr;
             }
-
+            
             .sidebar {
                 display: none;
             }
-        }
-
-        @media (max-width: 768px) {
+            
             .stats-grid {
                 grid-template-columns: 1fr;
             }
-
-            .jobs-grid {
+            
+            .job-details {
                 grid-template-columns: 1fr;
             }
-
-            .table-header {
+            
+            .action-buttons {
                 flex-direction: column;
-                gap: 1rem;
-                align-items: stretch;
             }
-
-            .table {
-                display: block;
-                overflow-x: auto;
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
             }
         }
     </style>
@@ -615,10 +524,9 @@
         </div>
         
         <div class="user-nav">
-            <a href="index.html" class="nav-btn">
-                <i class="fas fa-home"></i>
-                মূল সাইট
-            </a>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
             <div class="user-info" id="userInfo">
                 <!-- Will be populated by JavaScript -->
             </div>
@@ -631,37 +539,37 @@
         <nav class="sidebar">
             <ul class="nav-menu">
                 <li class="nav-item">
-                    <a href="#dashboard" class="nav-link active">
+                    <a class="nav-link active" data-section="dashboard">
                         <i class="fas fa-tachometer-alt"></i>
                         ড্যাশবোর্ড
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#available-jobs" class="nav-link">
+                    <a class="nav-link" data-section="available-jobs">
                         <i class="fas fa-briefcase"></i>
                         উপলব্ধ কাজ
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#my-jobs" class="nav-link">
+                    <a class="nav-link" data-section="my-jobs">
                         <i class="fas fa-tasks"></i>
                         আমার কাজ
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#earnings" class="nav-link">
+                    <a class="nav-link" data-section="earnings">
                         <i class="fas fa-coins"></i>
                         আয়
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#profile" class="nav-link">
+                    <a class="nav-link" data-section="profile">
                         <i class="fas fa-user"></i>
                         প্রোফাইল
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link" onclick="logout()">
+                    <a class="nav-link" onclick="logout()">
                         <i class="fas fa-sign-out-alt"></i>
                         লগআউট
                     </a>
@@ -670,116 +578,152 @@
         </nav>
 
         <!-- Main Content -->
-        <main class="main-content" id="mainContent">
-            <!-- Stats Overview -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div class="stat-icon">
-                            <i class="fas fa-briefcase"></i>
-                        </div>
-                        <span class="status-badge status-active">সক্রিয়</span>
-                    </div>
-                    <div class="stat-value" id="activeJobs">০</div>
-                    <div class="stat-label">সক্রিয় কাজ</div>
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <div class="section active" id="dashboardSection">
+                <div class="welcome-banner" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
+                    <h1 id="welcomeMessage">স্বাগতম!</h1>
+                    <p>আপনার সেবা প্রদানের জন্য উপলব্ধ কাজগুলো দেখুন</p>
                 </div>
 
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div class="stat-icon">
-                            <i class="fas fa-coins"></i>
-                        </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="activeJobs">০</div>
+                        <div class="stat-label">সক্রিয় কাজ</div>
                     </div>
-                    <div class="stat-value" id="totalEarnings">৳ ০</div>
-                    <div class="stat-label">মোট আয়</div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div class="stat-icon">
-                            <i class="fas fa-star"></i>
-                        </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalEarnings">৳ ০</div>
+                        <div class="stat-label">মোট আয়</div>
                     </div>
-                    <div class="stat-value" id="averageRating">০.০</div>
-                    <div class="stat-label">গড় রেটিং</div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div class="stat-icon">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="completedJobs">০</div>
+                        <div class="stat-label">সম্পন্ন কাজ</div>
                     </div>
-                    <div class="stat-value" id="completionRate">০%</div>
-                    <div class="stat-label">সময়মতো সমাপ্তি</div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="rating">০.০</div>
+                        <div class="stat-label">গড় রেটিং</div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Available Jobs -->
-            <div class="table-container" id="availableJobsSection">
-                <div class="table-header">
-                    <h3 class="table-title">উপলব্ধ কাজ</h3>
-                    <div class="table-actions">
-                        <button class="btn btn-secondary" onclick="refreshJobs()">
-                            <i class="fas fa-sync-alt"></i> রিফ্রেশ
+            <!-- Available Jobs Section -->
+            <div class="section" id="availableJobsSection">
+                <div class="jobs-container">
+                    <div class="jobs-header">
+                        <h2>উপলব্ধ কাজসমূহ</h2>
+                        <button class="btn btn-primary" onclick="refreshJobs()">
+                            <i class="fas fa-sync-alt"></i> রিফ্রেশ করুন
+                        </button>
+                    </div>
+                    
+                    <div id="availableJobsList">
+                        <!-- Available jobs will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Jobs Section -->
+            <div class="section" id="myJobsSection">
+                <div class="jobs-container">
+                    <div class="jobs-header">
+                        <h2>আমার কাজসমূহ</h2>
+                    </div>
+                    
+                    <div id="myJobsList">
+                        <!-- My jobs will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Earnings Section -->
+            <div class="section" id="earningsSection">
+                <div class="jobs-container">
+                    <h2 style="margin-bottom: 1.5rem;">আয়ের হিসাব</h2>
+                    
+                    <div id="earningsDetails">
+                        <!-- Earnings will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Section -->
+            <div class="section" id="profileSection">
+                <div class="jobs-container">
+                    <h2 style="margin-bottom: 1.5rem;">প্রোফাইল</h2>
+                    
+                    <div id="profileFormContainer">
+                        <!-- Profile form will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Price Negotiation Modal -->
+    <div class="modal" id="priceModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>মূল্য নির্ধারণ করুন</h3>
+                <button onclick="closeModal('priceModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="job-info" id="negotiationJobInfo">
+                    <!-- Job info will be loaded here -->
+                </div>
+                
+                <div class="price-negotiation">
+                    <div class="negotiation-header">
+                        <h4>মূল্য আলোচনা</h4>
+                        <span id="negotiationStatus" class="job-status status-negotiating">আলোচনা চলছে</span>
+                    </div>
+                    
+                    <div class="price-display" id="proposedPrice">
+                        প্রস্তাবিত: ৳ ০
+                    </div>
+                    
+                    <div class="price-input-group">
+                        <input type="number" id="priceAmount" class="price-input" placeholder="৳ পরিমাণ" min="100" step="100">
+                        <span style="font-weight: bold;">টাকা</span>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="submitPrice()">
+                            <i class="fas fa-paper-plane"></i> মূল্য প্রস্তাব করুন
+                        </button>
+                        <button class="btn btn-secondary" onclick="closeModal('priceModal')">
+                            <i class="fas fa-times"></i> বাতিল
                         </button>
                     </div>
                 </div>
-                
-                <div class="jobs-grid" id="availableJobsGrid">
-                    <!-- Available jobs will be loaded here -->
-                </div>
             </div>
-
-            <!-- My Jobs -->
-            <div class="table-container" id="myJobsSection" style="display: none;">
-                <div class="table-header">
-                    <h3 class="table-title">আমার কাজ</h3>
-                </div>
-                
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>কাজের আইডি</th>
-                            <th>গ্রাহক</th>
-                            <th>সেবার ধরন</th>
-                            <th>তারিখ</th>
-                            <th>পরিমাণ</th>
-                            <th>স্ট্যাটাস</th>
-                            <th>অ্যাকশন</th>
-                        </tr>
-                    </thead>
-                    <tbody id="myJobsTableBody">
-                        <!-- My jobs will be loaded here -->
-                    </tbody>
-                </table>
-            </div>
-        </main>
+        </div>
     </div>
 
     <!-- Job Details Modal -->
     <div class="modal" id="jobModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">কাজের বিস্তারিত</h3>
-                <button class="modal-close" onclick="closeJobModal()">×</button>
+                <h3>কাজের বিস্তারিত</h3>
+                <button onclick="closeModal('jobModal')">&times;</button>
             </div>
             <div class="modal-body" id="jobModalBody">
-                <!-- Content will be loaded here -->
+                <!-- Job details will be loaded here -->
             </div>
         </div>
     </div>
 
     <script>
-        // Current user
+        // Global variables
         let currentUser = null;
         let currentJobId = null;
+        let jobsData = [];
 
         // Initialize dashboard
         document.addEventListener('DOMContentLoaded', async function() {
             await checkLogin();
             await loadDashboardData();
             setupNavigation();
+            setupTheme();
         });
 
         // Check if user is logged in
@@ -792,11 +736,6 @@
             
             try {
                 currentUser = JSON.parse(userData);
-                if (currentUser.accountType !== 'professional') {
-                    window.location.href = 'index.html';
-                    return;
-                }
-                
                 updateUserInfo();
             } catch (error) {
                 console.error('Error parsing user data:', error);
@@ -807,128 +746,167 @@
         // Update user info in header
         function updateUserInfo() {
             const userInfo = document.getElementById('userInfo');
+            const welcomeMessage = document.getElementById('welcomeMessage');
             
-            const userInitial = currentUser.fullName ? currentUser.fullName.charAt(0) : 'P';
+            const userInitial = currentUser.fullName ? currentUser.fullName.charAt(0) : 
+                              currentUser.full_name ? currentUser.full_name.charAt(0) : 'P';
+            
+            const userName = currentUser.fullName || currentUser.full_name || 'সেবাদাতা';
             
             userInfo.innerHTML = `
                 <div class="user-avatar">${userInitial}</div>
                 <div>
-                    <div style="font-weight: 600;">${currentUser.fullName || 'Professional'}</div>
+                    <div style="font-weight: 600;">${userName}</div>
                     <div style="font-size: 0.85rem; color: #94a3b8;">সেবাদাতা</div>
                 </div>
             `;
+            
+            if (welcomeMessage) {
+                welcomeMessage.textContent = `স্বাগতম, ${userName}!`;
+            }
+        }
+
+        // Setup theme
+        function setupTheme() {
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = themeToggle.querySelector('i');
+            
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+            if (currentTheme === 'light') {
+                document.body.classList.add('light-mode');
+                themeIcon.className = 'fas fa-sun';
+            }
+            
+            themeToggle.addEventListener('click', function() {
+                if (document.body.classList.contains('light-mode')) {
+                    document.body.classList.remove('light-mode');
+                    localStorage.setItem('theme', 'dark');
+                    themeIcon.className = 'fas fa-moon';
+                } else {
+                    document.body.classList.add('light-mode');
+                    localStorage.setItem('theme', 'light');
+                    themeIcon.className = 'fas fa-sun';
+                }
+            });
         }
 
         // Setup navigation
         function setupNavigation() {
             const navLinks = document.querySelectorAll('.nav-link');
-            const sections = document.querySelectorAll('.table-container');
+            const sections = document.querySelectorAll('.section');
             
             navLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    
-                    navLinks.forEach(l => l.classList.remove('active'));
-                    link.classList.add('active');
-                    
-                    const section = link.getAttribute('href').substring(1);
-                    showSection(section);
-                });
-            });
-        }
-
-        function showSection(sectionId) {
-            // Hide all sections
-            document.querySelectorAll('.table-container').forEach(section => {
-                section.style.display = 'none';
-            });
-            
-            // Show selected section
-            const section = document.getElementById(sectionId + 'Section');
-            if (section) {
-                section.style.display = 'block';
-                
-                // Load data for the section
-                if (sectionId === 'available-jobs') {
-                    loadAvailableJobs();
-                } else if (sectionId === 'my-jobs') {
-                    loadMyJobs();
+                if (link.getAttribute('data-section')) {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        
+                        const sectionId = this.getAttribute('data-section');
+                        
+                        // Update active states
+                        navLinks.forEach(l => l.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        // Show selected section
+                        sections.forEach(section => {
+                            section.classList.remove('active');
+                            if (section.id === sectionId + 'Section') {
+                                section.classList.add('active');
+                            }
+                        });
+                        
+                        // Load data for the section
+                        if (sectionId === 'available-jobs') {
+                            loadAvailableJobs();
+                        } else if (sectionId === 'my-jobs') {
+                            loadMyJobs();
+                        } else if (sectionId === 'earnings') {
+                            loadEarnings();
+                        } else if (sectionId === 'profile') {
+                            loadProfile();
+                        }
+                    });
                 }
-            }
+            });
         }
 
         // Load dashboard data
         async function loadDashboardData() {
             await loadAvailableJobs();
-            await updateStats();
+            updateStats();
+        }
+
+        // Update statistics
+        function updateStats() {
+            const myJobs = JSON.parse(localStorage.getItem('professional_jobs') || '[]');
+            
+            const activeJobs = myJobs.filter(job => job.status === 'active').length;
+            const completedJobs = myJobs.filter(job => job.status === 'completed').length;
+            
+            // Calculate total earnings
+            let totalEarnings = 0;
+            myJobs.forEach(job => {
+                if (job.status === 'completed' && job.finalPrice) {
+                    totalEarnings += parseInt(job.finalPrice) || 0;
+                }
+            });
+            
+            // Calculate average rating
+            const ratings = myJobs.filter(job => job.rating).map(job => job.rating);
+            const averageRating = ratings.length > 0 ? 
+                (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1) : '০.০';
+            
+            document.getElementById('activeJobs').textContent = activeJobs;
+            document.getElementById('completedJobs').textContent = completedJobs;
+            document.getElementById('totalEarnings').textContent = `৳ ${totalEarnings.toLocaleString()}`;
+            document.getElementById('rating').textContent = averageRating;
         }
 
         // Load available jobs
         async function loadAvailableJobs() {
-            const jobsGrid = document.getElementById('availableJobsGrid');
+            const jobsList = document.getElementById('availableJobsList');
             
-            // For demo, use static data. In production, fetch from Neon
+            // Sample jobs data
             const availableJobs = [
                 {
-                    id: 'JOB-2024-001',
+                    id: 'JOB001',
                     service: 'বৈদ্যুতিক কাজ',
-                    customer: 'মাহমুদ হাসান',
+                    customerName: 'মাহমুদ হাসান',
                     location: 'ধানমন্ডি, ঢাকা',
                     description: 'বৈদ্যুতিক তার পরিবর্তন এবং নতুন আউটলেট বসানো প্রয়োজন। পুরাতন তারে সমস্যা হচ্ছে।',
-                    urgency: 'high',
-                    budget: '৳ ২,০০০ - ৩,০০০',
+                    customerBudget: '৳ ২,০০০',
                     date: 'আজ',
-                    time: 'বিকাল ৪টা'
+                    time: 'বিকাল ৪টা - ৬টা',
+                    address: '১২/৩, রোড ৭, ধানমন্ডি, ঢাকা',
+                    phone: '০১৭১২৩৪৫৬৭৮',
+                    status: 'available'
                 },
                 {
-                    id: 'JOB-2024-002',
+                    id: 'JOB002',
                     service: 'প্লাম্বিং',
-                    customer: 'সায়মা ইসলাম',
+                    customerName: 'সায়মা ইসলাম',
                     location: 'গুলশান, ঢাকা',
                     description: 'বাথরুমের পাইপ মেরামত প্রয়োজন। পানি চুইয়ে পড়ছে।',
-                    urgency: 'medium',
-                    budget: '৳ ১,৫০০ - ২,০০০',
+                    customerBudget: '৳ ১,৫০০',
                     date: 'আগামীকাল',
-                    time: 'সকাল ১০টা'
-                },
-                {
-                    id: 'JOB-2024-003',
-                    service: 'এয়ারকন্ডিশনিং',
-                    customer: 'রাশেদ আহমেদ',
-                    location: 'বনানী, ঢাকা',
-                    description: 'এয়ারকন্ডিশন সার্ভিসিং প্রয়োজন। ঠান্ডা কম হচ্ছে।',
-                    urgency: 'low',
-                    budget: '৳ ২,৫০০ - ৩,৫০০',
-                    date: 'পরশু',
-                    time: 'সকাল ১১টা'
-                },
-                {
-                    id: 'JOB-2024-004',
-                    service: 'কাঠের কাজ',
-                    customer: 'ফারহানা আক্তার',
-                    location: 'মিরপুর, ঢাকা',
-                    description: 'ক্যাবিনেট মেরামত প্রয়োজন। দরজা ঠিকমত বন্ধ হয় না।',
-                    urgency: 'medium',
-                    budget: '৳ ৩,০০০ - ৪,০০০',
-                    date: 'এই সপ্তাহ',
-                    time: 'যেকোনো সময়'
+                    time: 'সকাল ১০টা - ১২টা',
+                    address: '২৩/এ, রোড ১২, গুলশান, ঢাকা',
+                    phone: '০১৮৭৬৫৪৩২১০',
+                    status: 'available'
                 }
             ];
             
-            jobsGrid.innerHTML = availableJobs.map(job => `
-                <div class="job-card">
+            jobsList.innerHTML = availableJobs.map(job => `
+                <div class="job-card" id="job-${job.id}">
                     <div class="job-header">
                         <span class="job-service">${job.service}</span>
-                        <span class="job-urgency urgency-${job.urgency}">
-                            ${job.urgency === 'high' ? 'জরুরি' : job.urgency === 'medium' ? 'শীঘ্রই' : 'সাধারণ'}
-                        </span>
+                        <span class="job-status status-available">উপলব্ধ</span>
                     </div>
                     
                     <div class="job-customer">
-                        <div class="customer-avatar">${job.customer.charAt(0)}</div>
-                        <div class="customer-info">
-                            <h4>${job.customer}</h4>
-                            <div class="customer-location">
+                        <div class="customer-avatar">${job.customerName.charAt(0)}</div>
+                        <div>
+                            <h3 style="margin-bottom: 0.25rem;">${job.customerName}</h3>
+                            <div style="font-size: 0.9rem; color: #94a3b8;">
                                 <i class="fas fa-map-marker-alt"></i> ${job.location}
                             </div>
                         </div>
@@ -938,8 +916,8 @@
                     
                     <div class="job-details">
                         <div class="detail">
-                            <div class="detail-value">${job.budget}</div>
-                            <div class="detail-label">বাজেট</div>
+                            <div class="detail-value">${job.customerBudget}</div>
+                            <div class="detail-label">গ্রাহকের বাজেট</div>
                         </div>
                         <div class="detail">
                             <div class="detail-value">${job.date}</div>
@@ -951,12 +929,12 @@
                         </div>
                     </div>
                     
-                    <div style="display: flex; gap: 1rem;">
-                        <button class="btn" onclick="viewJob('${job.id}')" style="flex: 1;">
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="viewJobDetails('${job.id}')">
                             <i class="fas fa-eye"></i> বিস্তারিত
                         </button>
-                        <button class="btn btn-primary" onclick="acceptJob('${job.id}')" style="flex: 1;">
-                            <i class="fas fa-check"></i> গ্রহণ করুন
+                        <button class="btn btn-success" onclick="startNegotiation('${job.id}')">
+                            <i class="fas fa-handshake"></i> মূল্য আলোচনা
                         </button>
                     </div>
                 </div>
@@ -965,117 +943,268 @@
 
         // Load my jobs
         async function loadMyJobs() {
-            const tbody = document.getElementById('myJobsTableBody');
+            const myJobsList = document.getElementById('myJobsList');
             
-            // For demo, use static data. In production, fetch from Neon
-            const myJobs = [
-                {
-                    id: 'MYJOB-001',
-                    customer: 'মাহমুদ হাসান',
-                    service: 'বৈদ্যুতিক কাজ',
-                    date: '১৫ মার্চ, ২০২৪',
-                    amount: '৳ ২,৫০০',
-                    status: 'active'
-                },
-                {
-                    id: 'MYJOB-002',
-                    customer: 'সায়মা ইসলাম',
-                    service: 'প্লাম্বিং',
-                    date: '১৬ মার্চ, ২০২৪',
-                    amount: '৳ ১,৮০০',
-                    status: 'pending'
-                },
-                {
-                    id: 'MYJOB-003',
-                    customer: 'রাশেদ আহমেদ',
-                    service: 'এয়ারকন্ডিশনিং',
-                    date: '১৪ মার্চ, ২০২৪',
-                    amount: '৳ ৩,২০০',
-                    status: 'completed'
-                }
-            ];
+            const myJobs = JSON.parse(localStorage.getItem('professional_jobs') || '[]');
             
-            tbody.innerHTML = myJobs.map(job => {
-                const statusText = {
-                    'active': 'সক্রিয়',
-                    'pending': 'অপেক্ষমান',
-                    'completed': 'সম্পন্ন',
-                    'cancelled': 'বাতিল'
-                };
+            if (myJobs.length === 0) {
+                myJobsList.innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: #94a3b8;">
+                        <i class="fas fa-briefcase" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <h3>কোন কাজ নেই</h3>
+                        <p>আপনি এখনো কোন কাজ গ্রহণ করেননি</p>
+                        <button class="btn btn-primary" onclick="showSection('available-jobs')">
+                            উপলব্ধ কাজ দেখুন
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            myJobsList.innerHTML = myJobs.map(job => {
+                let statusClass = '';
+                let statusText = '';
                 
-                const statusClass = {
-                    'active': 'status-active',
-                    'pending': 'status-pending',
-                    'completed': 'status-completed',
-                    'cancelled': 'status-cancelled'
-                };
+                switch(job.status) {
+                    case 'pending':
+                        statusClass = 'status-pending';
+                        statusText = 'অপেক্ষমান';
+                        break;
+                    case 'negotiating':
+                        statusClass = 'status-negotiating';
+                        statusText = 'আলোচনা চলছে';
+                        break;
+                    case 'active':
+                        statusClass = 'status-available';
+                        statusText = 'সক্রিয়';
+                        break;
+                    case 'completed':
+                        statusClass = 'status-available';
+                        statusText = 'সম্পন্ন';
+                        break;
+                    default:
+                        statusClass = 'status-pending';
+                        statusText = job.status;
+                }
                 
                 return `
-                    <tr>
-                        <td>${job.id}</td>
-                        <td>${job.customer}</td>
-                        <td>${job.service}</td>
-                        <td>${job.date}</td>
-                        <td>${job.amount}</td>
-                        <td><span class="status-badge ${statusClass[job.status]}">${statusText[job.status]}</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="btn-icon btn-view" onclick="viewMyJob('${job.id}')" title="বিস্তারিত">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                ${job.status === 'pending' ? `
-                                    <button class="btn-icon btn-accept" onclick="startJob('${job.id}')" title="শুরু করুন">
-                                        <i class="fas fa-play"></i>
-                                    </button>
-                                ` : ''}
-                                ${job.status === 'active' ? `
-                                    <button class="btn-icon btn-accept" onclick="completeJob('${job.id}')" title="সম্পন্ন">
-                                        <i class="fas fa-check-circle"></i>
-                                    </button>
-                                ` : ''}
+                    <div class="job-card">
+                        <div class="job-header">
+                            <span class="job-service">${job.service}</span>
+                            <span class="job-status ${statusClass}">${statusText}</span>
+                        </div>
+                        
+                        <div class="job-customer">
+                            <div class="customer-avatar">${job.customerName.charAt(0)}</div>
+                            <div>
+                                <h3 style="margin-bottom: 0.25rem;">${job.customerName}</h3>
+                                <div style="font-size: 0.9rem; color: #94a3b8;">
+                                    <i class="fas fa-map-marker-alt"></i> ${job.location}
+                                </div>
                             </div>
-                        </td>
-                    </tr>
+                        </div>
+                        
+                        ${job.finalPrice ? `
+                            <div class="price-display" style="text-align: center; margin: 1rem 0;">
+                                চূড়ান্ত মূল্য: <strong style="color: var(--success);">৳ ${job.finalPrice}</strong>
+                            </div>
+                        ` : job.proposedPrice ? `
+                            <div class="price-display" style="text-align: center; margin: 1rem 0;">
+                                প্রস্তাবিত মূল্য: <strong style="color: var(--warning);">৳ ${job.proposedPrice}</strong>
+                            </div>
+                        ` : ''}
+                        
+                        <div class="action-buttons">
+                            <button class="btn btn-secondary" onclick="viewJobDetails('${job.id}')">
+                                <i class="fas fa-eye"></i> বিস্তারিত
+                            </button>
+                            
+                            ${job.status === 'negotiating' ? `
+                                <button class="btn btn-primary" onclick="continueNegotiation('${job.id}')">
+                                    <i class="fas fa-comments-dollar"></i> আলোচনা চালিয়ে যান
+                                </button>
+                            ` : ''}
+                            
+                            ${job.status === 'pending' ? `
+                                <button class="btn btn-success" onclick="startJob('${job.id}')">
+                                    <i class="fas fa-play"></i> কাজ শুরু করুন
+                                </button>
+                            ` : ''}
+                            
+                            ${job.status === 'active' ? `
+                                <button class="btn btn-success" onclick="completeJob('${job.id}')">
+                                    <i class="fas fa-check"></i> সম্পন্ন করুন
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
                 `;
             }).join('');
         }
 
-        // Update stats
-        async function updateStats() {
-            // For demo, use static data
-            document.getElementById('activeJobs').textContent = '৩';
-            document.getElementById('totalEarnings').textContent = '৳ ৭,৫০০';
-            document.getElementById('averageRating').textContent = '৪.৮';
-            document.getElementById('completionRate').textContent = '৯৫%';
+        // Load earnings
+        async function loadEarnings() {
+            const earningsDetails = document.getElementById('earningsDetails');
+            
+            const myJobs = JSON.parse(localStorage.getItem('professional_jobs') || '[]');
+            const completedJobs = myJobs.filter(job => job.status === 'completed');
+            
+            if (completedJobs.length === 0) {
+                earningsDetails.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: #94a3b8;">
+                        <i class="fas fa-coins" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <h3>আয়ের তথ্য নেই</h3>
+                        <p>আপনার এখনো কোন সম্পন্ন কাজ নেই</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let totalEarnings = 0;
+            completedJobs.forEach(job => {
+                totalEarnings += parseInt(job.finalPrice) || 0;
+            });
+            
+            earningsDetails.innerHTML = `
+                <div class="stat-card" style="margin-bottom: 1.5rem;">
+                    <div class="stat-value">৳ ${totalEarnings.toLocaleString()}</div>
+                    <div class="stat-label">মোট আয়</div>
+                </div>
+                
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr>
+                                <th style="padding: 1rem; border-bottom: 1px solid var(--border-color);">কাজ আইডি</th>
+                                <th style="padding: 1rem; border-bottom: 1px solid var(--border-color);">গ্রাহক</th>
+                                <th style="padding: 1rem; border-bottom: 1px solid var(--border-color);">সেবা</th>
+                                <th style="padding: 1rem; border-bottom: 1px solid var(--border-color);">পরিমাণ</th>
+                                <th style="padding: 1rem; border-bottom: 1px solid var(--border-color);">তারিখ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${completedJobs.map(job => `
+                                <tr>
+                                    <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">${job.id}</td>
+                                    <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">${job.customerName}</td>
+                                    <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">${job.service}</td>
+                                    <td style="padding: 1rem; border-bottom: 1px solid var(--border-color); font-weight: bold; color: var(--success);">৳ ${job.finalPrice}</td>
+                                    <td style="padding: 1rem; border-bottom: 1px solid var(--border-color);">${job.completedDate || job.date}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        // Load profile
+        async function loadProfile() {
+            const profileFormContainer = document.getElementById('profileFormContainer');
+            
+            const skills = currentUser.skills || ['বৈদ্যুতিক কাজ', 'প্লাম্বিং', 'রং করার কাজ'];
+            const hourlyRate = currentUser.hourlyRate || '৳ ৫০০/ঘন্টা';
+            
+            profileFormContainer.innerHTML = `
+                <form id="profileForm">
+                    <div class="form-group">
+                        <label class="form-label">পুরো নাম</label>
+                        <input type="text" class="form-input" id="fullName" value="${currentUser.fullName || currentUser.full_name || ''}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">ইমেইল</label>
+                        <input type="email" class="form-input" id="email" value="${currentUser.email || ''}" disabled>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">ফোন নম্বর</label>
+                        <input type="tel" class="form-input" id="phone" value="${currentUser.phone || currentUser.phoneNumber || ''}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">ঠিকানা</label>
+                        <textarea class="form-input" id="address" rows="3">${currentUser.address || ''}</textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">দক্ষতা/সেবা</label>
+                        <textarea class="form-input" id="skills" rows="3" placeholder="আপনার দক্ষতা লিখুন (কমা দ্বারা আলাদা করুন)">${skills.join(', ')}</textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">ঘন্টাপ্রতি মূল্য</label>
+                        <input type="text" class="form-input" id="hourlyRate" value="${hourlyRate}" placeholder="৳ ৫০০/ঘন্টা">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">বায়ো/প্রোফাইল বর্ণনা</label>
+                        <textarea class="form-input" id="bio" rows="4" placeholder="আপনার অভিজ্ঞতা এবং সেবা সম্পর্কে লিখুন">${currentUser.bio || currentUser.description || ''}</textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-save"></i> প্রোফাইল আপডেট করুন
+                    </button>
+                </form>
+            `;
+            
+            // Add form submission handler
+            document.getElementById('profileForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                updateProfile();
+            });
         }
 
         // View job details
-        function viewJob(jobId) {
+        async function viewJobDetails(jobId) {
             currentJobId = jobId;
             
-            // For demo, show static job details
-            const job = {
-                id: jobId,
-                service: 'বৈদ্যুতিক কাজ',
-                customer: 'মাহমুদ হাসান',
-                location: 'ধানমন্ডি, ঢাকা',
-                phone: '০১৭১২৩৪৫৬৭৮',
-                description: 'বৈদ্যুতিক তার পরিবর্তন এবং নতুন আউটলেট বসানো প্রয়োজন। পুরাতন তারে সমস্যা হচ্ছে। ঘরে বিদ্যুৎ আসছে না।',
-                urgency: 'high',
-                budget: '৳ ২,০০০ - ৩,০০০',
-                date: 'আজ',
-                time: 'বিকাল ৪টা',
-                address: '১২/৩, রোড ৭, ধানমন্ডি, ঢাকা'
-            };
+            // Find the job
+            const availableJobs = [
+                {
+                    id: 'JOB001',
+                    service: 'বৈদ্যুতিক কাজ',
+                    customerName: 'মাহমুদ হাসান',
+                    location: 'ধানমন্ডি, ঢাকা',
+                    description: 'বৈদ্যুতিক তার পরিবর্তন এবং নতুন আউটলেট বসানো প্রয়োজন। পুরাতন তারে সমস্যা হচ্ছে।',
+                    customerBudget: '৳ ২,০০০',
+                    date: 'আজ',
+                    time: 'বিকাল ৪টা - ৬টা',
+                    address: '১২/৩, রোড ৭, ধানমন্ডি, ঢাকা',
+                    phone: '০১৭১২৩৪৫৬৭৮',
+                    status: 'available'
+                },
+                {
+                    id: 'JOB002',
+                    service: 'প্লাম্বিং',
+                    customerName: 'সায়মা ইসলাম',
+                    location: 'গুলশান, ঢাকা',
+                    description: 'বাথরুমের পাইপ মেরামত প্রয়োজন। পানি চুইয়ে পড়ছে।',
+                    customerBudget: '৳ ১,৫০০',
+                    date: 'আগামীকাল',
+                    time: 'সকাল ১০টা - ১২টা',
+                    address: '২৩/এ, রোড ১২, গুলশান, ঢাকা',
+                    phone: '০১৮৭৬৫৪৩২১০',
+                    status: 'available'
+                }
+            ];
+            
+            const job = availableJobs.find(j => j.id === jobId) || 
+                       JSON.parse(localStorage.getItem('professional_jobs') || '[]').find(j => j.id === jobId);
+            
+            if (!job) {
+                alert('কাজের তথ্য পাওয়া যায়নি');
+                return;
+            }
             
             document.getElementById('jobModalBody').innerHTML = `
                 <div class="job-customer" style="margin-bottom: 1.5rem;">
                     <div class="customer-avatar" style="width: 60px; height: 60px; font-size: 1.5rem;">
-                        ${job.customer.charAt(0)}
+                        ${job.customerName.charAt(0)}
                     </div>
-                    <div class="customer-info">
-                        <h3 style="font-size: 1.3rem;">${job.customer}</h3>
-                        <div class="customer-location" style="font-size: 1rem;">
+                    <div>
+                        <h3 style="margin-bottom: 0.25rem;">${job.customerName}</h3>
+                        <div style="font-size: 0.9rem; color: #94a3b8;">
                             <i class="fas fa-map-marker-alt"></i> ${job.location}
                         </div>
                     </div>
@@ -1087,20 +1216,13 @@
                 </div>
                 
                 <div class="form-group">
-                    <label class="form-label">জরুরিতা</label>
-                    <div class="form-input" style="background: var(--card-bg); color: var(--danger);">
-                        ${job.urgency === 'high' ? 'জরুরি' : job.urgency === 'medium' ? 'শীঘ্রই' : 'সাধারণ'}
-                    </div>
-                </div>
-                
-                <div class="form-group">
                     <label class="form-label">ফোন নম্বর</label>
-                    <div class="form-input" style="background: var(--card-bg);">${job.phone}</div>
+                    <div class="form-input" style="background: var(--card-bg);">${job.phone || 'নম্বর নেই'}</div>
                 </div>
                 
                 <div class="form-group">
                     <label class="form-label">ঠিকানা</label>
-                    <div class="form-input" style="background: var(--card-bg);">${job.address}</div>
+                    <div class="form-input" style="background: var(--card-bg); min-height: 60px;">${job.address}</div>
                 </div>
                 
                 <div class="form-group">
@@ -1110,8 +1232,8 @@
                 
                 <div class="job-details" style="margin-top: 1.5rem;">
                     <div class="detail">
-                        <div class="detail-value">${job.budget}</div>
-                        <div class="detail-label">বাজেট</div>
+                        <div class="detail-value">${job.customerBudget || '৳ ০'}</div>
+                        <div class="detail-label">গ্রাহকের বাজেট</div>
                     </div>
                     <div class="detail">
                         <div class="detail-value">${job.date}</div>
@@ -1124,111 +1246,298 @@
                 </div>
                 
                 <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-                    <button class="btn" onclick="callCustomer('${job.phone}')" style="flex: 1;">
-                        <i class="fas fa-phone"></i> কল করুন
+                    <button class="btn btn-secondary" style="flex: 1;" onclick="closeModal('jobModal')">
+                        <i class="fas fa-times"></i> বন্ধ করুন
                     </button>
-                    <button class="btn btn-primary" onclick="acceptJob('${job.id}')" style="flex: 1;">
-                        <i class="fas fa-check"></i> কাজ গ্রহণ করুন
-                    </button>
+                    ${job.status === 'available' ? `
+                        <button class="btn btn-primary" style="flex: 1;" onclick="startNegotiation('${job.id}')">
+                            <i class="fas fa-handshake"></i> মূল্য আলোচনা শুরু করুন
+                        </button>
+                    ` : ''}
                 </div>
             `;
             
             document.getElementById('jobModal').style.display = 'flex';
         }
 
-        // View my job details
-        function viewMyJob(jobId) {
-            // Similar to viewJob but for my jobs
-            viewJob(jobId);
-        }
-
-        // Accept a job
-        async function acceptJob(jobId) {
-            if (!confirm('আপনি কি এই কাজটি গ্রহণ করতে চান?')) {
+        // Start price negotiation
+        async function startNegotiation(jobId) {
+            currentJobId = jobId;
+            
+            // Find the job
+            const availableJobs = [
+                {
+                    id: 'JOB001',
+                    service: 'বৈদ্যুতিক কাজ',
+                    customerName: 'মাহমুদ হাসান',
+                    location: 'ধানমন্ডি, ঢাকা',
+                    description: 'বৈদ্যুতিক তার পরিবর্তন এবং নতুন আউটলেট বসানো প্রয়োজন। পুরাতন তারে সমস্যা হচ্ছে।',
+                    customerBudget: '৳ ২,০০০',
+                    date: 'আজ',
+                    time: 'বিকাল ৪টা - ৬টা',
+                    address: '১২/৩, রোড ৭, ধানমন্ডি, ঢাকা',
+                    phone: '০১৭১২৩৪৫৬৭৮',
+                    status: 'available'
+                },
+                {
+                    id: 'JOB002',
+                    service: 'প্লাম্বিং',
+                    customerName: 'সায়মা ইসলাম',
+                    location: 'গুলশান, ঢাকা',
+                    description: 'বাথরুমের পাইপ মেরামত প্রয়োজন। পানি চুইয়ে পড়ছে।',
+                    customerBudget: '৳ ১,৫০০',
+                    date: 'আগামীকাল',
+                    time: 'সকাল ১০টা - ১২টা',
+                    address: '২৩/এ, রোড ১২, গুলশান, ঢাকা',
+                    phone: '০১৮৭৬৫৪৩২১০',
+                    status: 'available'
+                }
+            ];
+            
+            const job = availableJobs.find(j => j.id === jobId);
+            
+            if (!job) {
+                alert('কাজের তথ্য পাওয়া যায়নি');
                 return;
             }
             
-            const jobRequest = {
-                jobId: jobId,
-                professionalId: currentUser.id,
-                professionalName: currentUser.fullName,
-                acceptedAt: new Date().toISOString(),
-                status: 'pending'
+            // Close job modal if open
+            closeModal('jobModal');
+            
+            // Show price negotiation modal
+            document.getElementById('negotiationJobInfo').innerHTML = `
+                <div class="job-customer" style="margin-bottom: 1rem;">
+                    <div class="customer-avatar" style="width: 50px; height: 50px; font-size: 1.2rem;">
+                        ${job.customerName.charAt(0)}
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 0.25rem;">${job.customerName}</h4>
+                        <div style="font-size: 0.85rem; color: #94a3b8;">${job.service}</div>
+                    </div>
+                </div>
+                <div style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 1rem;">
+                    গ্রাহকের বাজেট: <strong>${job.customerBudget}</strong>
+                </div>
+            `;
+            
+            document.getElementById('priceModal').style.display = 'flex';
+        }
+
+        // Continue negotiation
+        function continueNegotiation(jobId) {
+            // For existing jobs, load the negotiation details
+            startNegotiation(jobId);
+        }
+
+        // Submit price proposal
+        async function submitPrice() {
+            const priceAmount = document.getElementById('priceAmount').value;
+            
+            if (!priceAmount || parseInt(priceAmount) < 100) {
+                alert('দয়া করে একটি বৈধ মূল্য দিন (ন্যূনতম ৳ ১০০)');
+                return;
+            }
+            
+            // Get job details
+            const availableJobs = [
+                {
+                    id: 'JOB001',
+                    service: 'বৈদ্যুতিক কাজ',
+                    customerName: 'মাহমুদ হাসান',
+                    location: 'ধানমন্ডি, ঢাকা',
+                    description: 'বৈদ্যুতিক তার পরিবর্তন এবং নতুন আউটলেট বসানো প্রয়োজন। পুরাতন তারে সমস্যা হচ্ছে।',
+                    customerBudget: '৳ ২,০০০',
+                    date: 'আজ',
+                    time: 'বিকাল ৪টা - ৬টা',
+                    address: '১২/৩, রোড ৭, ধানমন্ডি, ঢাকা',
+                    phone: '০১৭১২৩৪৫৬৭৮',
+                    status: 'available'
+                },
+                {
+                    id: 'JOB002',
+                    service: 'প্লাম্বিং',
+                    customerName: 'সায়মা ইসলাম',
+                    location: 'গুলশান, ঢাকা',
+                    description: 'বাথরুমের পাইপ মেরামত প্রয়োজন। পানি চুইয়ে পড়ছে।',
+                    customerBudget: '৳ ১,৫০০',
+                    date: 'আগামীকাল',
+                    time: 'সকাল ১০টা - ১২টা',
+                    address: '২৩/এ, রোড ১২, গুলশান, ঢাকা',
+                    phone: '০১৮৭৬৫৪৩২১০',
+                    status: 'available'
+                }
+            ];
+            
+            const job = availableJobs.find(j => j.id === currentJobId);
+            
+            if (!job) {
+                alert('কাজের তথ্য পাওয়া যায়নি');
+                return;
+            }
+            
+            // Create job acceptance with price proposal
+            const myJob = {
+                id: currentJobId,
+                service: job.service,
+                customerName: job.customerName,
+                location: job.location,
+                description: job.description,
+                customerBudget: job.customerBudget,
+                date: job.date,
+                time: job.time,
+                address: job.address,
+                phone: job.phone,
+                proposedPrice: priceAmount,
+                status: 'negotiating',
+                professionalId: currentUser.id || 'PRO001',
+                professionalName: currentUser.fullName || currentUser.full_name || 'Unknown',
+                acceptedAt: new Date().toISOString()
             };
             
-            try {
-                // Save to database
-                await saveJobAcceptance(jobRequest);
-                
-                alert('কাজটি সফলভাবে গ্রহণ করা হয়েছে!');
-                closeJobModal();
-                
-                // Refresh available jobs
-                await loadAvailableJobs();
-                await loadMyJobs();
-                await updateStats();
-            } catch (error) {
-                console.error('Error accepting job:', error);
-                alert('কাজ গ্রহণ করতে সমস্যা হয়েছে। পুনরায় চেষ্টা করুন।');
+            // Save to localStorage
+            const existingJobs = JSON.parse(localStorage.getItem('professional_jobs') || '[]');
+            
+            // Check if job already exists
+            const jobIndex = existingJobs.findIndex(j => j.id === currentJobId);
+            if (jobIndex === -1) {
+                existingJobs.push(myJob);
+            } else {
+                existingJobs[jobIndex] = myJob;
             }
+            
+            localStorage.setItem('professional_jobs', JSON.stringify(existingJobs));
+            
+            // Show success message
+            alert(`৳ ${priceAmount} মূল্য প্রস্তাব গ্রাহকের কাছে পাঠানো হয়েছে! গ্রাহক গ্রহণ বা প্রত্যাখ্যান করবে।`);
+            
+            // Close modal and refresh
+            closeModal('priceModal');
+            updateStats();
+            loadMyJobs();
         }
 
         // Start a job
         function startJob(jobId) {
-            if (confirm('কাজটি শুরু করবেন?')) {
-                alert('কাজটি শুরু হিসেবে চিহ্নিত করা হয়েছে।');
-                loadMyJobs();
+            if (confirm('আপনি কি এই কাজটি শুরু করতে চান?')) {
+                // Update job status in localStorage
+                const existingJobs = JSON.parse(localStorage.getItem('professional_jobs') || '[]');
+                const jobIndex = existingJobs.findIndex(j => j.id === jobId);
+                
+                if (jobIndex !== -1) {
+                    existingJobs[jobIndex].status = 'active';
+                    existingJobs[jobIndex].startedAt = new Date().toISOString();
+                    localStorage.setItem('professional_jobs', JSON.stringify(existingJobs));
+                    
+                    alert('কাজটি শুরু হিসেবে চিহ্নিত করা হয়েছে।');
+                    updateStats();
+                    loadMyJobs();
+                }
             }
         }
 
         // Complete a job
         function completeJob(jobId) {
-            if (confirm('কাজটি সম্পন্ন হয়েছে?')) {
-                alert('কাজটি সম্পন্ন হিসেবে চিহ্নিত করা হয়েছে।');
-                loadMyJobs();
+            if (confirm('আপনি কি এই কাজটি সম্পন্ন করতে চান?')) {
+                // Update job status in localStorage
+                const existingJobs = JSON.parse(localStorage.getItem('professional_jobs') || '[]');
+                const jobIndex = existingJobs.findIndex(j => j.id === jobId);
+                
+                if (jobIndex !== -1) {
+                    existingJobs[jobIndex].status = 'completed';
+                    existingJobs[jobIndex].completedAt = new Date().toISOString();
+                    existingJobs[jobIndex].finalPrice = existingJobs[jobIndex].proposedPrice || existingJobs[jobIndex].customerBudget;
+                    localStorage.setItem('professional_jobs', JSON.stringify(existingJobs));
+                    
+                    alert('কাজটি সম্পন্ন হিসেবে চিহ্নিত করা হয়েছে।');
+                    updateStats();
+                    loadMyJobs();
+                }
             }
         }
 
-        // Call customer
-        function callCustomer(phone) {
-            alert(`কল করা হচ্ছে: ${phone}`);
+        // Update profile
+        function updateProfile() {
+            const updatedUser = {
+                ...currentUser,
+                fullName: document.getElementById('fullName').value,
+                full_name: document.getElementById('fullName').value,
+                phone: document.getElementById('phone').value,
+                phoneNumber: document.getElementById('phone').value,
+                address: document.getElementById('address').value,
+                skills: document.getElementById('skills').value.split(',').map(s => s.trim()),
+                hourlyRate: document.getElementById('hourlyRate').value,
+                bio: document.getElementById('bio').value,
+                description: document.getElementById('bio').value
+            };
+            
+            // Save to localStorage
+            localStorage.setItem('nibash_user', JSON.stringify(updatedUser));
+            currentUser = updatedUser;
+            updateUserInfo();
+            
+            alert('প্রোফাইল সফলভাবে আপডেট করা হয়েছে!');
         }
 
         // Refresh jobs
         function refreshJobs() {
             loadAvailableJobs();
+            alert('কাজের তালিকা রিফ্রেশ করা হয়েছে!');
         }
 
-        // Save job acceptance to database
-        async function saveJobAcceptance(jobRequest) {
-            // In production, make API call to save to Neon
-            console.log('Saving job acceptance:', jobRequest);
-            
-            // For demo, save to localStorage
-            const acceptances = JSON.parse(localStorage.getItem('job_acceptances') || '[]');
-            acceptances.push(jobRequest);
-            localStorage.setItem('job_acceptances', JSON.stringify(acceptances));
-            
-            return Promise.resolve({ success: true });
+        // Close modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
         }
 
-        // Close job modal
-        function closeJobModal() {
-            document.getElementById('jobModal').style.display = 'none';
+        // Show section
+        function showSection(sectionId) {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('.section');
+            
+            // Update active states
+            navLinks.forEach(l => l.classList.remove('active'));
+            navLinks.forEach(l => {
+                if (l.getAttribute('data-section') === sectionId) {
+                    l.classList.add('active');
+                }
+            });
+            
+            // Show selected section
+            sections.forEach(section => {
+                section.classList.remove('active');
+                if (section.id === sectionId + 'Section') {
+                    section.classList.add('active');
+                }
+            });
+            
+            // Load data for the section
+            if (sectionId === 'available-jobs') {
+                loadAvailableJobs();
+            } else if (sectionId === 'my-jobs') {
+                loadMyJobs();
+            } else if (sectionId === 'earnings') {
+                loadEarnings();
+            } else if (sectionId === 'profile') {
+                loadProfile();
+            }
         }
 
         // Logout
         function logout() {
-            localStorage.removeItem('nibash_user');
-            window.location.href = 'index.html';
+            if (confirm('আপনি কি নিশ্চিত যে লগআউট করতে চান?')) {
+                localStorage.removeItem('selectedRole');
+                window.location.href = 'index.html';
+            }
         }
 
-        // Close modal when clicking outside
-        window.addEventListener('click', (e) => {
-            if (e.target === document.getElementById('jobModal')) {
-                closeJobModal();
+        // Initialize localStorage if not exists
+        function initializeStorage() {
+            if (!localStorage.getItem('professional_jobs')) {
+                localStorage.setItem('professional_jobs', JSON.stringify([]));
             }
-        });
+        }
+
+        initializeStorage();
     </script>
 </body>
 </html>
