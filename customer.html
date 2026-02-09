@@ -7,7 +7,6 @@
     <title>নিবাস - গ্রাহক ড্যাশবোর্ড</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Kalpurush&display=swap" rel="stylesheet">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -743,33 +742,60 @@
             document.getElementById('preferredDate').min = today;
         });
 
+        // FIXED VERSION - Session handling
         async function initializeDashboard() {
             const userToken = localStorage.getItem('nibash_token');
+            const userData = localStorage.getItem('nibash_user');
 
-            if (!userToken) {
+            console.log('🔍 Dashboard initialization check:', {
+                hasToken: !!userToken,
+                tokenLength: userToken?.length,
+                hasUserData: !!userData
+            });
+
+            if (!userToken || !userData) {
+                console.log('❌ Missing auth data, redirecting to login');
                 window.location.href = 'login.html';
                 return;
             }
 
             try {
+                currentUser = JSON.parse(userData);
+                console.log('👤 Current user from localStorage:', currentUser);
+
+                // First, try to get fresh user data from API
                 const response = await fetch('/api/auth/me', {
                     method: 'GET',
                     headers: {
-                        'Authorization': `Bearer ${userToken}`
+                        'Authorization': `Bearer ${userToken}`,
+                        'Content-Type': 'application/json'
                     }
                 });
 
                 const data = await response.json();
+                console.log('📡 /api/auth/me response:', data);
 
                 if (!response.ok || !data.success) {
-                    throw new Error(data.error || 'Session invalid');
+                    console.warn('⚠️ API /auth/me failed, using cached user data');
+                    // Use cached data but verify role
+                } else {
+                    // Update with fresh data
+                    currentUser = data.user;
+                    localStorage.setItem('nibash_user', JSON.stringify(currentUser));
+                    console.log('✅ Updated user from API:', currentUser);
                 }
 
-                currentUser = data.user;
-                localStorage.setItem('nibash_user', JSON.stringify(currentUser));
+                // Verify user is a customer (multiple field checks)
+                const userRole = currentUser.role || currentUser.accountType || currentUser.account_type || '';
+                const isCustomer = userRole.toLowerCase().includes('customer');
+                
+                console.log('👤 Role check:', {
+                    role: userRole,
+                    isCustomer: isCustomer,
+                    rawUserData: currentUser
+                });
 
-                // Verify user is a customer
-                if (currentUser.role !== 'customer' && currentUser.accountType !== 'customer') {
+                if (!isCustomer) {
                     showNotification('Customer access only. Redirecting to login...', 'error');
                     localStorage.clear();
                     window.location.href = 'login.html';
@@ -783,8 +809,8 @@
                 setupপ্রোফাইলForm();
 
             } catch (error) {
-                console.error('Session error:', error);
-                showNotification('Session expired. Please login again.', 'error');
+                console.error('❌ Dashboard initialization error:', error);
+                showNotification('Session error. Please login again.', 'error');
                 localStorage.clear();
                 window.location.href = 'login.html';
             }

@@ -37,15 +37,13 @@ app.get('/robots.txt', (req, res) => {
 Allow: /`);
 });
 
-// API routes (keep existing)
+// API routes - FIXED VERSION
 app.use('/api/payment/initiate', require('./api/payment/initiate'));
 app.use('/api/payment/validate', require('./api/payment/validate'));
 app.use('/api/payment/lookup', require('./api/payment/lookup'));
 app.use('/api/auth/login', require('./api/auth/login'));
-app.use('/api/auth/signup', require('./api/auth/login'));
-app.use('/api/auth/me', require('./api/auth/login'));
-app.use('/api/login', require('./api/login'));
-app.use('/api/signup', require('./api/signup'));
+app.use('/api/auth/signup', require('./api/auth/signup'));    // ✅ FIXED: was pointing to login.js
+app.use('/api/auth/me', require('./api/auth/me'));            // ✅ FIXED: was pointing to login.js
 app.use('/api/payments/create', require('./api/payments/create'));
 app.use('/api/services/create', require('./api/services/create'));
 app.use('/api/services/list', require('./api/services/list'));
@@ -79,4 +77,5 @@ app.listen(PORT, () => {
   console.log(`API test: http://localhost:${PORT}/api/test`);
   console.log(`Robots: http://localhost:${PORT}/robots.txt`);
   console.log(`Bot protection active`);
+  console.log(`✅ Fixed routes: /api/auth/signup and /api/auth/me now point to correct files`);
 });
