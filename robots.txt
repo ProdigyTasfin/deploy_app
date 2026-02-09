@@ -1,0 +1,32 @@
+# robots.txt for nibash.org
+# Generated: 2024-02-09
+# Site: Professional Service Marketplace
+# Tech: Node.js/Express, Static HTML
+
+User-agent: *
+Allow: /
+
+# Block API and backend
+Disallow: /api/
+Disallow: /node_modules/
+Disallow: /database/
+
+# Block config files
+Disallow: /package.json
+Disallow: /package-lock.json
+Disallow: /*.json$
+
+# Block admin areas
+Disallow: /admin
+Disallow: /admin-login
+
+# Block temporary/development
+Disallow: /test
+Disallow: /tmp/
+Disallow: /backup/
+
+# Respectful crawl rate
+Crawl-delay: 1
+
+# Note: Sitemap will be added when generated
+# Sitemap: https://nibash.org/sitemap.xml
