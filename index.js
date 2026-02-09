@@ -47,6 +47,8 @@ app.use('/api/auth/me', require('./api/auth/me'));            // ✅ FIXED: was 
 app.use('/api/payments/create', require('./api/payments/create'));
 app.use('/api/services/create', require('./api/services/create'));
 app.use('/api/services/list', require('./api/services/list'));
+// Add after other API routes
+app.use('/api/auth/admin-login', require('./api/auth/admin-login'));
 
 // Test endpoint
 app.get('/api/test', (req, res) => {

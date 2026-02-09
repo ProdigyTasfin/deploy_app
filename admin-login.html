@@ -188,6 +188,13 @@
             text-align: center;
         }
 
+        .loading {
+            display: none;
+            text-align: center;
+            color: var(--primary);
+            margin-top: 1rem;
+        }
+
         @media (max-width: 480px) {
             .login-card {
                 padding: 1.5rem;
@@ -197,20 +204,6 @@
                 font-size: 1.5rem;
             }
         }
-    
-        /* Global glass hover enhancement */
-        body, button, input, select, textarea {
-            font-family: 'Hind Siliguri', 'Kalpurush', system-ui, sans-serif;
-        }
-        .card, .stat-card, .service-card, .signup-card, .login-card, .feature-card, .section {
-            transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
-        }
-        .card:hover, .stat-card:hover, .service-card:hover, .signup-card:hover, .login-card:hover, .feature-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 16px 35px rgba(86, 41, 190, 0.18);
-            border-color: rgba(167, 139, 250, 0.5);
-        }
-
     </style>
 </head>
 <body>
@@ -226,9 +219,7 @@
                 সিস্টেম এডমিন লগইন
             </div>
             
-            <div class="error-message" id="errorMessage">
-                <!-- Error messages will appear here -->
-            </div>
+            <div class="error-message" id="errorMessage"></div>
             
             <form id="adminLoginForm">
                 <div class="form-group">
@@ -236,7 +227,7 @@
                     <input type="email" 
                            id="adminEmail" 
                            class="form-control" 
-                           placeholder="admin@nibash.com"
+                           placeholder="admin@nibash.org"
                            autocomplete="username"
                            required>
                 </div>
@@ -251,11 +242,15 @@
                            required>
                 </div>
                 
-                <button type="submit" class="btn">
+                <button type="submit" class="btn" id="submitBtn">
                     <i class="fas fa-sign-in-alt"></i>
                     এডমিন প্যানেলে প্রবেশ করুন
                 </button>
             </form>
+            
+            <div class="loading" id="loading">
+                <i class="fas fa-spinner fa-spin"></i> লগইন হচ্ছে...
+            </div>
             
             <div class="security-note">
                 <i class="fas fa-info-circle"></i>
@@ -269,91 +264,95 @@
         </div>
     </div>
 
-<!-- Keep the same HTML structure, but UPDATE the JavaScript -->
-<script>
-    document.getElementById('adminLoginForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
+    <script>
+        document.getElementById('adminLoginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
 
-        const email = document.getElementById('adminEmail').value.trim();
-        const password = document.getElementById('adminPassword').value;
+            const email = document.getElementById('adminEmail').value.trim();
+            const password = document.getElementById('adminPassword').value;
+            const submitBtn = document.getElementById('submitBtn');
+            const loading = document.getElementById('loading');
+            const errorMsg = document.getElementById('errorMessage');
 
-        if (!email || !password) {
-            showError('ইমেইল এবং পাসওয়ার্ড প্রয়োজন');
-            return;
-        }
+            // Reset states
+            errorMsg.style.display = 'none';
+            submitBtn.disabled = true;
+            loading.style.display = 'block';
 
-        // === FIXED: Check for REAL admin credentials ===
-        // These should match your actual admin accounts
-        const adminCredentials = [
-            { email: 'admin@nibash.com', password: 'Admin@1234' },
-            { email: 'sobujnath@gmail.com', password: 'Sobuj@2024' }, // Example admin
-            { email: 'tasfin@gmail.com', password: 'Tasfin@2024' }   // Example admin
-        ];
-
-        // Check if credentials match
-        const isValidAdmin = adminCredentials.some(admin => 
-            admin.email === email && admin.password === password
-        );
-
-        if (!isValidAdmin) {
-            showError('ভুল এডমিন ইমেইল বা পাসওয়ার্ড');
-            return;
-        }
-
-        try {
-            // Create admin user object
-            const adminUser = {
-                id: 'ADM-' + Date.now(),
-                email: email,
-                fullName: email === 'admin@nibash.com' ? 'সিস্টেম এডমিন' : 
-                         email === 'sobujnath@gmail.com' ? 'Sobuj Nath' : 
-                         email === 'tasfin@gmail.com' ? 'Tasfin Hasan' : 'এডমিন',
-                role: 'admin',
-                accountType: 'admin',
-                permissions: ['all'],
-                loginTime: new Date().toISOString()
-            };
-
-            // Store in localStorage
-            localStorage.setItem('nibash_user', JSON.stringify(adminUser));
-            localStorage.setItem('nibash_token', 'admin-token-' + Date.now());
-            localStorage.setItem('user_role', 'admin');
-            localStorage.setItem('admin_session', new Date().toISOString());
-            localStorage.setItem('admin_email', email);
-
-            // Also store in admin users list
-            let adminUsers = JSON.parse(localStorage.getItem('admin_users') || '[]');
-            const existingAdmin = adminUsers.find(u => u.email === email);
-            if (!existingAdmin) {
-                adminUsers.push({
-                    ...adminUser,
-                    password: password, // In real app, this should be hashed
-                    createdAt: new Date().toISOString()
-                });
-                localStorage.setItem('admin_users', JSON.stringify(adminUsers));
+            if (!email || !password) {
+                showError('ইমেইল এবং পাসওয়ার্ড প্রয়োজন');
+                resetForm();
+                return;
             }
 
-            console.log('Admin login successful:', adminUser);
-            
-            // Redirect to admin dashboard
-            window.location.href = 'admin.html';
-            
-        } catch (error) {
-            console.error('Admin login error:', error);
-            showError('লগইন প্রক্রিয়ায় সমস্যা হয়েছে');
-        }
-    });
+            try {
+                // Call the API endpoint
+                const response = await fetch('/api/auth/admin-login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
 
-    function showError(message) {
-        const errorElement = document.getElementById('errorMessage');
-        errorElement.textContent = message;
-        errorElement.style.display = 'block';
-    }
-    
-    // Auto-focus on email field
-    document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('adminEmail').focus();
-    });
-</script>
+                const data = await response.json();
+
+                if (response.ok && data.success && data.admin_access) {
+                    // Store admin session
+                    localStorage.setItem('nibash_user', JSON.stringify(data.user));
+                    localStorage.setItem('nibash_token', data.token);
+                    localStorage.setItem('user_role', 'admin');
+                    localStorage.setItem('admin_session', new Date().toISOString());
+                    
+                    // Clear form
+                    document.getElementById('adminPassword').value = '';
+                    
+                    // Redirect to admin dashboard
+                    window.location.href = data.redirectTo || '/admin.html';
+                    
+                } else {
+                    showError(data.error || 'লগইন ব্যর্থ হয়েছে');
+                    resetForm();
+                }
+
+            } catch (error) {
+                console.error('Admin login error:', error);
+                showError('নেটওয়ার্ক ত্রুটি। আবার চেষ্টা করুন।');
+                resetForm();
+            }
+        });
+
+        function showError(message) {
+            const errorElement = document.getElementById('errorMessage');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+
+        function resetForm() {
+            document.getElementById('submitBtn').disabled = false;
+            document.getElementById('loading').style.display = 'none';
+        }
+        
+        // Auto-focus on email field
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('adminEmail').focus();
+        });
+
+        // Security: Auto-logout on inactivity (for admin only)
+        let logoutTimer;
+        function resetLogoutTimer() {
+            clearTimeout(logoutTimer);
+            logoutTimer = setTimeout(() => {
+                if (window.location.pathname.includes('admin')) {
+                    alert('এডমিন সেশন শেষ হয়েছে। পুনরায় লগইন করুন।');
+                    window.location.href = 'index.html';
+                }
+            }, 30 * 60 * 1000); // 30 minutes for admin
+        }
+
+        document.addEventListener('mousemove', resetLogoutTimer);
+        document.addEventListener('keypress', resetLogoutTimer);
+        resetLogoutTimer();
+    </script>
 </body>
-</html>
+</html> 

@@ -592,16 +592,7 @@
             color: var(--primary-light);
         }
 
-        .social-icons {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .social-icons a {
-            color: white;
-            font-size: 1.2rem;
-        }
+        /* REMOVED Social Icons Section */
 
         .copyright {
             text-align: center;
@@ -1004,7 +995,7 @@
             <h2 style="margin-bottom: 1rem;">আপনার সমস্যার সমাধান এখন মাত্র কয়েক ক্লিক দূরে</h2>
             <p style="margin-bottom: 2rem; opacity: 0.9;">আজই নিবাসের সাথে যুক্ত হোন এবং গৃহস্থালির সকল সমস্যা থেকে মুক্তি পান।</p>
             <button class="btn" style="background: white; color: var(--primary);" onclick="requestService()">
-                <i class="fas fa-phone-alt"></i> ফ্রি কনসাল্টেশন নিন
+                <i class="fas fa-phone-alt"></i> ফ্রি কনসুলটেশন নিন
             </button>
         </section>
     </main>
@@ -1015,12 +1006,7 @@
             <div class="footer-column">
                 <h3>নিবাস</h3>
                 <p>বাংলাদেশের প্রথম ডিজিটাল গৃহসেবা প্ল্যাটফর্ম। ২০২৩ সাল থেকে নির্ভরযোগ্য সেবা প্রদান করে আসছি।</p>
-                <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-linkedin"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-                </div>
+                <!-- REMOVED Social Media Icons -->
             </div>
 
             <div class="footer-column">
@@ -1049,15 +1035,29 @@
             <div class="footer-column" id="contact">
                 <h3>যোগাযোগ</h3>
                 <ul class="footer-links">
-                    <li><i class="fas fa-envelope"></i> info@nibash.com</li>
-                    <li><i class="fas fa-phone"></i> ০১৬১২-৩৪৫৬৭৮</li>
+                    <!-- UPDATED Email to admin@nibash.org -->
+                    <li><i class="fas fa-envelope"></i> admin@nibash.org</li>
+                    <!-- REMOVED Phone Number -->
                     <li><i class="fas fa-map-marker-alt"></i> ঢাকা, বাংলাদেশ</li>
+                    <!-- ADDED Support Link -->
+                    <li><a href="mailto:admin@nibash.org" style="color: var(--primary-light); font-weight: 500;">
+                        <i class="fas fa-headset"></i> সাপোর্ট
+                    </a></li>
+                    <!-- ADDED Admin Dashboard Link -->
+                    <li><a href="admin-login.html" style="color: var(--primary-light); font-weight: 500;">
+                        <i class="fas fa-user-shield"></i> এডমিন লগইন
+                    </a></li>
                 </ul>
             </div>
         </div>
 
         <div class="copyright">
             <p>&copy; ২০২৪ নিবাস। সর্বস্বত্ব সংরক্ষিত। নিবাস একটি রেজিস্টার্ড ট্রেডমার্ক।</p>
+            <p style="margin-top: 0.5rem; font-size: 0.9rem; color: #64748b;">
+                <a href="privacy-policy.html" style="color: #94a3b8;">গোপনীয়তা নীতি</a> | 
+                <a href="terms-of-service.html" style="color: #94a3b8;">সেবার শর্তাবলী</a> | 
+                <a href="cookie-policy.html" style="color: #94a3b8;">কুকি পলিসি</a>
+            </p>
         </div>
     </footer>
 
@@ -1235,9 +1235,8 @@
             if (!adminExists) {
                 // Create admin user
                 const adminUser = {
-                    email: 'admin@nibash.com',
+                    email: 'admin@nibash.org',
                     fullName: 'সিস্টেম এডমিন',
-                    phone: '০১৬১২-৩৪৫৬৭৮',
                     role: 'admin',
                     accountType: 'admin',
                     status: 'active',
@@ -1250,7 +1249,7 @@
                 // Also save admin credentials for login
                 let userCredentials = JSON.parse(localStorage.getItem('user_credentials') || '[]');
                 userCredentials.push({
-                    email: 'admin@nibash.com',
+                    email: 'admin@nibash.org',
                     password: 'admin123', // Default password
                     role: 'admin'
                 });
@@ -1266,7 +1265,7 @@
             const userInitial = user.fullName ? user.fullName.charAt(0).toUpperCase() : 'U';
             
             // Check if user is admin
-            const isAdmin = user.email === 'admin@nibash.com' || user.role === 'admin';
+            const isAdmin = user.email === 'admin@nibash.org' || user.role === 'admin';
             
             authSection.innerHTML = `
                 <div class="user-menu">
