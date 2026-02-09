@@ -131,6 +131,11 @@
             text-decoration: none;
             transition: all 0.3s;
             cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-size: 1rem;
         }
 
         .light-mode .nav-link {
@@ -327,6 +332,7 @@
             gap: 0.5rem;
             transition: all 0.3s;
             text-decoration: none;
+            font-size: 0.9rem;
         }
 
         .btn-primary {
@@ -456,12 +462,26 @@
             border: 1px solid var(--dark-border);
             border-radius: 6px;
             color: var(--dark-text);
+            min-width: 200px;
         }
 
         .light-mode .filter-select {
             background: var(--light-bg);
             border: 1px solid var(--light-border);
             color: var(--light-text);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #94a3b8;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
         }
 
         /* Responsive */
@@ -482,10 +502,18 @@
                 display: block;
                 overflow-x: auto;
             }
+            
+            .header {
+                padding: 1rem;
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
         }
     </style>
 </head>
-<body class="dark-mode">
+<body>
     <!-- Header -->
     <header class="header">
         <a href="index.html" class="logo">
@@ -494,7 +522,14 @@
         </a>
         
         <div class="user-info" id="userInfo">
-            <!-- Will be populated by JavaScript -->
+            <div class="user-avatar">A</div>
+            <div>
+                <div style="font-weight: 600;" id="adminName">এডমিন</div>
+                <div style="font-size: 0.85rem; color: #94a3b8;" id="adminEmail">admin@nibash.org</div>
+            </div>
+            <button class="btn btn-danger" onclick="logout()" style="margin-left: 1rem;">
+                <i class="fas fa-sign-out-alt"></i> লগআউট
+            </button>
         </div>
     </header>
 
@@ -504,39 +539,33 @@
         <nav class="sidebar">
             <ul class="nav-menu">
                 <li class="nav-item">
-                    <a class="nav-link active" data-section="dashboard">
+                    <a class="nav-link active" onclick="showSection('dashboard')">
                         <i class="fas fa-tachometer-alt"></i>
                         ড্যাশবোর্ড
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-section="professionals">
+                    <a class="nav-link" onclick="showSection('professionals')">
                         <i class="fas fa-user-cog"></i>
                         বিশেষজ্ঞ আবেদন
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-section="service-requests">
+                    <a class="nav-link" onclick="showSection('service-requests')">
                         <i class="fas fa-tools"></i>
                         সেবা অনুরোধ
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-section="users">
+                    <a class="nav-link" onclick="showSection('users')">
                         <i class="fas fa-users"></i>
                         ব্যবহারকারী
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-section="payments">
+                    <a class="nav-link" onclick="showSection('payments')">
                         <i class="fas fa-credit-card"></i>
                         পেমেন্ট
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" onclick="logout()">
-                        <i class="fas fa-sign-out-alt"></i>
-                        লগআউট
                     </a>
                 </li>
             </ul>
@@ -585,9 +614,9 @@
                 <div class="table-container">
                     <div class="table-header">
                         <h3 class="table-title">সাম্প্রতিক বিশেষজ্ঞ আবেদন</h3>
-                        <a href="#professionals" class="btn btn-primary" onclick="showSection('professionals')">
+                        <button class="btn btn-primary" onclick="showSection('professionals')">
                             <i class="fas fa-eye"></i> সব দেখুন
-                        </a>
+                        </button>
                     </div>
                     <table class="table">
                         <thead>
@@ -601,7 +630,12 @@
                             </tr>
                         </thead>
                         <tbody id="recentProfessionals">
-                            <!-- Will be loaded dynamically -->
+                            <tr>
+                                <td colspan="6" class="empty-state">
+                                    <i class="fas fa-user-cog"></i>
+                                    <div>কোন আবেদন নেই</div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -609,9 +643,9 @@
                 <div class="table-container" style="margin-top: 1.5rem;">
                     <div class="table-header">
                         <h3 class="table-title">সাম্প্রতিক সেবা অনুরোধ</h3>
-                        <a href="#service-requests" class="btn btn-primary" onclick="showSection('service-requests')">
+                        <button class="btn btn-primary" onclick="showSection('service-requests')">
                             <i class="fas fa-eye"></i> সব দেখুন
-                        </a>
+                        </button>
                     </div>
                     <table class="table">
                         <thead>
@@ -624,7 +658,12 @@
                             </tr>
                         </thead>
                         <tbody id="recentRequests">
-                            <!-- Will be loaded dynamically -->
+                            <tr>
+                                <td colspan="5" class="empty-state">
+                                    <i class="fas fa-tools"></i>
+                                    <div>কোন অনুরোধ নেই</div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -658,7 +697,12 @@
                             </tr>
                         </thead>
                         <tbody id="professionalsTable">
-                            <!-- Will be loaded dynamically -->
+                            <tr>
+                                <td colspan="8" class="empty-state">
+                                    <i class="fas fa-user-cog"></i>
+                                    <div>কোন বিশেষজ্ঞ আবেদন নেই</div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -693,7 +737,12 @@
                             </tr>
                         </thead>
                         <tbody id="requestsTable">
-                            <!-- Will be loaded dynamically -->
+                            <tr>
+                                <td colspan="8" class="empty-state">
+                                    <i class="fas fa-tools"></i>
+                                    <div>কোন সেবা অনুরোধ নেই</div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -716,7 +765,12 @@
                             </tr>
                         </thead>
                         <tbody id="usersTable">
-                            <!-- Users will be loaded here -->
+                            <tr>
+                                <td colspan="7" class="empty-state">
+                                    <i class="fas fa-users"></i>
+                                    <div>কোন ব্যবহারকারী নেই</div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -739,7 +793,12 @@
                             </tr>
                         </thead>
                         <tbody id="paymentsTable">
-                            <!-- Payments will be loaded here -->
+                            <tr>
+                                <td colspan="7" class="empty-state">
+                                    <i class="fas fa-credit-card"></i>
+                                    <div>কোন পেমেন্ট নেই</div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -782,54 +841,54 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 Admin dashboard loading...');
             checkAdminAccess();
+            setupNavigation();
         });
 
         // Single admin access check function
         function checkAdminAccess() {
-    console.log('🔐 Checking admin access...');
-    
-    const userToken = localStorage.getItem('nibash_token');
-    const userData = localStorage.getItem('nibash_user');
-    
-    if (!userToken || !userData) {
-        console.log('❌ No admin session found');
-        alert('Please login to admin panel');
-        window.location.href = 'admin-login.html';
-        return;
-    }
-    
-    try {
-        const user = JSON.parse(userData);
-        
-        // Simple check for admin
-        const isAdmin = user.role === 'admin' || 
-                       user.account_type === 'admin' ||
-                       user.email.includes('admin') ||
-                       user.email.endsWith('@nibash.org');
-        
-        if (!isAdmin) {
-            console.log('❌ Not an admin:', user.email);
-            alert('Admin access only');
-            window.location.href = 'index.html';
-            return;
+            console.log('🔐 Checking admin access...');
+            
+            const userToken = localStorage.getItem('nibash_token');
+            const userData = localStorage.getItem('nibash_user');
+            
+            if (!userToken || !userData) {
+                console.log('❌ No admin session found');
+                alert('দয়া করে এডমিন প্যানেলে লগইন করুন');
+                window.location.href = 'admin-login.html';
+                return;
+            }
+            
+            try {
+                const user = JSON.parse(userData);
+                
+                // Simple check for admin
+                const isAdmin = user.role === 'admin' || 
+                               user.account_type === 'admin' ||
+                               user.email.includes('admin') ||
+                               user.email.endsWith('@nibash.org');
+                
+                if (!isAdmin) {
+                    console.log('❌ Not an admin:', user.email);
+                    alert('এডমিন এক্সেস প্রয়োজন');
+                    window.location.href = 'index.html';
+                    return;
+                }
+                
+                console.log('✅ Admin verified:', user.email);
+                currentAdmin = user;
+                initAdminPanel();
+                
+            } catch (error) {
+                console.error('Admin check error:', error);
+                window.location.href = 'admin-login.html';
+            }
         }
-        
-        console.log('✅ Admin verified:', user.email);
-        currentAdmin = user;
-        initAdminPanel();
-        
-    } catch (error) {
-        console.error('Admin check error:', error);
-        window.location.href = 'admin-login.html';
-    }
-}
 
         // Initialize admin panel
         function initAdminPanel() {
             console.log('🎯 Initializing admin panel...');
             
             updateUserInfo();
-            setupNavigation();
             loadDashboardData();
             loadAllProfessionals();
             loadAllServiceRequests();
@@ -839,48 +898,64 @@
 
         // Update user info display
         function updateUserInfo() {
-            const userInfo = document.getElementById('userInfo');
-            if (!userInfo || !currentAdmin) return;
+            const adminName = document.getElementById('adminName');
+            const adminEmail = document.getElementById('adminEmail');
+            const userAvatar = document.querySelector('.user-avatar');
             
-            const userName = currentAdmin.fullName || 'এডমিন';
-            const userInitial = userName.charAt(0).toUpperCase();
-            
-            userInfo.innerHTML = `
-                <div class="user-avatar">${userInitial}</div>
-                <div>
-                    <div style="font-weight: 600;">${userName}</div>
-                    <div style="font-size: 0.85rem; color: #94a3b8;">সিস্টেম এডমিন</div>
-                </div>
-            `;
+            if (currentAdmin) {
+                if (adminName) adminName.textContent = currentAdmin.fullName || 'এডমিন';
+                if (adminEmail) adminEmail.textContent = currentAdmin.email || 'admin@nibash.org';
+                if (userAvatar && currentAdmin.fullName) {
+                    userAvatar.textContent = currentAdmin.fullName.charAt(0).toUpperCase();
+                }
+            }
         }
 
+        // Setup navigation
         function setupNavigation() {
-            const navLinks = document.querySelectorAll('.nav-link[data-section]');
+            const navLinks = document.querySelectorAll('.nav-link');
             
             navLinks.forEach(link => {
                 link.addEventListener('click', function() {
-                    const sectionId = this.getAttribute('data-section');
-                    
                     // Update active states
                     navLinks.forEach(l => l.classList.remove('active'));
                     this.classList.add('active');
-                    
-                    // Show selected section
-                    showSection(sectionId);
                 });
             });
         }
 
+        // Show/Hide sections - FIXED FUNCTION
         function showSection(sectionId) {
-            // Hide all sections
+            console.log('Showing section:', sectionId);
+            
+            // Update active nav
+            document.querySelectorAll('.nav-link').forEach(nav => {
+                nav.classList.remove('active');
+            });
+            
+            // Find and activate the clicked nav link
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                if (link.getAttribute('onclick') && link.getAttribute('onclick').includes(sectionId)) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Update active section
             document.querySelectorAll('.section').forEach(section => {
                 section.classList.remove('active');
             });
             
-            // Show selected section
-            const section = document.getElementById(sectionId + 'Section');
-            if (section) {
-                section.classList.add('active');
+            // Special handling for service-requests section
+            if (sectionId === 'service-requests') {
+                document.getElementById('serviceRequestsSection').classList.add('active');
+            } else {
+                const sectionElement = document.getElementById(sectionId + 'Section');
+                if (sectionElement) {
+                    sectionElement.classList.add('active');
+                } else {
+                    console.error('Section not found:', sectionId + 'Section');
+                }
             }
         }
 
@@ -921,8 +996,8 @@
             if (recent.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="6" style="text-align: center; padding: 2rem; color: #94a3b8;">
-                            <i class="fas fa-user-cog" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                        <td colspan="6" class="empty-state">
+                            <i class="fas fa-user-cog"></i>
                             <div>কোন আবেদন নেই</div>
                         </td>
                     </tr>
@@ -958,8 +1033,8 @@
             if (recent.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="5" style="text-align: center; padding: 2rem; color: #94a3b8;">
-                            <i class="fas fa-tools" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                        <td colspan="5" class="empty-state">
+                            <i class="fas fa-tools"></i>
                             <div>কোন অনুরোধ নেই</div>
                         </td>
                     </tr>
@@ -990,8 +1065,8 @@
             if (applications.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="8" style="text-align: center; padding: 2rem; color: #94a3b8;">
-                            <i class="fas fa-user-cog" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                        <td colspan="8" class="empty-state">
+                            <i class="fas fa-user-cog"></i>
                             <div>কোন বিশেষজ্ঞ আবেদন নেই</div>
                         </td>
                     </tr>
@@ -1062,8 +1137,8 @@
             if (requests.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="8" style="text-align: center; padding: 2rem; color: #94a3b8;">
-                            <i class="fas fa-tools" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                        <td colspan="8" class="empty-state">
+                            <i class="fas fa-tools"></i>
                             <div>কোন সেবা অনুরোধ নেই</div>
                         </td>
                     </tr>
@@ -1121,8 +1196,8 @@
             if (users.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="7" style="text-align: center; padding: 2rem; color: #94a3b8;">
-                            <i class="fas fa-users" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                        <td colspan="7" class="empty-state">
+                            <i class="fas fa-users"></i>
                             <div>কোন ব্যবহারকারী নেই</div>
                         </td>
                     </tr>
@@ -1159,8 +1234,8 @@
             if (payments.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="7" style="text-align: center; padding: 2rem; color: #94a3b8;">
-                            <i class="fas fa-credit-card" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                        <td colspan="7" class="empty-state">
+                            <i class="fas fa-credit-card"></i>
                             <div>কোন পেমেন্ট নেই</div>
                         </td>
                     </tr>
@@ -1473,9 +1548,9 @@
 
         function logout() {
             if (confirm('আপনি কি লগআউট করতে চান?')) {
+                localStorage.removeItem('nibash_token');
                 localStorage.removeItem('nibash_user');
-                localStorage.removeItem('user_role');
-                window.location.href = 'index.html';
+                window.location.href = 'admin-login.html';
             }
         }
 

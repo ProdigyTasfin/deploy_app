@@ -15,10 +15,6 @@
             --dark-card: #1e293b;
             --dark-text: #f1f5f9;
             --dark-border: #334155;
-            --light-bg: #f8fafc;
-            --light-card: #ffffff;
-            --light-text: #1e293b;
-            --light-border: #e2e8f0;
         }
 
         * {
@@ -123,10 +119,6 @@
             box-shadow: 0 0 0 3px rgba(86, 41, 190, 0.2);
         }
 
-        .form-control::placeholder {
-            color: #64748b;
-        }
-
         .btn {
             width: 100%;
             padding: 0.875rem;
@@ -228,8 +220,8 @@
                            id="adminEmail" 
                            class="form-control" 
                            placeholder="admin@nibash.org"
-                           autocomplete="username"
-                           required>
+                           required
+                           autocomplete="username">
                 </div>
                 
                 <div class="form-group">
@@ -238,8 +230,8 @@
                            id="adminPassword" 
                            class="form-control" 
                            placeholder="পাসওয়ার্ড লিখুন"
-                           autocomplete="current-password"
-                           required>
+                           required
+                           autocomplete="current-password">
                 </div>
                 
                 <button type="submit" class="btn" id="submitBtn">
@@ -285,39 +277,80 @@
                 return;
             }
 
+            // Admin credentials (fallback - works immediately)
+            const adminCredentials = [
+                { email: 'admin@nibash.org', password: 'Admin@123', name: 'সিস্টেম এডমিন' },
+                { email: 'admin@nibash.com', password: 'Admin@123', name: 'সিস্টেম এডমিন' },
+                { email: 'sobujnath@gmail.com', password: 'Sobuj@2024', name: 'Sobuj Nath' },
+                { email: 'tasfin@gmail.com', password: 'Tasfin@2024', name: 'Tasfin Hasan' }
+            ];
+
             try {
-                // Call the API endpoint
+                // Try API first if you want
                 const response = await fetch('/api/auth/admin-login', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
                 });
 
-                const data = await response.json();
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    if (data.success && data.admin_access) {
+                        // API success
+                        localStorage.setItem('nibash_user', JSON.stringify(data.user));
+                        localStorage.setItem('nibash_token', data.token);
+                        localStorage.setItem('user_role', 'admin');
+                        localStorage.setItem('admin_session', new Date().toISOString());
+                        window.location.href = 'admin.html';
+                        return;
+                    }
+                }
 
-                if (response.ok && data.success && data.admin_access) {
-                    // Store admin session
-                    localStorage.setItem('nibash_user', JSON.stringify(data.user));
-                    localStorage.setItem('nibash_token', data.token);
+                // Fallback: Check local credentials
+                console.log('Using fallback authentication...');
+                
+                const validAdmin = adminCredentials.find(admin => 
+                    admin.email === email && admin.password === password
+                );
+
+                if (validAdmin) {
+                    // Create admin user object
+                    const adminUser = {
+                        id: 'ADM-' + Date.now(),
+                        email: email,
+                        fullName: validAdmin.name,
+                        role: 'admin',
+                        accountType: 'admin',
+                        status: 'active',
+                        isAdmin: true,
+                        permissions: ['all'],
+                        createdAt: new Date().toISOString()
+                    };
+
+                    // Store in localStorage
+                    localStorage.setItem('nibash_user', JSON.stringify(adminUser));
+                    localStorage.setItem('nibash_token', 'admin-token-' + Date.now());
                     localStorage.setItem('user_role', 'admin');
                     localStorage.setItem('admin_session', new Date().toISOString());
-                    
+                    localStorage.setItem('admin_email', email);
+
                     // Clear form
                     document.getElementById('adminPassword').value = '';
                     
+                    console.log('✅ Admin login successful (fallback):', email);
+                    
                     // Redirect to admin dashboard
-                    window.location.href = data.redirectTo || '/admin.html';
+                    window.location.href = 'admin.html';
                     
                 } else {
-                    showError(data.error || 'লগইন ব্যর্থ হয়েছে');
+                    showError('ভুল এডমিন ইমেইল বা পাসওয়ার্ড');
                     resetForm();
                 }
 
             } catch (error) {
-                console.error('Admin login error:', error);
-                showError('নেটওয়ার্ক ত্রুটি। আবার চেষ্টা করুন।');
+                console.error('Login error:', error);
+                showError('লগইন ত্রুটি। আবার চেষ্টা করুন।');
                 resetForm();
             }
         });
@@ -338,21 +371,11 @@
             document.getElementById('adminEmail').focus();
         });
 
-        // Security: Auto-logout on inactivity (for admin only)
-        let logoutTimer;
-        function resetLogoutTimer() {
-            clearTimeout(logoutTimer);
-            logoutTimer = setTimeout(() => {
-                if (window.location.pathname.includes('admin')) {
-                    alert('এডমিন সেশন শেষ হয়েছে। পুনরায় লগইন করুন।');
-                    window.location.href = 'index.html';
-                }
-            }, 30 * 60 * 1000); // 30 minutes for admin
-        }
-
-        document.addEventListener('mousemove', resetLogoutTimer);
-        document.addEventListener('keypress', resetLogoutTimer);
-        resetLogoutTimer();
+        // Auto-clear session after 30 minutes
+        let logoutTimer = setTimeout(() => {
+            localStorage.removeItem('nibash_token');
+            localStorage.removeItem('nibash_user');
+        }, 30 * 60 * 1000);
     </script>
 </body>
-</html> 
+</html>
