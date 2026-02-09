@@ -10,6 +10,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
+    <style>
         :root {
             --primary: #5629be;
             --primary-light: #a78bfa;
@@ -540,11 +541,8 @@
                 font-size: 1.5rem;
             }
         }
-    
+
         /* Global glass hover enhancement */
-        body, button, input, select, textarea {
-            font-family: 'Hind Siliguri', 'Kalpurush', system-ui, sans-serif;
-        }
         .card, .stat-card, .service-card, .signup-card, .login-card, .feature-card, .section {
             transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
         }
@@ -553,7 +551,6 @@
             box-shadow: 0 16px 35px rgba(86, 41, 190, 0.18);
             border-color: rgba(167, 139, 250, 0.5);
         }
-
     </style>
 </head>
 <body class="dark-mode">
@@ -674,402 +671,321 @@
         </div>
     </div>
 
-   <script>
-    // Theme Management
-    const themeToggle = document.getElementById('themeToggle');
-    const themeIcon = themeToggle.querySelector('i');
-        // Legacy localStorage login flow removed.
+    <script>
+        // Theme Management
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
 
-    // Load theme from localStorage
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    document.body.classList.add(`${savedTheme}-mode`);
-    themeIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-    
-    themeToggle.addEventListener('click', () => {
-        if (document.body.classList.contains('dark-mode')) {
-            document.body.classList.remove('dark-mode');
-            document.body.classList.add('light-mode');
-            localStorage.setItem('theme', 'light');
-            themeIcon.className = 'fas fa-moon';
-        } else {
-            document.body.classList.remove('light-mode');
-            document.body.classList.add('dark-mode');
-            localStorage.setItem('theme', 'dark');
-            themeIcon.className = 'fas fa-sun';
-        }
-    });
-
-    // Initialize Login Page
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('🔍 Login page loaded');
+        // Load theme from localStorage
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.body.classList.add(`${savedTheme}-mode`);
+        themeIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
         
-        // Production mode: no local dummy users are created.
-        
-        setupPasswordToggle();
-        setupRoleSelection();
-        setupFormValidation();
-        setupFormSubmission();
-        checkAutoLogin();
-        
-        // Debug info
-        console.log('✅ login.js loaded successfully');
-        console.log('📝 Form elements:');
-        console.log('- Email:', document.getElementById('email') ? 'Found' : 'Missing');
-        console.log('- Password:', document.getElementById('password') ? 'Found' : 'Missing');
-        console.log('- Role:', document.getElementById('role') ? 'Found' : 'Missing');
-        console.log('- Submit Button:', document.getElementById('submitBtn') ? 'Found' : 'Missing');
-        console.log('🌐 API will use relative URL: /api/login');
-    });
-
-    // Password Toggle
-    function setupPasswordToggle() {
-        const toggleBtn = document.getElementById('togglePassword');
-        const passwordInput = document.getElementById('password');
-        
-        toggleBtn.addEventListener('click', function() {
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-            this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+        themeToggle.addEventListener('click', () => {
+            if (document.body.classList.contains('dark-mode')) {
+                document.body.classList.remove('dark-mode');
+                document.body.classList.add('light-mode');
+                localStorage.setItem('theme', 'light');
+                themeIcon.className = 'fas fa-moon';
+            } else {
+                document.body.classList.remove('light-mode');
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+                themeIcon.className = 'fas fa-sun';
+            }
         });
-    }
 
-    // Role Selection
-    function setupRoleSelection() {
-        const roleOptions = document.querySelectorAll('.role-option');
-        const roleInput = document.getElementById('role');
-        
-        roleOptions.forEach(option => {
-            option.addEventListener('click', function() {
-                // Remove selected class from all options
-                roleOptions.forEach(opt => opt.classList.remove('selected'));
-                
-                // Add selected class to clicked option
-                this.classList.add('selected');
-                
-                // Update hidden input value
-                const selectedRole = this.getAttribute('data-role');
-                roleInput.value = selectedRole;
-                
-                console.log('✅ Role selected:', selectedRole);
+        // Initialize Login Page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔍 Login page loaded');
+            
+            setupPasswordToggle();
+            setupRoleSelection();
+            setupFormValidation();
+            setupFormSubmission();
+            checkAutoLogin();
+            
+            console.log('✅ login.js loaded successfully');
+            console.log('📝 Form elements:');
+            console.log('- Email:', document.getElementById('email') ? 'Found' : 'Missing');
+            console.log('- Password:', document.getElementById('password') ? 'Found' : 'Missing');
+            console.log('- Role:', document.getElementById('role') ? 'Found' : 'Missing');
+            console.log('- Submit Button:', document.getElementById('submitBtn') ? 'Found' : 'Missing');
+            console.log('🌐 API will use: /api/auth/login');
+        });
+
+        // Password Toggle
+        function setupPasswordToggle() {
+            const toggleBtn = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('password');
+            
+            toggleBtn.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
             });
-        });
-        
-        // Select customer by default
-        roleOptions[0].classList.add('selected');
-    }
+        }
 
-    // Form Validation
-    function setupFormValidation() {
-        const form = document.getElementById('loginForm');
-        const inputs = form.querySelectorAll('input[required]');
-        
-        inputs.forEach(input => {
-            input.addEventListener('blur', function() {
-                validateField(this);
+        // Role Selection
+        function setupRoleSelection() {
+            const roleOptions = document.querySelectorAll('.role-option');
+            const roleInput = document.getElementById('role');
+            
+            roleOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    roleOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    
+                    const selectedRole = this.getAttribute('data-role');
+                    roleInput.value = selectedRole;
+                    console.log('✅ Role selected:', selectedRole);
+                });
             });
             
-            input.addEventListener('input', function() {
-                clearError(this.id + 'Error');
-            });
-        });
-    }
-
-    function validateField(field) {
-        const value = field.value.trim();
-        const errorId = field.id + 'Error';
-        const errorElement = document.getElementById(errorId);
-        
-        switch(field.id) {
-            case 'email':
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(value)) {
-                    showError(errorElement, 'সঠিক ইমেইল ঠিকানা দিন');
-                    return false;
-                }
-                break;
-                
-            case 'password':
-                if (value.length < 6) {
-                    showError(errorElement, 'পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে');
-                    return false;
-                }
-                break;
+            // Select customer by default
+            roleOptions[0].classList.add('selected');
         }
-        
-        clearError(errorId);
-        return true;
-    }
 
-    function showError(element, message) {
-        if (element) {
-            element.textContent = message;
-            element.classList.add('show');
-        }
-    }
-
-    function clearError(errorId) {
-        const element = document.getElementById(errorId);
-        if (element) {
-            element.textContent = '';
-            element.classList.remove('show');
-        }
-    }
-
-    // Form Submission - MAIN LOGIN FUNCTION
-    function setupFormSubmission() {
-        const form = document.getElementById('loginForm');
-        const submitBtn = document.getElementById('submitBtn');
-        
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            console.log('🔄 Login form submitted');
-            
-            // Validate all fields
+        // Form Validation
+        function setupFormValidation() {
+            const form = document.getElementById('loginForm');
             const inputs = form.querySelectorAll('input[required]');
-            let isValid = true;
             
             inputs.forEach(input => {
-                if (!validateField(input)) {
-                    isValid = false;
-                }
+                input.addEventListener('blur', function() {
+                    validateField(this);
+                });
+                
+                input.addEventListener('input', function() {
+                    clearError(this.id + 'Error');
+                });
             });
+        }
+
+        function validateField(field) {
+            const value = field.value.trim();
+            const errorId = field.id + 'Error';
+            const errorElement = document.getElementById(errorId);
             
-            if (!isValid) {
-                console.log('❌ Form validation failed');
-                return;
+            switch(field.id) {
+                case 'email':
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(value)) {
+                        showError(errorElement, 'সঠিক ইমেইল ঠিকানা দিন');
+                        return false;
+                    }
+                    break;
+                    
+                case 'password':
+                    if (value.length < 6) {
+                        showError(errorElement, 'পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে');
+                        return false;
+                    }
+                    break;
             }
             
-            // Get form data
-            const formData = {
-                email: document.getElementById('email').value.trim(),
-                password: document.getElementById('password').value,
-                role: document.getElementById('role').value
-            };
+            clearError(errorId);
+            return true;
+        }
+
+        function showError(element, message) {
+            if (element) {
+                element.textContent = message;
+                element.classList.add('show');
+            }
+        }
+
+        function clearError(errorId) {
+            const element = document.getElementById(errorId);
+            if (element) {
+                element.textContent = '';
+                element.classList.remove('show');
+            }
+        }
+
+        // Form Submission - MAIN LOGIN FUNCTION
+        function setupFormSubmission() {
+            const form = document.getElementById('loginForm');
+            const submitBtn = document.getElementById('submitBtn');
             
-            console.log('📤 Login data:', formData);
-            
-            // Disable submit button
-            submitBtn.innerHTML = '<span class="loading"></span> লগইন হচ্ছে...';
-            submitBtn.disabled = true;
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                console.log('🔄 Login form submitted');
+                
+                // Validate all fields
+                const inputs = form.querySelectorAll('input[required]');
+                let isValid = true;
+                
+                inputs.forEach(input => {
+                    if (!validateField(input)) {
+                        isValid = false;
+                    }
+                });
+                
+                if (!isValid) {
+                    console.log('❌ Form validation failed');
+                    return;
+                }
+                
+                // Get form data
+                const formData = {
+                    email: document.getElementById('email').value.trim(),
+                    password: document.getElementById('password').value,
+                    role: document.getElementById('role').value
+                };
+                
+                console.log('📤 Login data:', formData);
+                
+                // Disable submit button
+                submitBtn.innerHTML = '<span class="loading"></span> লগইন হচ্ছে...';
+                submitBtn.disabled = true;
+                
+                try {
+                    await loginWithAPI(formData);
+                } catch (apiError) {
+                    console.log('❌ API login failed:', apiError.message);
+                    alert('❌ লগইন ব্যর্থ। ইমেইল ও পাসওয়ার্ড চেক করুন।');
+                } finally {
+                    // Reset button
+                    submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> লগইন করুন';
+                    submitBtn.disabled = false;
+                }
+            });
+        }
+
+        // API Login - SINGLE SOURCE OF TRUTH
+        async function loginWithAPI(formData) {
+            console.log('🌐 Calling API: /api/auth/login');
             
             try {
-                await loginWithAPI(formData);
-            } catch (apiError) {
-                console.log('❌ API login failed:', apiError.message);
-                alert('❌ লগইন ব্যর্থ। ইমেইল ও পাসওয়ার্ড চেক করুন।');
-            } finally {
-                // Reset button
-                submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> লগইন করুন';
-                submitBtn.disabled = false;
-            }
-        });
-    }
-
-    // API Login
-    async function loginWithAPI(formData) {
-        console.log('🌐 Calling API: /api/login');
-        
-        const response = await fetch('/api/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        });
-        
-        console.log('📨 Response status:', response.status);
-        
-        const data = await response.json();
-        console.log('📊 Response data:', data);
-        
-        if (response.ok && data.success) {
-            console.log('✅ API login successful!');
-            
-            // Store authenticated session
-            localStorage.setItem('nibash_user', JSON.stringify(data.user));
-            if (data.token) {
-                localStorage.setItem('nibash_token', data.token);
-            }
-            localStorage.setItem('user_role', data.user.role || data.user.accountType || 'customer');
-            
-            // Remember me
-            const rememberCheckbox = document.getElementById('remember');
-            if (rememberCheckbox?.checked) {
-                localStorage.setItem('remember_email', formData.email);
-                localStorage.setItem('remember_role', formData.role);
-            } else {
-                localStorage.removeItem('remember_email');
-                localStorage.removeItem('remember_role');
-            }
-            
-            // Redirect
-            redirectUser(data.user);
-            return;
-        } else {
-            throw new Error(data.error || 'API login failed');
-        }
-    }
-
-    // Redirect user after login
-    // FIXED: Redirect user after login - LINE ~400
-function redirectUser(userData) {
-    console.log('✅ Login successful for:', userData);
-    alert('✅ লগইন সফল! ড্যাশবোর্ডে যাচ্ছে...');
-    
-    // Determine user role
-    let userRole = userData.role || userData.accountType || userData.account_type || 'customer';
-    
-    console.log('👤 User role detected:', userRole);
-    
-    // Redirect based on role
-    setTimeout(() => {
-        if (userRole === 'admin' || userRole === 'Admin') {
-            window.location.href = 'admin.html';
-        } else if (userRole === 'professional' || userRole === 'Professional') {
-            window.location.href = 'professional.html';
-        } else if (userRole === 'customer' || userRole === 'Customer') {
-            window.location.href = 'customer.html';
-        } else {
-            // Default fallback
-            if (localStorage.getItem('selectedRole') === 'professional') {
-                window.location.href = 'professional.html';
-            } else {
-                window.location.href = 'customer.html';
-            }
-        }
-    }, 1000);
-}
-
-    // Auto-login check
-    function checkAutoLogin() {
-        const rememberedEmail = localStorage.getItem('remember_email');
-        const rememberedRole = localStorage.getItem('remember_role');
-        
-        if (rememberedEmail && rememberedRole) {
-            document.getElementById('email').value = rememberedEmail;
-            document.getElementById('role').value = rememberedRole;
-            document.getElementById('remember').checked = true;
-            
-            // Select the correct role option
-            const roleOptions = document.querySelectorAll('.role-option');
-            roleOptions.forEach(option => {
-                option.classList.remove('selected');
-                if (option.getAttribute('data-role') === rememberedRole) {
-                    option.classList.add('selected');
-                }
-            });
-            
-            console.log('🔑 Auto-filled remembered login:', rememberedEmail);
-        }
-    }
-    async function loginUser() {
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const role = document.getElementById('role').value;
-    
-    if (!email || !password || !role) {
-        showNotification('Please fill in all fields');
-        return;
-    }
-    
-    const loginBtn = document.querySelector('.login-btn');
-    const originalText = loginBtn.innerHTML;
-    loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> লগইন হচ্ছে...';
-    loginBtn.disabled = true;
-    
-    try {
-        console.log('Login attempt:', { email, role });
-        
-        const response = await fetch('/api/auth/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                email: email,
-                password: password,
-                role: role
-            })
-        });
-        
-        const data = await response.json();
-        
-        if (!response.ok) {
-            throw new Error(data.error || 'Login failed');
-        }
-        
-        if (data.success) {
-            localStorage.setItem('nibash_user', JSON.stringify(data.user));
-            localStorage.setItem('nibash_token', data.token);
-            
-            showNotification('লগইন সফল! রিডাইরেক্ট করা হচ্ছে...', 'success');
-            
-            setTimeout(() => {
-                if (data.redirectTo) {
-                    window.location.href = data.redirectTo;
-                } else {
-                    switch(role) {
-                        case 'admin':
-                            window.location.href = '/admin.html';
-                            break;
-                        case 'professional':
-                            window.location.href = '/professional.html';
-                            break;
-                        case 'customer':
-                        default:
-                            window.location.href = '/customer.html';
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                console.log('📨 Response status:', response.status);
+                
+                const data = await response.json();
+                console.log('📊 Response data:', data);
+                
+                if (response.ok && data.success) {
+                    console.log('✅ API login successful!');
+                    
+                    // Store authenticated session
+                    localStorage.setItem('nibash_user', JSON.stringify(data.user));
+                    if (data.token) {
+                        localStorage.setItem('nibash_token', data.token);
                     }
+                    
+                    // Remember me
+                    const rememberCheckbox = document.getElementById('remember');
+                    if (rememberCheckbox?.checked) {
+                        localStorage.setItem('remember_email', formData.email);
+                        localStorage.setItem('remember_role', formData.role);
+                    } else {
+                        localStorage.removeItem('remember_email');
+                        localStorage.removeItem('remember_role');
+                    }
+                    
+                    // Redirect
+                    redirectUser(data.user);
+                    return true;
+                } else {
+                    throw new Error(data.error || 'API login failed');
+                }
+            } catch (error) {
+                console.error('❌ Network error:', error);
+                alert('❌ নেটওয়ার্ক ত্রুটি। ইন্টারনেট চেক করুন।');
+                return false;
+            }
+        }
+
+        // Redirect user after login
+        function redirectUser(userData) {
+            console.log('✅ Login successful for:', userData);
+            alert('✅ লগইন সফল! ড্যাশবোর্ডে যাচ্ছে...');
+            
+            // Determine user role
+            let userRole = userData.role || userData.accountType || userData.account_type || 'customer';
+            userRole = userRole.toLowerCase();
+            
+            console.log('👤 User role detected:', userRole);
+            
+            // Redirect based on role
+            setTimeout(() => {
+                if (userRole.includes('admin')) {
+                    window.location.href = 'admin.html';
+                } else if (userRole.includes('professional')) {
+                    window.location.href = 'professional.html';
+                } else {
+                    window.location.href = 'customer.html';
                 }
             }, 1000);
-        } else {
-            throw new Error(data.error || 'Login failed');
         }
-        
-    } catch (error) {
-        console.error('Login error:', error);
-        showNotification(error.message || 'Login failed. Please try again.');
-        loginBtn.innerHTML = originalText;
-        loginBtn.disabled = false;
-    }
-}
 
-    // Social Login
-    function loginWithFacebook() {
-        console.log('Facebook login clicked');
-        alert('Facebook লগইন শীঘ্রই যুক্ত হবে।');
-    }
-
-    function loginWithGoogle() {
-        console.log('Google login clicked');
-        alert('Google লগইন শীঘ্রই যুক্ত হবে।');
-    }
-
-    // Forgot Password
-    function forgotPassword() {
-        const email = prompt('আপনার ইমেইল ঠিকানা লিখুন:');
-        if (email) {
-            alert('পাসওয়ার্ড রিসেট লিংক ' + email + ' ঠিকানায় পাঠানো হয়েছে।');
-        }
-    }
-
-    // Test API endpoint
-    window.testAPI = async function() {
-        console.log('🧪 Testing API endpoints...');
-        
-        const endpoints = ['/api/login', '/api/signup', '/api/test'];
-        
-        for (const endpoint of endpoints) {
-            try {
-                console.log(`🔍 Testing: ${endpoint}`);
-                const response = await fetch(endpoint, { method: 'GET' });
-                console.log(`✅ ${endpoint}: ${response.status}`);
-            } catch (error) {
-                console.log(`❌ ${endpoint}: ${error.message}`);
+        // Auto-login check
+        function checkAutoLogin() {
+            const rememberedEmail = localStorage.getItem('remember_email');
+            const rememberedRole = localStorage.getItem('remember_role');
+            
+            if (rememberedEmail && rememberedRole) {
+                document.getElementById('email').value = rememberedEmail;
+                document.getElementById('role').value = rememberedRole;
+                document.getElementById('remember').checked = true;
+                
+                // Select the correct role option
+                const roleOptions = document.querySelectorAll('.role-option');
+                roleOptions.forEach(option => {
+                    option.classList.remove('selected');
+                    if (option.getAttribute('data-role') === rememberedRole) {
+                        option.classList.add('selected');
+                    }
+                });
+                
+                console.log('🔑 Auto-filled remembered login:', rememberedEmail);
             }
         }
-    };
-</script>
+
+        // Social Login
+        function loginWithFacebook() {
+            console.log('Facebook login clicked');
+            alert('Facebook লগইন শীঘ্রই যুক্ত হবে।');
+        }
+
+        function loginWithGoogle() {
+            console.log('Google login clicked');
+            alert('Google লগইন শীঘ্রই যুক্ত হবে।');
+        }
+
+        // Forgot Password
+        function forgotPassword() {
+            const email = prompt('আপনার ইমেইল ঠিকানা লিখুন:');
+            if (email) {
+                alert('পাসওয়ার্ড রিসেট লিংক ' + email + ' ঠিকানায় পাঠানো হয়েছে।');
+            }
+        }
+
+        // Test API endpoint
+        window.testAPI = async function() {
+            console.log('🧪 Testing API endpoints...');
+            
+            const endpoints = ['/api/auth/login', '/api/signup', '/api/test'];
+            
+            for (const endpoint of endpoints) {
+                try {
+                    console.log(`🔍 Testing: ${endpoint}`);
+                    const response = await fetch(endpoint, { method: 'GET' });
+                    console.log(`✅ ${endpoint}: ${response.status}`);
+                } catch (error) {
+                    console.log(`❌ ${endpoint}: ${error.message}`);
+                }
+            }
+        };
+    </script>
 </body>
 </html>
