@@ -1,32 +1,47 @@
 # robots.txt for nibash.org
-# Generated: 2024-02-09
+# Generated: 2026-02-09
 # Site: Professional Service Marketplace
 # Tech: Node.js/Express, Static HTML
 
 User-agent: *
 Allow: /
 
-# Block API and backend
+# Block ALL API endpoints (your actual routes)
 Disallow: /api/
-Disallow: /node_modules/
-Disallow: /database/
+Disallow: /api/auth/
+Disallow: /api/payment/
+Disallow: /api/payments/
+Disallow: /api/services/
 
-# Block config files
-Disallow: /package.json
-Disallow: /package-lock.json
-Disallow: /*.json$
+# Block admin areas (your actual files)
+Disallow: /admin.html
+Disallow: /admin-login.html
 
-# Block admin areas
-Disallow: /admin
-Disallow: /admin-login
+# Block development/test endpoints
+Disallow: /api/test
 
-# Block temporary/development
-Disallow: /test
-Disallow: /tmp/
-Disallow: /backup/
+# Block sensitive user pages (login-gated)
+Disallow: /customer-dashboard.html
+Disallow: /profile.html
 
-# Respectful crawl rate
-Crawl-delay: 1
+# Allow public pages (these will be crawled):
+# - index.html (homepage)
+# - professional.html
+# - employer.html  
+# - customer.html
+# - about-us.html
+# - terms-of-service.html
+# - privacy-policy.html
+# - cookie-policy.html
+# - data-request.html
+# - login.html (public login page)
+# - forgot-password.html
+# - professional-signup.html
+# - customer-signup.html
+# - payment.html
+# - payment-success.html
+# - payment-cancel.html
+# - payment-failed.html
 
-# Note: Sitemap will be added when generated
+# Note: Sitemap will be added when actually generated
 # Sitemap: https://nibash.org/sitemap.xml
