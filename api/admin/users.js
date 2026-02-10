@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { supabase } = require('../db');
+const { supabase, supabaseAdmin } = require('../db');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -15,19 +15,26 @@ module.exports = async (req, res) => {
   try { decoded = jwt.verify(token, process.env.JWT_SECRET || 'nibash-secret-key-2024'); }
   catch { return res.status(401).json({ success: false, error: 'Invalid or expired token' }); }
 
-  const status = req.query.status || 'pending';
-  const { data, error } = await supabase
-    .from('service_requests')
-    .select(`
-      id, service_type, title, description, address, preferred_date, preferred_time, status, created_at,
-      customer:users!service_requests_customer_id_fkey(id, full_name, phone),
-      professional:users!service_requests_professional_id_fkey(id, full_name, phone)
-    `)
-    .eq('status', status)
+  if (decoded.role !== 'admin') return res.status(403).json({ success: false, error: 'Forbidden' });
+
+  const dbClient = supabaseAdmin || supabase;
+
+  const { data: users, error } = await dbClient
+    .from('users')
+    .select('id, email, full_name, phone, role, status, created_at')
     .order('created_at', { ascending: false });
 
   if (error) return res.status(500).json({ success: false, error: error.message });
 
-  const requests = (data || []).filter((row) => decoded.role === 'admin' || decoded.role === 'professional' || row.customer?.id === decoded.id);
-  return res.json({ success: true, requests });
+  const userIds = (users || []).map((u) => u.id);
+  let professionals = [];
+  if (userIds.length > 0) {
+    const { data: proData } = await dbClient
+      .from('professionals')
+      .select('user_id, service_type, is_verified, is_active, experience_years, hourly_rate')
+      .in('user_id', userIds);
+    professionals = proData || [];
+  }
+
+  return res.json({ success: true, users, professionals });
 };

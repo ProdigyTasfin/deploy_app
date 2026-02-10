@@ -1561,6 +1561,85 @@
                 closeModal();
             }
         });
+
+        // Realtime admin data (polling fallback)
+        let adminRealtimeTimer = null;
+        async function fetchAdminData() {
+            const token = localStorage.getItem('nibash_token');
+            const res = await fetch('/api/admin/users', { headers: { 'Authorization': `Bearer ${token}` } });
+            const payload = await res.json();
+            if (!res.ok || !payload.success) throw new Error(payload.error || 'Failed to fetch admin data');
+            return payload;
+        }
+
+        async function loadDashboardData() {
+            try {
+                const payload = await fetchAdminData();
+                const users = payload.users || [];
+                const professionals = payload.professionals || [];
+                document.getElementById('totalUsers').textContent = users.length;
+                document.getElementById('pendingProfessionals').textContent = professionals.filter((p) => !p.is_verified).length;
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        async function loadAllUsers() {
+            const tbody = document.getElementById('usersTable');
+            try {
+                const payload = await fetchAdminData();
+                const users = payload.users || [];
+                tbody.innerHTML = users.map(user => `
+                    <tr>
+                        <td>${user.full_name || 'N/A'}</td>
+                        <td>${user.email}</td>
+                        <td>${user.phone || 'N/A'}</td>
+                        <td>${user.role}</td>
+                        <td><span class="status-badge ${user.status === 'active' ? 'status-active' : 'status-pending'}">${user.status}</span></td>
+                        <td>${new Date(user.created_at).toLocaleDateString('bn-BD')}</td>
+                        <td>-</td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                tbody.innerHTML = '<tr><td colspan="7" class="empty-state">ডাটা লোড করা যায়নি</td></tr>';
+            }
+        }
+
+        async function loadAllProfessionals() {
+            const tbody = document.getElementById('professionalsTable');
+            try {
+                const payload = await fetchAdminData();
+                const users = payload.users || [];
+                const pros = payload.professionals || [];
+                const rows = pros.map((p) => {
+                    const u = users.find((x) => x.id === p.user_id) || {};
+                    return `
+                        <tr>
+                            <td>${u.full_name || 'N/A'}</td>
+                            <td>${u.email || 'N/A'}</td>
+                            <td>${p.service_type || 'N/A'}</td>
+                            <td>${p.experience_years || 0} বছর</td>
+                            <td>${p.hourly_rate || 0}</td>
+                            <td><span class="status-badge ${p.is_verified ? 'status-approved' : 'status-pending'}">${p.is_verified ? 'approved' : 'pending'}</span></td>
+                            <td>-</td>
+                        </tr>
+                    `;
+                });
+                tbody.innerHTML = rows.join('') || '<tr><td colspan="7" class="empty-state">কোন প্রফেশনাল নেই</td></tr>';
+            } catch (error) {
+                tbody.innerHTML = '<tr><td colspan="7" class="empty-state">ডাটা লোড করা যায়নি</td></tr>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (adminRealtimeTimer) clearInterval(adminRealtimeTimer);
+            adminRealtimeTimer = setInterval(() => {
+                loadDashboardData();
+                loadAllUsers();
+                loadAllProfessionals();
+            }, 10000);
+        });
+
     </script>
 </body>
 </html>
