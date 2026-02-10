@@ -27,10 +27,7 @@ module.exports = async (req, res) => {
 
     // --- Validation ---
     if (!email || !password || !full_name || !phone) {
-      return res.status(400).json({
-        success: false,
-        error: 'All required fields must be filled'
-      });
+      return res.status(400).json({ success: false, error: 'All required fields must be filled' });
     }
 
     if (!['customer', 'professional', 'admin'].includes(role)) {
@@ -59,6 +56,16 @@ module.exports = async (req, res) => {
         success: false,
         error: 'Email already registered'
       });
+      if (authError) return res.status(500).json({ success: false, error: authError.message });
+      authUserId = createdAuthUser.user?.id;
+    } else {
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { data: { full_name, role } }
+      });
+      if (signUpError) return res.status(500).json({ success: false, error: signUpError.message });
+      authUserId = signUpData.user?.id;
     }
 
     // --- Create auth user (admin preferred, fallback safe) ---

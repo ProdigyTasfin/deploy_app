@@ -935,7 +935,7 @@
                     localStorage.setItem('nibash_user', JSON.stringify({
                         id: data.user.id,
                         email: data.user.email,
-                        fullName: data.user.fullName,
+                        fullName: data.user.fullName || data.user.full_name,
                         role: data.user.role
                     }));
                     
