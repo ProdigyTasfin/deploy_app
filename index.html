@@ -992,10 +992,10 @@
 
         <!-- CTA Section -->
         <section class="cta-section">
-            <h2 style="margin-bottom: 1rem;">আপনার সমস্যার সমাধান এখন মাত্র কয়েক ক্লিক দূরে</h2>
-            <p style="margin-bottom: 2rem; opacity: 0.9;">আজই নিবাসের সাথে যুক্ত হোন এবং গৃহস্থালির সকল সমস্যা থেকে মুক্তি পান।</p>
+            <h2 style="margin-bottom: 1rem;">আজকের জরুরি স্লট প্রায় পূর্ণ — এখনই বুক করুন</h2>
+            <p style="margin-bottom: 2rem; opacity: 0.9;">দ্রুত রেসপন্স টিমে সীমিত স্লট আছে। দেরি করলে আপনার পছন্দের সময় নাও পাওয়া যেতে পারে।</p>
             <button class="btn" style="background: white; color: var(--primary);" onclick="requestService()">
-                <i class="fas fa-phone-alt"></i> ফ্রি কনসুলটেশন নিন
+                <i class="fas fa-bolt"></i> এখনই সেবা নিন
             </button>
         </section>
     </main>
@@ -1246,14 +1246,6 @@
                 users.push(adminUser);
                 localStorage.setItem('nibash_users', JSON.stringify(users));
                 
-                // Also save admin credentials for login
-                let userCredentials = JSON.parse(localStorage.getItem('user_credentials') || '[]');
-                userCredentials.push({
-                    email: 'admin@nibash.org',
-                    password: 'admin123', // Default password
-                    role: 'admin'
-                });
-                localStorage.setItem('user_credentials', JSON.stringify(userCredentials));
                 
                 console.log('Admin user created successfully');
             }
@@ -1538,18 +1530,16 @@
         function requestService() {
             const userData = localStorage.getItem('nibash_user');
             if (!userData) {
-                showNotification('সেবা অনুরোধ করার জন্য দয়া করে লগইন করুন');
-                window.location.href = 'login.html';
+                showNotification('সেবা নিতে আগে লগইন/সাইনআপ করুন');
+                window.location.href = 'login.html?redirect=customer.html';
                 return;
             }
-            openModal('serviceModal');
+            window.location.href = 'customer.html#new-service';
         }
 
         function selectService(serviceId, serviceName) {
+            localStorage.setItem('selected_service_type', String(serviceId));
             requestService();
-            setTimeout(() => {
-                document.getElementById('serviceType').value = serviceId;
-            }, 100);
         }
 
         async function submitServiceRequest() {

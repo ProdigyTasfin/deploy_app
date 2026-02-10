@@ -870,7 +870,15 @@
                 
                 console.log('📨 Response status:', response.status);
                 
-                const data = await response.json();
+                const contentType = response.headers.get('content-type') || '';
+                let data;
+                if (contentType.includes('application/json')) {
+                    data = await response.json();
+                } else {
+                    const raw = await response.text();
+                    console.error('❌ Non-JSON login response:', raw);
+                    throw new Error(`Unexpected response format (${response.status}). Expected JSON from /api/auth/login`);
+                }
                 console.log('📊 Response data:', data);
                 
                 if (response.ok && data.success) {
@@ -974,7 +982,7 @@
         window.testAPI = async function() {
             console.log('🧪 Testing API endpoints...');
             
-            const endpoints = ['/api/auth/login', '/api/signup', '/api/test'];
+            const endpoints = ['/api/auth/login', '/api/auth/signup', '/api/test'];
             
             for (const endpoint of endpoints) {
                 try {
