@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { supabase, supabaseAdmin } = require('../db');
+const { supabase } = require('../db');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -17,9 +17,7 @@ module.exports = async (req, res) => {
 
   if (decoded.role !== 'admin') return res.status(403).json({ success: false, error: 'Forbidden' });
 
-  const dbClient = supabaseAdmin || supabase;
-
-  const { data: users, error } = await dbClient
+  const { data: users, error } = await supabase
     .from('users')
     .select('id, email, full_name, phone, role, status, created_at')
     .order('created_at', { ascending: false });
@@ -29,7 +27,7 @@ module.exports = async (req, res) => {
   const userIds = (users || []).map((u) => u.id);
   let professionals = [];
   if (userIds.length > 0) {
-    const { data: proData } = await dbClient
+    const { data: proData } = await supabase
       .from('professionals')
       .select('user_id, service_type, is_verified, is_active, experience_years, hourly_rate')
       .in('user_id', userIds);
