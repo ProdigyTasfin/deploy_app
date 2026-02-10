@@ -904,7 +904,7 @@
                     availableJobs = data.requests.map(request => ({
                         id: request.service_id || request.id,
                         service: request.service_type,
-                        customerName: request.customer_name || 'গ্রাহক',
+                        customerName: request.customer?.full_name || 'গ্রাহক',
                         location: request.address || 'ঠিকানা নেই',
                         description: request.description,
                         customerBudget: request.estimated_budget ? `৳ ${request.estimated_budget}` : '৳ ০',
@@ -1068,6 +1068,12 @@
 
         // Load earnings
         async function loadEarnings() {
+            const payoutNotice = `
+                <div style="padding:0.75rem 1rem;border:1px solid var(--border-color);border-radius:8px;margin-bottom:1rem;background:rgba(16,185,129,0.08);">
+                    অপেক্ষা করুন, আপনার অর্জিত টাকা আপনার দেওয়া বিকাশ/নগদে পাঠানো হচ্ছে।
+                </div>
+            `;
+
             const earningsDetails = document.getElementById('earningsDetails');
             
             const myJobs = JSON.parse(localStorage.getItem('professional_jobs') || '[]');
@@ -1090,6 +1096,7 @@
             });
             
             earningsDetails.innerHTML = `
+                ${payoutNotice}
                 <div class="stat-card" style="margin-bottom: 1.5rem;">
                     <div class="stat-value">৳ ${totalEarnings.toLocaleString()}</div>
                     <div class="stat-label">মোট আয়</div>

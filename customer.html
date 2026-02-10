@@ -740,6 +740,16 @@
             // Set minimum date to today for preferred date
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('preferredDate').min = today;
+
+            const preselectedType = localStorage.getItem('selected_service_type');
+            if (window.location.hash === '#new-service') {
+                openModal('serviceModal');
+            }
+            if (preselectedType) {
+                const serviceTypeEl = document.getElementById('serviceType');
+                if (serviceTypeEl) serviceTypeEl.value = preselectedType;
+                localStorage.removeItem('selected_service_type');
+            }
         });
 
         // FIXED VERSION - Session handling
@@ -1115,16 +1125,12 @@
                         'Authorization': `Bearer ${userToken}`
                     },
                     body: JSON.stringify({
-                        service_id: newService.id,
-                        service_type: newService.type,
+                        service_type: newService.typeName,
+                        title: newService.typeName,
                         description: newService.description,
                         preferred_date: newService.date,
                         preferred_time: newService.time,
-                        address: newService.address,
-                        status: newService.status,
-                        customer_name: newService.customerName,
-                        customer_id: newService.customerId,
-                        customer_phone: currentUser.phone || ''
+                        address: newService.address
                     })
                 });
 
@@ -1133,36 +1139,15 @@
                     throw new Error(serviceData.error || 'Service request failed');
                 }
 
-                // Create a pending payment
+                const requestId = serviceData.request?.id;
                 const payment = {
                     id: 'PAY-' + Date.now(),
-                    serviceId: newService.id,
+                    serviceRequestId: requestId,
                     description: `${newService.typeName} এর পেমেন্ট`,
                     amount: calculateServiceAmount(newService.type),
-                    status: 'pending',
+                    status: 'submitted',
                     date: new Date().toISOString()
                 };
-
-                const paymentResponse = await fetch('/api/payments/create', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${userToken}`
-                    },
-                    body: JSON.stringify({
-                        payment_id: payment.id,
-                        service_id: payment.serviceId,
-                        description: payment.description,
-                        amount: payment.amount,
-                        status: payment.status,
-                        customer_id: newService.customerId
-                    })
-                });
-
-                const paymentData = await paymentResponse.json();
-                if (!paymentResponse.ok || !paymentData.success) {
-                    throw new Error(paymentData.error || 'Payment creation failed');
-                }
 
                 const existingServices = JSON.parse(localStorage.getItem('user_services') || '[]');
                 existingServices.unshift(newService);
@@ -1223,7 +1208,7 @@
             }
 
             showNotification('পেমেন্ট গেটওয়েতে নেওয়া হচ্ছে...', 'success');
-            const redirectUrl = `payment.html?payment_id=${encodeURIComponent(payment.id || payment._id)}`;
+            const redirectUrl = `payment.html?payment_id=${encodeURIComponent(payment.id || payment._id)}&service_request_id=${encodeURIComponent(payment.serviceRequestId || '')}&amount=${encodeURIComponent(payment.amount || '')}`;
             setTimeout(() => {
                 window.location.href = redirectUrl;
             }, 300);
