@@ -898,7 +898,7 @@
             
             try {
                 // Use same-origin API to avoid CORS and support local development
-                const API_URL = '/api/signup';
+                const API_URL = '/api/auth/signup';
                 
                 console.log('🌐 Calling API:', API_URL);
                 
@@ -914,7 +914,15 @@
                 console.log('📨 Response status:', response.status);
                 console.log('📨 Response headers:', response.headers);
                 
-                const data = await response.json();
+                const contentType = response.headers.get('content-type') || '';
+                let data;
+                if (contentType.includes('application/json')) {
+                    data = await response.json();
+                } else {
+                    const raw = await response.text();
+                    console.error('❌ Non-JSON signup response:', raw);
+                    throw new Error(`Unexpected response format (${response.status}). Please verify API route: ${API_URL}`);
+                }
                 console.log('📊 Response data:', data);
                 
                 if (response.ok && data.success) {
@@ -936,7 +944,6 @@
                     users.push({
                         email: formData.email,
                         phone: formData.phone,
-                        password: formData.password,
                         accountType: 'customer',
                         createdAt: new Date().toISOString()
                     });
@@ -1054,7 +1061,7 @@
     console.log('- Phone:', document.getElementById('phone') ? 'Found' : 'Missing');
     console.log('- Password:', document.getElementById('password') ? 'Found' : 'Missing');
     console.log('- Submit Button:', document.getElementById('submitBtn') ? 'Found' : 'Missing');
-    console.log('🌐 API URL configured: /api/signup');
+    console.log('🌐 API URL configured: /api/auth/signup');
 </script>
 </body>
 </html>

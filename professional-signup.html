@@ -1195,13 +1195,21 @@
         submitBtn.disabled = true;
 
         try {
-            const response = await fetch('/api/signup', {
+            const response = await fetch('/api/auth/signup', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                 body: JSON.stringify(payload)
             });
 
-            const data = await response.json();
+            const contentType = response.headers.get('content-type') || '';
+            let data;
+            if (contentType.includes('application/json')) {
+                data = await response.json();
+            } else {
+                const raw = await response.text();
+                console.error('❌ Non-JSON professional signup response:', raw);
+                throw new Error(`Unexpected response format (${response.status}). Expected JSON from /api/auth/signup`);
+            }
 
             if (!response.ok || !data.success) {
                 throw new Error(data.error || 'নিবন্ধন ব্যর্থ হয়েছে');
