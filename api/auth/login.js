@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { supabase } = require('../db');
+const supabase = require('../db'); // Fixed: removed destructuring
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
