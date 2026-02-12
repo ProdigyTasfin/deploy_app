@@ -1,6 +1,9 @@
 // api/db.js - Secure Database Helper with Admin Support
 const { createClient } = require('@supabase/supabase-js');
-require('dotenv').config(); // Load environment variables
+const dotenv = require('dotenv');
+
+// Load environment variables
+dotenv.config();
 
 // ========== SECURITY WARNING ==========
 // ⚠️ NEVER commit actual keys to git
@@ -8,31 +11,25 @@ require('dotenv').config(); // Load environment variables
 // ⚠️ Consider using service role key for admin operations
 // ======================================
 
-// Use environment variables with fallbacks (development only)
-const supabaseUrl = process.env.SUPABASE_URL || 'https://kohswrhxjvfygzrldyyk.supabase.co';
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtvaHN3cmh4anZmeWd6cmxkeXlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwMzUzODgsImV4cCI6MjA4NTYxMTM4OH0.rK-SYCs-uC63581jLtuTDdYklsiL7vKtdCO7TuIdKII';
+// Validate required environment variables
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_KEY;
 
-// Service role key for admin operations (NEVER expose to client)
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || null;
+// Log warnings for missing environment variables (but don't crash in development)
+if (!supabaseUrl) {
+  console.warn('⚠️ Warning: NEXT_PUBLIC_SUPABASE_URL or SUPABASE_URL environment variable is not set');
+}
+
+if (!supabaseAnonKey) {
+  console.warn('⚠️ Warning: NEXT_PUBLIC_SUPABASE_ANON_KEY or SUPABASE_ANON_KEY environment variable is not set');
+}
 
 // Main client for general operations (limited by RLS policies)
-const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    persistSession: false,
-    autoRefreshToken: false,
-    detectSessionInUrl: false
-  },
-  global: {
-    headers: {
-      'x-application-name': 'nibash-api'
-    }
-  }
-});
-
-// Admin client for bypassing RLS (use with caution)
-let supabaseAdmin = null;
-if (supabaseServiceKey) {
-  supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
+const supabase = createClient(
+  supabaseUrl || 'https://placeholder.supabase.co', 
+  supabaseAnonKey || 'placeholder-key',
+  {
     auth: {
       persistSession: false,
       autoRefreshToken: false,
@@ -40,11 +37,35 @@ if (supabaseServiceKey) {
     },
     global: {
       headers: {
-        'x-application-name': 'nibash-admin',
-        'x-service-role': 'true'
+        'x-application-name': 'nibash-api'
       }
     }
-  });
+  }
+);
+
+// Admin client for bypassing RLS (use with extreme caution)
+let supabaseAdmin = null;
+if (supabaseServiceKey) {
+  try {
+    supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+        detectSessionInUrl: false
+      },
+      global: {
+        headers: {
+          'x-application-name': 'nibash-admin',
+          'x-service-role': 'true'
+        }
+      }
+    });
+    console.log('✅ Supabase admin client initialized');
+  } catch (error) {
+    console.error('❌ Failed to initialize Supabase admin client:', error.message);
+  }
+} else {
+  console.warn('⚠️ Warning: SUPABASE_SERVICE_ROLE_KEY is not set. Admin operations will be unavailable.');
 }
 
 // ========== DATABASE HELPERS ==========
@@ -54,22 +75,78 @@ if (supabaseServiceKey) {
  */
 async function findUserByEmail(email) {
   try {
+    if (!email) {
+      throw new Error('Email is required');
+    }
+
     const { data, error } = await supabase
       .from('users')
       .select('*')
       .eq('email', email.toLowerCase().trim())
-      .single();
+      .maybeSingle(); // FIXED: Changed from .single() to .maybeSingle()
     
     if (error) {
-      if (error.code === 'PGRST116') {
-        return null; // User not found
-      }
+      console.error('Database error in findUserByEmail:', error);
+      throw error;
+    }
+    
+    return data; // Returns null if not found
+  } catch (error) {
+    console.error('Database error in findUserByEmail:', error);
+    throw error;
+  }
+}
+
+/**
+ * Secure user lookup by ID
+ */
+async function findUserById(id) {
+  try {
+    if (!id) {
+      throw new Error('User ID is required');
+    }
+
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', id)
+      .maybeSingle(); // FIXED: Changed from .single() to .maybeSingle()
+    
+    if (error) {
+      console.error('Database error in findUserById:', error);
       throw error;
     }
     
     return data;
   } catch (error) {
-    console.error('Database error in findUserByEmail:', error);
+    console.error('Database error in findUserById:', error);
+    throw error;
+  }
+}
+
+/**
+ * Secure user lookup by auth_user_id
+ */
+async function findUserByAuthId(authUserId) {
+  try {
+    if (!authUserId) {
+      throw new Error('Auth User ID is required');
+    }
+
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('auth_user_id', authUserId)
+      .maybeSingle(); // FIXED: Changed from .single() to .maybeSingle()
+    
+    if (error) {
+      console.error('Database error in findUserByAuthId:', error);
+      throw error;
+    }
+    
+    return data;
+  } catch (error) {
+    console.error('Database error in findUserByAuthId:', error);
     throw error;
   }
 }
@@ -80,8 +157,8 @@ async function findUserByEmail(email) {
 async function createUser(userData) {
   try {
     // Validate required fields
-    if (!userData.email || !userData.password_hash) {
-      throw new Error('Email and password hash are required');
+    if (!userData.email) {
+      throw new Error('Email is required');
     }
     
     // Ensure email is lowercase
@@ -91,6 +168,9 @@ async function createUser(userData) {
     const now = new Date().toISOString();
     userData.created_at = now;
     userData.updated_at = now;
+    
+    // Set default status if not provided
+    userData.status = userData.status || 'active';
     
     const { data, error } = await supabase
       .from('users')
@@ -103,10 +183,11 @@ async function createUser(userData) {
       if (error.code === '23505') {
         throw new Error('User with this email already exists');
       }
+      console.error('Database error in createUser:', error);
       throw error;
     }
     
-    // Don't return password hash
+    // Don't return sensitive data
     const { password_hash, ...safeUserData } = data;
     return safeUserData;
   } catch (error) {
@@ -116,24 +197,60 @@ async function createUser(userData) {
 }
 
 /**
+ * Update user profile
+ */
+async function updateUser(userId, updates) {
+  try {
+    if (!userId) {
+      throw new Error('User ID is required');
+    }
+
+    // Remove sensitive fields that shouldn't be updated directly
+    const { id, auth_user_id, email, password_hash, created_at, ...safeUpdates } = updates;
+    
+    // Add updated timestamp
+    safeUpdates.updated_at = new Date().toISOString();
+    
+    const { data, error } = await supabase
+      .from('users')
+      .update(safeUpdates)
+      .eq('id', userId)
+      .select()
+      .maybeSingle(); // FIXED: Changed from .single() to .maybeSingle()
+    
+    if (error) {
+      console.error('Database error in updateUser:', error);
+      throw error;
+    }
+    
+    return data;
+  } catch (error) {
+    console.error('Database error in updateUser:', error);
+    throw error;
+  }
+}
+
+/**
  * ADMIN ONLY: Bypass RLS for admin operations
  */
 async function adminFindUserByEmail(email) {
   if (!supabaseAdmin) {
-    throw new Error('Admin client not configured');
+    throw new Error('Admin client not configured. Set SUPABASE_SERVICE_ROLE_KEY environment variable.');
   }
   
   try {
+    if (!email) {
+      throw new Error('Email is required');
+    }
+
     const { data, error } = await supabaseAdmin
       .from('users')
       .select('*')
       .eq('email', email.toLowerCase().trim())
-      .single();
+      .maybeSingle(); // FIXED: Changed from .single() to .maybeSingle()
     
     if (error) {
-      if (error.code === 'PGRST116') {
-        return null;
-      }
+      console.error('Admin database error in adminFindUserByEmail:', error);
       throw error;
     }
     
@@ -149,10 +266,14 @@ async function adminFindUserByEmail(email) {
  */
 async function adminGetAllUsers(page = 1, limit = 50) {
   if (!supabaseAdmin) {
-    throw new Error('Admin client not configured');
+    throw new Error('Admin client not configured. Set SUPABASE_SERVICE_ROLE_KEY environment variable.');
   }
   
   try {
+    // Validate pagination parameters
+    page = Math.max(1, parseInt(page) || 1);
+    limit = Math.min(100, Math.max(1, parseInt(limit) || 50));
+    
     const start = (page - 1) * limit;
     const end = start + limit - 1;
     
@@ -162,17 +283,63 @@ async function adminGetAllUsers(page = 1, limit = 50) {
       .order('created_at', { ascending: false })
       .range(start, end);
     
-    if (error) throw error;
+    if (error) {
+      console.error('Admin database error in adminGetAllUsers:', error);
+      throw error;
+    }
+    
+    // Remove sensitive data from all users
+    const safeUsers = (data || []).map(user => {
+      const { password_hash, ...safeUser } = user;
+      return safeUser;
+    });
     
     return {
-      users: data,
+      users: safeUsers,
       pagination: {
         page,
         limit,
-        total: count,
-        pages: Math.ceil(count / limit)
+        total: count || 0,
+        pages: Math.ceil((count || 0) / limit)
       }
     };
+  } catch (error) {
+    console.error('Admin database error:', error);
+    throw error;
+  }
+}
+
+/**
+ * ADMIN ONLY: Get user by ID
+ */
+async function adminFindUserById(id) {
+  if (!supabaseAdmin) {
+    throw new Error('Admin client not configured');
+  }
+  
+  try {
+    if (!id) {
+      throw new Error('User ID is required');
+    }
+
+    const { data, error } = await supabaseAdmin
+      .from('users')
+      .select('*')
+      .eq('id', id)
+      .maybeSingle();
+    
+    if (error) {
+      console.error('Admin database error in adminFindUserById:', error);
+      throw error;
+    }
+    
+    // Remove sensitive data
+    if (data) {
+      const { password_hash, ...safeUser } = data;
+      return safeUser;
+    }
+    
+    return null;
   } catch (error) {
     console.error('Admin database error:', error);
     throw error;
@@ -184,6 +351,10 @@ async function adminGetAllUsers(page = 1, limit = 50) {
  */
 async function updateUserPassword(userId, passwordHash) {
   try {
+    if (!userId || !passwordHash) {
+      throw new Error('User ID and password hash are required');
+    }
+
     const { data, error } = await supabase
       .from('users')
       .update({
@@ -192,9 +363,13 @@ async function updateUserPassword(userId, passwordHash) {
       })
       .eq('id', userId)
       .select('id, email, updated_at')
-      .single();
+      .maybeSingle(); // FIXED: Changed from .single() to .maybeSingle()
     
-    if (error) throw error;
+    if (error) {
+      console.error('Database error in updateUserPassword:', error);
+      throw error;
+    }
+    
     return data;
   } catch (error) {
     console.error('Database error in updateUserPassword:', error);
@@ -207,6 +382,10 @@ async function updateUserPassword(userId, passwordHash) {
  */
 async function createServiceRequest(serviceData) {
   try {
+    if (!serviceData.customer_id || !serviceData.service_type) {
+      throw new Error('Customer ID and service type are required');
+    }
+
     const now = new Date().toISOString();
     serviceData.created_at = now;
     serviceData.updated_at = now;
@@ -218,7 +397,11 @@ async function createServiceRequest(serviceData) {
       .select()
       .single();
     
-    if (error) throw error;
+    if (error) {
+      console.error('Database error in createServiceRequest:', error);
+      throw error;
+    }
+    
     return data;
   } catch (error) {
     console.error('Database error in createServiceRequest:', error);
@@ -231,6 +414,10 @@ async function createServiceRequest(serviceData) {
  */
 async function createPaymentRecord(paymentData) {
   try {
+    if (!paymentData.customer_id || !paymentData.amount) {
+      throw new Error('Customer ID and amount are required');
+    }
+
     const now = new Date().toISOString();
     paymentData.created_at = now;
     paymentData.updated_at = now;
@@ -242,7 +429,11 @@ async function createPaymentRecord(paymentData) {
       .select()
       .single();
     
-    if (error) throw error;
+    if (error) {
+      console.error('Database error in createPaymentRecord:', error);
+      throw error;
+    }
+    
     return data;
   } catch (error) {
     console.error('Database error in createPaymentRecord:', error);
@@ -255,6 +446,12 @@ async function createPaymentRecord(paymentData) {
  */
 async function getUserServices(userId, limit = 20) {
   try {
+    if (!userId) {
+      throw new Error('User ID is required');
+    }
+
+    limit = Math.min(100, Math.max(1, parseInt(limit) || 20));
+
     const { data, error } = await supabase
       .from('service_requests')
       .select('*')
@@ -262,7 +459,11 @@ async function getUserServices(userId, limit = 20) {
       .order('created_at', { ascending: false })
       .limit(limit);
     
-    if (error) throw error;
+    if (error) {
+      console.error('Database error in getUserServices:', error);
+      throw error;
+    }
+    
     return data || [];
   } catch (error) {
     console.error('Database error in getUserServices:', error);
@@ -275,6 +476,12 @@ async function getUserServices(userId, limit = 20) {
  */
 async function getUserPayments(userId, limit = 20) {
   try {
+    if (!userId) {
+      throw new Error('User ID is required');
+    }
+
+    limit = Math.min(100, Math.max(1, parseInt(limit) || 20));
+
     const { data, error } = await supabase
       .from('payments')
       .select('*')
@@ -282,10 +489,69 @@ async function getUserPayments(userId, limit = 20) {
       .order('created_at', { ascending: false })
       .limit(limit);
     
-    if (error) throw error;
+    if (error) {
+      console.error('Database error in getUserPayments:', error);
+      throw error;
+    }
+    
     return data || [];
   } catch (error) {
     console.error('Database error in getUserPayments:', error);
+    throw error;
+  }
+}
+
+/**
+ * Get professionals with filtering
+ */
+async function getProfessionals(filters = {}, limit = 50) {
+  try {
+    limit = Math.min(100, Math.max(1, parseInt(limit) || 50));
+
+    let query = supabase
+      .from('professionals')
+      .select(`
+        *,
+        users!inner (
+          id,
+          email,
+          full_name,
+          phone,
+          address,
+          avatar_url
+        )
+      `)
+      .eq('is_active', true)
+      .order('created_at', { ascending: false })
+      .limit(limit);
+    
+    // Apply filters
+    if (filters.service_type) {
+      query = query.eq('service_type', filters.service_type);
+    }
+    
+    if (filters.is_verified !== undefined) {
+      query = query.eq('is_verified', filters.is_verified);
+    }
+    
+    if (filters.min_experience) {
+      query = query.gte('experience_years', filters.min_experience);
+    }
+    
+    if (filters.max_hourly_rate) {
+      query = query.lte('hourly_rate', filters.max_hourly_rate);
+    }
+    
+    const { data, error } = await query;
+    
+    if (error) {
+      console.error('Database error in getProfessionals:', error);
+      throw error;
+    }
+    
+    return data || [];
+  } catch (error) {
+    console.error('Database error in getProfessionals:', error);
     throw error;
   }
 }
@@ -295,24 +561,37 @@ async function getUserPayments(userId, limit = 20) {
  */
 async function checkDatabaseConnection() {
   try {
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('users')
-      .select('count')
+      .select('count', { count: 'exact', head: true })
       .limit(1);
     
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
     
     return {
       connected: true,
       timestamp: new Date().toISOString(),
-      message: 'Database connection successful'
+      message: '✅ Database connection successful',
+      config: {
+        url: supabaseUrl ? '✓ Configured' : '✗ Missing',
+        anonKey: supabaseAnonKey ? '✓ Configured' : '✗ Missing',
+        serviceKey: supabaseServiceKey ? '✓ Configured' : '✗ Missing'
+      }
     };
   } catch (error) {
+    console.error('❌ Database connection check failed:', error);
     return {
       connected: false,
       timestamp: new Date().toISOString(),
       error: error.message,
-      message: 'Database connection failed'
+      message: '❌ Database connection failed',
+      config: {
+        url: supabaseUrl ? '✓ Configured' : '✗ Missing',
+        anonKey: supabaseAnonKey ? '✓ Configured' : '✗ Missing',
+        serviceKey: supabaseServiceKey ? '✓ Configured' : '✗ Missing'
+      }
     };
   }
 }
@@ -327,15 +606,20 @@ module.exports = {
   
   // Helper functions
   findUserByEmail,
+  findUserById,
+  findUserByAuthId,
   createUser,
+  updateUser,
   updateUserPassword,
   createServiceRequest,
   createPaymentRecord,
   getUserServices,
   getUserPayments,
+  getProfessionals,
   checkDatabaseConnection,
   
   // Admin functions (use with caution)
   adminFindUserByEmail,
+  adminFindUserById,
   adminGetAllUsers
 };
