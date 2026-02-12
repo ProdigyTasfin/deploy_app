@@ -1,5 +1,5 @@
 // api/auth/admin-login.js - SIMPLE FIX
-const { supabase } = require('../db');
+const supabase = require('../db'); // Fixed: removed destructuring
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
